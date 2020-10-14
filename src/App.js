@@ -17,12 +17,13 @@ function App() {
   const [currentObstacle, setCurrentObstacle] = useState();
   const [userAutoMode, setUserMode] = useState(true); //starting point user mode - take from params
   const [autoMode, setMode] = useState(true);
-  const [isMoving, setIsMoving] = useState(false); //Moving, or hit Obstacle
+  const [isMoving, setIsMoving] = useState(true); //Moving, or hit Obstacle
   const [sessionId, setSessionId] = useState();
   const [sessionData, setSessionData] = useState();
   const [parameters, setParameters] = useState();
   const [global, setGlobal] = useState();
   const [error, setError] = useState();
+  const [started, setStarted] = useState(false);
 
   //const [groceryListId, setGroceryListId] = useQueryString('listId');
   //TO USE QUERIES https://github.com/briandesousa/firebase-with-react-hooks/blob/logrocket-blog/src/App.js
@@ -32,7 +33,7 @@ function App() {
   // Use an effect to authenticate and load the grocery list from the database
   useEffect(() => {
     if (!parameters) {
-      FirestoreService.getParametersData("set-1").then((params) => {
+      FirestoreService.getParametersData("set-2").then((params) => {
         setParameters(params.data());
         console.log("params: " + params.data()["computerError"]);
       });
@@ -53,10 +54,10 @@ function App() {
   }, []); //sessionId, setSessionId
 
   useEffect(() => {
-    if (global) {
+    if (global && started) {
       drive();
     }
-  }, [global]);
+  }, [global, started]);
 
   //ssss
   function onSessionCreate(sessionId) {
@@ -113,6 +114,10 @@ function App() {
 
   const modeChange = (mode) => {
     setMode(mode);
+  };
+
+  const start = () => {
+    setStarted(true);
   };
 
   /*
@@ -181,6 +186,7 @@ function App() {
           isMoving={isMoving}
           sessionId={sessionId}
           obstaclesNum={obstaclesNum}
+          started={started}
         />
       </div>
       <div class="bottom-left">
@@ -200,6 +206,8 @@ function App() {
           onArrowClick={drive}
           isFirstRun={obstaclesNum == 0}
           currentObstacle={currentObstacle}
+          started={started}
+          startOnClick={start}
         />
       </div>
     </div>

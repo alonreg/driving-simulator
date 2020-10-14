@@ -48,7 +48,7 @@ class Obstacle {
     this.ev_l = this.getExpectedValue(this.real_l, success, fail, pass_penalty); // EV of left
     this.ev_f = this.getExpectedValue(this.real_f, success, fail, 0); //EV with no pass
     this.ev_rescue = rescue; // EV of rescue
-    this.desicion = this.getComputerDecision();
+    this.decision = this.getComputerDecision();
 
     console.log(
       "Decisions Parameters: " +
@@ -69,7 +69,7 @@ class Obstacle {
         " ev_rescue" +
         this.ev_rescue +
         " dec: " +
-        this.desicion
+        this.decision
     );
   }
 
@@ -91,14 +91,23 @@ class Obstacle {
   }
 
   getXValue(max, min) {
-    const rnd = Math.random() * max + min;
+    const rnd = Math.random() * (max - min) + min;
     console.log("rnd = " + rnd);
     return rnd;
   }
 
   getRealObstacleValue(k, x) {
-    console.log("in get real obstacle value:" + " k= " + k + " x=" + x);
-    return 1 / (1 + Math.exp(-1 * k * x));
+    const exponent = 1 / (1 + Math.exp(-1 * k * x));
+    console.log(
+      "in get real obstacle value:" +
+        " k= " +
+        k +
+        " x=" +
+        x +
+        " real = " +
+        exponent
+    );
+    return exponent;
   }
 
   ncdf(x, mean, std) {
@@ -123,7 +132,7 @@ class Obstacle {
       1
     );
 
-    console.log(
+    /*console.log(
       "value with error => error: " +
         error +
         " real: " +
@@ -147,7 +156,7 @@ class Obstacle {
           0,
           1
         )
-    );
+    );*/
 
     return this.ncdf(normal.inv(real, 0, 1) + normal.inv(rnd, 0, error), 0, 1); // obstacleValueWithError;
   }
@@ -156,7 +165,7 @@ class Obstacle {
     const ev =
       (1 - failureProbabilty) * (successScore + pass) +
       failureProbabilty * (failScore + pass);
-    console.log(
+    /*console.log(
       "in getEV=> failureProb: " +
         failureProbabilty +
         " Success Score = " +
@@ -167,7 +176,7 @@ class Obstacle {
         pass +
         " ev " +
         ev
-    );
+    );*/
     return ev;
   }
 

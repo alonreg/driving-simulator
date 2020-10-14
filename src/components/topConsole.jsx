@@ -18,12 +18,12 @@ function TopConsole(props) {
 
   return (
     <>
-      {props.isMoving ? (
+      {props.isMoving && props.started ? (
         <img draggable={false} src={drivingGif} className="driving-gif" />
       ) : (
         <img draggable={false} src={drivingPaused} className="driving-gif" />
       )}
-      <h1>{props.isMoving ? "Driving..." : "Oops, we hit an obstacle"}</h1>
+      <h1>{props.isMoving ? ("Driving...") : (props.started? "Oops, we hit an obstacle" : "Press Start")}</h1>
       <p>
         ( obstacles: {props.obstaclesNum}, auto?:
         {props.userAutoMode.toString()} session id: {props.sessionId}, )
@@ -32,7 +32,7 @@ function TopConsole(props) {
         <span>Driving Mode</span>
         <br />
         <Switch
-          disabled={!props.isMoving}
+          disabled={!props.isMoving || !props.started}
           uncheckedIcon={
             <div
               style={{

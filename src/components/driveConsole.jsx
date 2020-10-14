@@ -11,9 +11,9 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 
-function CenterSign({ autoModeInit, isMoving, autoMode, isFirstRun }) {
+function CenterSign({ autoModeInit, isMoving, autoMode, started }) {
   useEffect(() => {
-    if (autoMode && !isMoving) {
+    if (autoMode && !isMoving && started) {
       //|| isFirstRun
       autoModeInit();
     }
@@ -26,6 +26,16 @@ function CenterSign({ autoModeInit, isMoving, autoMode, isFirstRun }) {
       ) : (
         <img draggable={false} src={hazard} className="hazard" />
       )}
+    </>
+  );
+}
+
+function StartButton({ onClick }) {
+  return (
+    <>
+      <Button onClick={() => onClick()} variant="dark" className="hazard">
+        Start
+      </Button>
     </>
   );
 }
@@ -94,9 +104,11 @@ function DriveConsole({
   currentObstacle,
   isMoving,
   isFirstRun,
+  started,
+  startOnClick,
 }) {
   const computerDesicion = () => {
-    direction = currentObstacle.decision;
+    const direction = currentObstacle?.decision ?? null;
     if (autoMode) {
       setTimeout(
         (function (localDirectionDecided) {
@@ -118,15 +130,32 @@ function DriveConsole({
         " isMoving: " +
         isMoving
     );
-    if (direction == "rescue") {
-      onArrowClick();
-      //onChange["obstaclesAddition"]();
-      //onChange["scoreAddition"](-100);
-    } else {
-      onArrowClick();
-      //onChange["obstaclesAddition"]();
-      //11-12-2020 - alon!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      if (Math.random() > 0.5) {
+    const rnd = Math.random();
+    switch (direction) {
+      case "right":
+        rnd >= currentObstacle.real_r
+          ? onChange["scoreAddition"](90)
+          : onChange["scoreAddition"](-90); //TODO: Convert to dynamic
+        break;
+      case "left":
+        rnd >= currentObstacle.real_r
+          ? onChange["scoreAddition"](90)
+          : onChange["scoreAddition"](-90);
+        break;
+      case "forward":
+        rnd >= currentObstacle.real_r
+          ? onChange["scoreAddition"](100)
+          : onChange["scoreAddition"](-80);
+        break;
+      case "rescue":
+        onChange["scoreAddition"](-40);
+      default:
+        break;
+    }
+    onArrowClick();
+    //onChange["obstaclesAddition"]();
+    //11-12-2020 - alon!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    /*if (Math.random() > 0.5) {
         if (direction != "forward") {
           onChange["scoreAddition"](100);
         } else {
@@ -134,49 +163,56 @@ function DriveConsole({
         }
       } else {
         onChange["scoreAddition"](-150);
-      }
-    }
+      }*/
     onChange["obstaclesAddition"]();
   };
 
   return (
     <>
-      <RescueButton
-        onClick={directionDecided}
-        className="rescue"
-        autoModeInit={computerDesicion}
-      />
-      <Arrow
-        key="123"
-        direction="left"
-        onClick={directionDecided}
-        progressBar={currentObstacle?.obstacleValueWithError_computer_l ?? 50}
-        estimate={currentObstacle?.obstacleValueWithError_human_l ?? 0 }
-        autoMode={autoMode}
-        isMoving={isMoving}
-      />
-      <Arrow
-        direction="right"
-        onClick={directionDecided}
-        progressBar={currentObstacle?.obstacleValueWithError_computer_r ?? 0 }
-        estimate={currentObstacle?.obstacleValueWithError_human_r ?? 0}
-        autoMode={autoMode}
-        isMoving={isMoving}
-      />
-      <Arrow
-        direction="forward"
-        onClick={directionDecided}
-        progressBar={currentObstacle?.obstacleValueWithError_computer_f ?? 0}
-        estimate={currentObstacle?.obstacleValueWithError_human_f ?? 0}
-        autoMode={autoMode}
-        isMoving={isMoving}
-      />
-      <CenterSign
-        autoModeInit={computerDesicion}
-        isMoving={isMoving}
-        autoMode={autoMode}
-        isFirstRun={isFirstRun}
-      />
+      {started ? (
+        <>
+          <RescueButton onClick={directionDecided} className="rescue" />
+          <Arrow
+            key="123"
+            direction="left"
+            onClick={directionDecided}
+            progressBar={
+              currentObstacle?.obstacleValueWithError_computer_l ?? 50
+            }
+            estimate={currentObstacle?.obstacleValueWithError_human_l ?? 0}
+            autoMode={autoMode}
+            isMoving={isMoving}
+          />
+          <Arrow
+            direction="right"
+            onClick={directionDecided}
+            progressBar={
+              currentObstacle?.obstacleValueWithError_computer_r ?? 0
+            }
+            estimate={currentObstacle?.obstacleValueWithError_human_r ?? 0}
+            autoMode={autoMode}
+            isMoving={isMoving}
+          />
+          <Arrow
+            direction="forward"
+            onClick={directionDecided}
+            progressBar={
+              currentObstacle?.obstacleValueWithError_computer_f ?? 0
+            }
+            estimate={currentObstacle?.obstacleValueWithError_human_f ?? 0}
+            autoMode={autoMode}
+            isMoving={isMoving}
+          />
+          <CenterSign
+            autoModeInit={computerDesicion}
+            isMoving={isMoving}
+            autoMode={autoMode}
+            started={started}
+          />
+        </>
+      ) : (
+        <StartButton onClick={startOnClick} />
+      )}
     </>
   );
 }
