@@ -19,27 +19,28 @@ class Obstacle {
     this.real_r = this.getRealObstacleValue(k, this.getXValue(max, min));
     this.real_l = this.getRealObstacleValue(k, this.getXValue(max, min));
     this.real_f = this.getRealObstacleValue(k, this.getXValue(max, min));
-    this.ObstacleValueWithError_human_r = this.getObstacleValueWithError(
+
+    this.obstacleValueWithError_human_r = this.getObstacleValueWithError(
       this.real_r,
       humanError
     );
-    this.ObstacleValueWithError_human_l = this.getObstacleValueWithError(
+    this.obstacleValueWithError_human_l = this.getObstacleValueWithError(
       this.real_l,
       humanError
     );
-    this.ObstacleValueWithError_human_f = this.getObstacleValueWithError(
+    this.obstacleValueWithError_human_f = this.getObstacleValueWithError(
       this.real_f,
       humanError
     );
-    this.ObstacleValueWithError_computer_r = this.getObstacleValueWithError(
+    this.obstacleValueWithError_computer_r = this.getObstacleValueWithError(
       this.real_r,
       computerError
     );
-    this.ObstacleValueWithError_computer_f = this.getObstacleValueWithError(
+    this.obstacleValueWithError_computer_l = this.getObstacleValueWithError(
       this.real_l,
       computerError
     );
-    this.ObstacleValueWithError_computer_f = this.getObstacleValueWithError(
+    this.obstacleValueWithError_computer_f = this.getObstacleValueWithError(
       this.real_f,
       computerError
     );
@@ -48,6 +49,7 @@ class Obstacle {
     this.ev_f = this.getExpectedValue(this.real_f, success, fail, 0); //EV with no pass
     this.ev_rescue = rescue; // EV of rescue
     this.desicion = this.getComputerDecision();
+
     console.log(
       "Decisions Parameters: " +
         " k:" +
@@ -80,37 +82,93 @@ class Obstacle {
       return "rescue";
 
     if (this.ev_r >= this.ev_l && this.ev_r >= this.ev_f) {
-      return "r";
+      return "right";
     } else if (this.ev_l >= this.ev_f && this.ev_l >= this.ev_r) {
-      return "l";
+      return "left";
     } else {
-      return "f";
+      return "forward";
     }
   }
 
   getXValue(max, min) {
-    return Math.random() * min + max;
+    const rnd = Math.random() * max + min;
+    console.log("rnd = " + rnd);
+    return rnd;
   }
 
   getRealObstacleValue(k, x) {
-    return 1 / Math.exp(-1 * k * x);
+    console.log("in get real obstacle value:" + " k= " + k + " x=" + x);
+    return 1 / (1 + Math.exp(-1 * k * x));
+  }
+
+  ncdf(x, mean, std) {
+    var x = (x - mean) / std;
+    var t = 1 / (1 + 0.2315419 * Math.abs(x));
+    var d = 0.3989423 * Math.exp((-x * x) / 2);
+    var prob =
+      d *
+      t *
+      (0.3193815 +
+        t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+    if (x > 0) prob = 1 - prob;
+    return prob;
   }
 
   getObstacleValueWithError(real, error) {
+    const rnd = Math.random();
+    //=NORM.DIST(NORM.INV(I2,$B$12,$B$13)+NORM.INV(RAND(),0,$B$14),$B$12,$B$13,TRUE)
     let obstacleValueWithError = normal.cdf(
-      normal.inv(real, 0, 1) + normal.inv(Math.random(), 0, error),
+      normal.inv(real, 0, 1) + normal.inv(rnd, 0, error), // should be changed to global variables?
       0,
       1
     );
-    console.log(obstacleValueWithError);
-    return obstacleValueWithError;
+
+    console.log(
+      "value with error => error: " +
+        error +
+        " real: " +
+        real +
+        " normal inv " +
+        normal.inv(0.37519, 0, 1) +
+        " normal inv 22 " +
+        normal.inv(0.8, 0, 1.5) +
+        " cdf: " +
+        this.ncdf(normal.inv(real, 0, 1) + normal.inv(rnd, 0, error), 0, 1) +
+        " val with err: " +
+        obstacleValueWithError
+    );
+
+    console.log(
+      "compare: 1 - ncdf = " +
+        this.ncdf(-1.714269295, 0, 1) +
+        " jsstat = " +
+        normal.cdf(
+          -1.714269295, // should be changed to global variables?
+          0,
+          1
+        )
+    );
+
+    return this.ncdf(normal.inv(real, 0, 1) + normal.inv(rnd, 0, error), 0, 1); // obstacleValueWithError;
   }
 
   getExpectedValue(failureProbabilty, successScore, failScore, pass) {
-    return (
+    const ev =
       (1 - failureProbabilty) * (successScore + pass) +
-      failureProbabilty * (failScore + pass)
+      failureProbabilty * (failScore + pass);
+    console.log(
+      "in getEV=> failureProb: " +
+        failureProbabilty +
+        " Success Score = " +
+        successScore +
+        " fail score = " +
+        failScore +
+        " pass " +
+        pass +
+        " ev " +
+        ev
     );
+    return ev;
   }
 
   /*

@@ -65,14 +65,14 @@ function Arrow({
           type="button"
           className={`arrow-${direction} estimate-${direction}`}
         >
-          {estimate}%
+          {Math.round((estimate + Number.EPSILON) * 100)}%
         </h1>
       ) : null}
       {!isMoving ? (
         <ProgressBar
           className={`arrow-${direction} progress-${direction}`}
           striped
-          now={progressBar}
+          now={progressBar * 100}
         />
       ) : null}
       <input
@@ -96,7 +96,7 @@ function DriveConsole({
   isFirstRun,
 }) {
   const computerDesicion = () => {
-    const direction = "forward";
+    direction = currentObstacle.decision;
     if (autoMode) {
       setTimeout(
         (function (localDirectionDecided) {
@@ -125,6 +125,7 @@ function DriveConsole({
     } else {
       onArrowClick();
       //onChange["obstaclesAddition"]();
+      //11-12-2020 - alon!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       if (Math.random() > 0.5) {
         if (direction != "forward") {
           onChange["scoreAddition"](100);
@@ -149,24 +150,24 @@ function DriveConsole({
         key="123"
         direction="left"
         onClick={directionDecided}
-        progressBar="40"
-        estimate="70"
+        progressBar={currentObstacle?.obstacleValueWithError_computer_l ?? 50}
+        estimate={currentObstacle?.obstacleValueWithError_human_l ?? 0 }
         autoMode={autoMode}
         isMoving={isMoving}
       />
       <Arrow
         direction="right"
         onClick={directionDecided}
-        progressBar="40"
-        estimate="70"
+        progressBar={currentObstacle?.obstacleValueWithError_computer_r ?? 0 }
+        estimate={currentObstacle?.obstacleValueWithError_human_r ?? 0}
         autoMode={autoMode}
         isMoving={isMoving}
       />
       <Arrow
         direction="forward"
         onClick={directionDecided}
-        progressBar={currentObstacle.humanEstimate}
-        estimate={currentObstacle.computerEstimate}
+        progressBar={currentObstacle?.obstacleValueWithError_computer_f ?? 0}
+        estimate={currentObstacle?.obstacleValueWithError_human_f ?? 0}
         autoMode={autoMode}
         isMoving={isMoving}
       />

@@ -150,7 +150,7 @@ function App() {
       }
     );
     console.log("ccccc  " + obstacle.desicion);
-
+    setCurrentObstacle(obstacle);
     setTimeout(() => {
       console.log("set is moving - flase");
       setIsMoving(false);
@@ -199,9 +199,7 @@ function App() {
           isMoving={isMoving}
           onArrowClick={drive}
           isFirstRun={obstaclesNum == 0}
-          currentObstacle={
-            currentObstacle ?? { humanEstimate: 1, computerEstimate: 3 }
-          }
+          currentObstacle={currentObstacle}
         />
       </div>
     </div>
