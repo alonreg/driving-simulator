@@ -9,7 +9,7 @@ class Obstacle {
     max,
     humanError,
     computerError,
-    { success, pass_penalty, fail, rescue }
+    { success, pass, fail, rescue }
   ) {
     this.k = k;
     this.min = min;
@@ -44,8 +44,8 @@ class Obstacle {
       this.real_f,
       computerError
     );
-    this.ev_r = this.getExpectedValue(this.real_r, success, fail, pass_penalty); // EV of right
-    this.ev_l = this.getExpectedValue(this.real_l, success, fail, pass_penalty); // EV of left
+    this.ev_r = this.getExpectedValue(this.real_r, success, fail, pass); // EV of right
+    this.ev_l = this.getExpectedValue(this.real_l, success, fail, pass); // EV of left
     this.ev_f = this.getExpectedValue(this.real_f, success, fail, 0); //EV with no pass
     this.ev_rescue = rescue; // EV of rescue
     this.decision = this.getComputerDecision();
@@ -69,7 +69,13 @@ class Obstacle {
         " ev_rescue" +
         this.ev_rescue +
         " dec: " +
-        this.decision
+        this.decision +
+        "scores: success: " +
+        success +
+        " fail: " +
+        fail +
+        " pass: " +
+        pass
     );
   }
 

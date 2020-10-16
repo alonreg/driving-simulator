@@ -101,17 +101,18 @@ export const addGroceryListItem = (item, groceryListId, userId) => {
     });
 };*/
 
-export const setSessionData = (
+export const setSessionData = ({
   session,
   successByHuman,
   successByComp,
   failByHuman,
   failByComp,
   score,
+  scoreBoard,
   totalTime,
   timeOnAuto,
-  modeChanges
-) => {
+  modeChanges,
+}) => {
   console.log("firebase > setSesstionData > " + session);
   db.collection("sessions")
     .doc(session)
@@ -127,6 +128,7 @@ export const setSessionData = (
         totalTime: totalTime ?? 0,
         timeOnAuto: timeOnAuto ?? 0,
         modeChanges: modeChanges ?? 0,
+        scoreBoard: scoreBoard ?? "",
       },
       { merge: true }
     )

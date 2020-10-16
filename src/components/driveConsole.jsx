@@ -33,7 +33,12 @@ function CenterSign({ autoModeInit, isMoving, autoMode, started }) {
 function StartButton({ onClick }) {
   return (
     <>
-      <Button onClick={() => onClick()} variant="dark" className="hazard">
+      <Button
+        onClick={() => onClick()}
+        variant="success"
+        className="hazard"
+        size="lg"
+      >
         Start
       </Button>
     </>
@@ -41,13 +46,14 @@ function StartButton({ onClick }) {
 }
 
 // this currently doesnt get re-render so ill need to use the hazard as a re-render
-function RescueButton({ onClick }) {
+function RescueButton({ onClick, disabled }) {
   return (
     <>
       <Button
         onClick={() => onClick("rescue")}
         variant="danger"
         className="rescue"
+        disabled={disabled}
       >
         Rescue
       </Button>
@@ -106,6 +112,7 @@ function DriveConsole({
   isFirstRun,
   started,
   startOnClick,
+  scoreBoard,
 }) {
   const computerDesicion = () => {
     const direction = currentObstacle?.decision ?? null;
@@ -134,24 +141,25 @@ function DriveConsole({
     switch (direction) {
       case "right":
         rnd >= currentObstacle.real_r
-          ? onChange["scoreAddition"](90)
-          : onChange["scoreAddition"](-90); //TODO: Convert to dynamic
+          ? onChange["scoreAddition"](scoreBoard.success - scoreBoard.pass)
+          : onChange["scoreAddition"](scoreBoard.fail - scoreBoard.pass);
         break;
       case "left":
-        rnd >= currentObstacle.real_r
-          ? onChange["scoreAddition"](90)
-          : onChange["scoreAddition"](-90);
+        rnd >= currentObstacle.real_l
+          ? onChange["scoreAddition"](scoreBoard.success - scoreBoard.pass)
+          : onChange["scoreAddition"](scoreBoard.fail - scoreBoard.pass);
         break;
       case "forward":
-        rnd >= currentObstacle.real_r
-          ? onChange["scoreAddition"](100)
-          : onChange["scoreAddition"](-80);
+        rnd >= currentObstacle.real_f
+          ? onChange["scoreAddition"](scoreBoard.success)
+          : onChange["scoreAddition"](scoreBoard.fail);
         break;
       case "rescue":
-        onChange["scoreAddition"](-40);
+        onChange["scoreAddition"](scoreBoard.rescue);
       default:
         break;
     }
+    onChange["obstaclesAddition"]();
     onArrowClick();
     //onChange["obstaclesAddition"]();
     //11-12-2020 - alon!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -164,42 +172,39 @@ function DriveConsole({
       } else {
         onChange["scoreAddition"](-150);
       }*/
-    onChange["obstaclesAddition"]();
   };
 
   return (
     <>
       {started ? (
         <>
-          <RescueButton onClick={directionDecided} className="rescue" />
+          <RescueButton
+            onClick={directionDecided}
+            disabled={isMoving || autoMode}
+            className="rescue"
+          />
           <Arrow
             key="123"
             direction="left"
             onClick={directionDecided}
-            progressBar={
-              currentObstacle?.obstacleValueWithError_computer_l ?? 50
-            }
-            estimate={currentObstacle?.obstacleValueWithError_human_l ?? 0}
+            progressBar={currentObstacle?.obstacleValueWithError_human_l ?? 50}
+            estimate={currentObstacle?.obstacleValueWithError_computer_l ?? 0}
             autoMode={autoMode}
             isMoving={isMoving}
           />
           <Arrow
             direction="right"
             onClick={directionDecided}
-            progressBar={
-              currentObstacle?.obstacleValueWithError_computer_r ?? 0
-            }
-            estimate={currentObstacle?.obstacleValueWithError_human_r ?? 0}
+            progressBar={currentObstacle?.obstacleValueWithError_human_r ?? 0}
+            estimate={currentObstacle?.obstacleValueWithError_computer_r ?? 0}
             autoMode={autoMode}
             isMoving={isMoving}
           />
           <Arrow
             direction="forward"
             onClick={directionDecided}
-            progressBar={
-              currentObstacle?.obstacleValueWithError_computer_f ?? 0
-            }
-            estimate={currentObstacle?.obstacleValueWithError_human_f ?? 0}
+            progressBar={currentObstacle?.obstacleValueWithError_human_f ?? 0}
+            estimate={currentObstacle?.obstacleValueWithError_computer_f ?? 0}
             autoMode={autoMode}
             isMoving={isMoving}
           />
@@ -211,7 +216,7 @@ function DriveConsole({
           />
         </>
       ) : (
-        <StartButton onClick={startOnClick} />
+        <StartButton onClick={startOnClick} className="lg" />
       )}
     </>
   );

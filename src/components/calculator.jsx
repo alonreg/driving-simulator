@@ -52,11 +52,17 @@ function Calculator(props) {
           onKeyPress={() => false}
           onChange={handleChange}
           value={values.answer}
+          disabled={!props.started}
         />
         <br />
         <br />
         {"    "}
-        <Button variant="primary" size="lg" type="submit">
+        <Button
+          variant="primary"
+          size="lg"
+          type="submit"
+          disabled={!props.started}
+        >
           Submit
         </Button>
         {"    "}

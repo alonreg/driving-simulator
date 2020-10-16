@@ -6,21 +6,22 @@ import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import createSpacing from "@material-ui/core/styles/createSpacing";
 
-function Score(props) {
+function Score({ score, scoreBoard, onChange }) {
   const data = [
-    { actionName: "Succesful Pass", score: "+150" },
-    { actionName: "Passing", score: "-50" },
-    { actionName: "Getting Stuck", score: "-150" },
-    { actionName: "Calling For Rescue", score: "-10" },
-    { actionName: "Correct Calculation", score: "+20" },
+    { actionName: "Succesful Pass", score: scoreBoard.success },
+    { actionName: "Passing", score: scoreBoard.pass },
+    { actionName: "Getting Stuck", score: scoreBoard.fail },
+    { actionName: "Calling For Rescue", score: scoreBoard.rescue },
+    { actionName: "Correct Calculation", score: scoreBoard.calculation },
   ];
 
   const mapToTable = function (action, i) {
     var fontColor = action.score > 0 ? "font-green" : "font-red";
+    var positiveCharacter = action.score > 0 ? "+" : "";
     return (
       <tr key={i} className={`font-italic score-board  ${fontColor}`}>
         <td>{action["actionName"]}</td>
-        <td>{action["score"]}</td>
+        <td>{positiveCharacter + action["score"]}</td>
       </tr>
     );
   };
@@ -33,7 +34,7 @@ function Score(props) {
         className="inputRounded score"
         name="score"
         type="text"
-        value={props.score}
+        value={score}
         readOnly
       />
       <div></div>

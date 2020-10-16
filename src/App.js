@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import * as FirestoreService from "./firebase";
 import Loader from "react-loader-spinner";
 import Obstacle from "./obstacle";
+import { firestore } from "firebase";
 
 function App() {
   const [score, setScore] = useState(0);
@@ -19,11 +20,23 @@ function App() {
   const [autoMode, setMode] = useState(true);
   const [isMoving, setIsMoving] = useState(true); //Moving, or hit Obstacle
   const [sessionId, setSessionId] = useState();
-  const [sessionData, setSessionData] = useState();
   const [parameters, setParameters] = useState();
   const [global, setGlobal] = useState();
   const [error, setError] = useState();
   const [started, setStarted] = useState(false);
+  const [ended, setEnded] = useState(false);
+  ////////////////////////////////////////// SESSION DATA ////////
+  const [sessionData, setSessionData] = useState({
+    session: sessionId,
+    successByHuman: 0,
+    successByComp: 0,
+    failByHuman: 0,
+    failByComp: 0,
+    startTime: Date.now(), //delta
+    totalTimeInSeconds: 0,
+    modeChanges: 0,
+    parameters: "",
+  });
 
   //const [groceryListId, setGroceryListId] = useQueryString('listId');
   //TO USE QUERIES https://github.com/briandesousa/firebase-with-react-hooks/blob/logrocket-blog/src/App.js
@@ -58,6 +71,15 @@ function App() {
       drive();
     }
   }, [global, started]);
+
+  useEffect(() => {
+    if (parameters && parameters.obstaclesNum <= obstaclesNum) {
+      setTimeout(() => {
+        end();
+      }, 1000);
+      return;
+    }
+  }, [score]);
 
   //ssss
   function onSessionCreate(sessionId) {
@@ -100,7 +122,7 @@ function App() {
       const message = v;
       notifyBad(message);
     }
-    setScore(v + score);
+    setScore((score) => v + score);
   };
 
   const obstaclesAddition = () => {
@@ -113,11 +135,26 @@ function App() {
   };
 
   const modeChange = (mode) => {
+    setSessionData({
+      ...sessionData,
+      modeChanges: sessionData["modeChanges"] + 1,
+    });
     setMode(mode);
   };
 
   const start = () => {
     setStarted(true);
+  };
+
+  const end = () => {
+    FirestoreService.setSessionData({
+      ...sessionData,
+      session: sessionId,
+      score: score,
+      scoreBoard: parameters.scoreBoard,
+      parameters: "enter-set-dynamically",
+    });
+    setEnded(true);
   };
 
   /*
@@ -147,14 +184,8 @@ function App() {
       global.random_values[1],
       parameters.humanError,
       parameters.computerError,
-      {
-        success: 100,
-        pass_penalty: -10,
-        fail: -90,
-        rescue: -40,
-      }
+      parameters.score
     );
-    console.log("ccccc  " + obstacle.desicion);
     setCurrentObstacle(obstacle);
     setTimeout(() => {
       console.log("set is moving - flase");
@@ -171,12 +202,18 @@ function App() {
     );
   }
 
-  return (
+  return ended ? (
+    <p>Thank you for your participation!, final score: {score}</p>
+  ) : (
     <div class="flex-container">
       <ToastContainer limit="2" style={{ fontSize: 30, textAlign: "center" }} />
       <div className="top-left">
         <p></p>
-        <Score score={score} onChange={scoreAddition} />
+        <Score
+          score={score}
+          scoreBoard={parameters.score}
+          onChange={scoreAddition}
+        />
       </div>
       <div className="top-right">
         <TopConsole
@@ -191,13 +228,14 @@ function App() {
       </div>
       <div class="bottom-left">
         <br />
-        <Calculator score={score} onChange={scoreAddition} />
+        <Calculator score={score} onChange={scoreAddition} started={started} />
       </div>
       <div class="bottom-right bordered">
         <DriveConsole
           isMoving={isMoving}
           autoMode={autoMode}
           score={score}
+          scoreBoard={parameters.score}
           onChange={{
             scoreAddition: scoreAddition,
             obstaclesAddition: obstaclesAddition,
