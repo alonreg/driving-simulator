@@ -35,7 +35,7 @@ function Calculator(props) {
     initialValues,
     onSubmit: (values) => {
       values.values.answer == problemParameters[0] + problemParameters[1]
-        ? props.onChange(20) //change scoring to get properties from db
+        ? props.onChange(props.scoreBoard.calculation) //change scoring to get properties from db
         : props.onChange(0);
       setParameters(generateMathProblem());
     },

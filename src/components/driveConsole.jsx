@@ -123,7 +123,7 @@ function DriveConsole({
             localDirectionDecided(direction);
           };
         })(directionDecided),
-        5000
+        2000
       );
     }
   };
@@ -141,13 +141,13 @@ function DriveConsole({
     switch (direction) {
       case "right":
         rnd >= currentObstacle.real_r
-          ? onChange["scoreAddition"](scoreBoard.success - scoreBoard.pass)
-          : onChange["scoreAddition"](scoreBoard.fail - scoreBoard.pass);
+          ? onChange["scoreAddition"](scoreBoard.success + scoreBoard.pass)
+          : onChange["scoreAddition"](scoreBoard.fail + scoreBoard.pass);
         break;
       case "left":
         rnd >= currentObstacle.real_l
-          ? onChange["scoreAddition"](scoreBoard.success - scoreBoard.pass)
-          : onChange["scoreAddition"](scoreBoard.fail - scoreBoard.pass);
+          ? onChange["scoreAddition"](scoreBoard.success + scoreBoard.pass)
+          : onChange["scoreAddition"](scoreBoard.fail + scoreBoard.pass);
         break;
       case "forward":
         rnd >= currentObstacle.real_f

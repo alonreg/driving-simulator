@@ -262,14 +262,17 @@ NEW!
 }
 
 .progress-right {
+  border-radius: 30px;
   top: 45%;
 }
 
 .progress-left {
+  border-radius: 30px;
   top: 45%;
 }
 
 .progress-forward {
+  border-radius: 30px;
   top: 13%;
 }
 

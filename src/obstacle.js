@@ -9,7 +9,10 @@ class Obstacle {
     max,
     humanError,
     computerError,
-    { success, pass, fail, rescue }
+    success,
+    pass,
+    fail,
+    rescue
   ) {
     this.k = k;
     this.min = min;
@@ -50,7 +53,7 @@ class Obstacle {
     this.ev_rescue = rescue; // EV of rescue
     this.decision = this.getComputerDecision();
 
-    console.log(
+    /*console.log(
       "Decisions Parameters: " +
         " k:" +
         this.k +
@@ -76,7 +79,7 @@ class Obstacle {
         fail +
         " pass: " +
         pass
-    );
+    );*/
   }
 
   getComputerDecision() {
@@ -98,13 +101,13 @@ class Obstacle {
 
   getXValue(max, min) {
     const rnd = Math.random() * (max - min) + min;
-    console.log("rnd = " + rnd);
+    //console.log("rnd = " + rnd);
     return rnd;
   }
 
   getRealObstacleValue(k, x) {
     const exponent = 1 / (1 + Math.exp(-1 * k * x));
-    console.log(
+    /* console.log(
       "in get real obstacle value:" +
         " k= " +
         k +
@@ -112,7 +115,7 @@ class Obstacle {
         x +
         " real = " +
         exponent
-    );
+    );*/
     return exponent;
   }
 

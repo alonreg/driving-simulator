@@ -1,5 +1,5 @@
 import shadows from "@material-ui/core/styles/shadows";
-import * as firebase from "firebase/app";
+import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 
@@ -43,6 +43,10 @@ export const createSession = (userId) => {
 
 export const getParametersData = (parameterSet) => {
   return db.collection("parameters").doc(parameterSet).get();
+};
+
+export const getAllParametersData = () => {
+  return db.collection("parameters");
 };
 
 export const getSessionData = (sessionId) => {
@@ -135,4 +139,45 @@ export const setSessionData = ({
     .then((ref) => {
       console.log("ref of setSessionData in fIREBASE.JS: " + ref);
     }); //catch error  - .catch()
+};
+
+export const setParameters = ({
+  set,
+  computerError,
+  humanError,
+  obstaclesNum,
+  startWithAuto,
+  calculation,
+  fail,
+  pass,
+  rescue,
+  success,
+}) => {
+  return db
+    .collection("parameters")
+    .doc(set)
+    .set(
+      {
+        computerError: computerError,
+        humanError: humanError,
+        obstaclesNum: obstaclesNum,
+        startWithAuto: startWithAuto,
+        success: success ?? 100,
+        pass: pass ?? 0,
+        rescue: rescue ?? 0,
+        fail: fail ?? 0,
+        calculation: calculation ?? 0,
+      },
+      { merge: true }
+    );
+};
+
+export const deleteParameters = (set) => {
+  db.collection("parameters").doc(set).delete();
+};
+//export const setParameters = {};
+
+export const updateParameters = (set, updatedItem) => {
+  delete updatedItem.id;
+  db.collection("parameters").doc(set).update(updatedItem);
 };

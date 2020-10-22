@@ -23,13 +23,16 @@ function TopConsole(props) {
       ) : (
         <img draggable={false} src={drivingPaused} className="driving-gif" />
       )}
-      <h1>{props.isMoving ? ("Driving...") : (props.started? "Oops, we hit an obstacle" : "Press Start")}</h1>
-      <p>
-        ( obstacles: {props.obstaclesNum}, auto?:
-        {props.userAutoMode.toString()} session id: {props.sessionId}, )
-      </p>
+      <h1>
+        {props.isMoving
+          ? "Driving..."
+          : props.started
+          ? "Oops, we hit an obstacle"
+          : "Press Start"}
+      </h1>
+      <p>obstacles: {props.obstaclesNum}</p>
       <label className="switch">
-        <span>Driving Mode</span>
+        <span>Mode</span>
         <br />
         <Switch
           disabled={!props.isMoving || !props.started}
