@@ -178,7 +178,7 @@ function Experiment() {
 
   const drive = () => {
     console.log("in drive");
-    const timeout = Math.random() * 400 + 1000;
+    const timeout = Math.random() * 2000 + 1500;
     console.log(timeout);
 
     setIsMoving(true);
