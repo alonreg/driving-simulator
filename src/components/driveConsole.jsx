@@ -228,7 +228,7 @@ function DriveConsole({
           />
         </>
       ) : (
-        <StartButton onClick={startOnClick} className="lg" />
+        <StartButton onClick={startOnClick} className="start-button" />
       )}
     </>
   );
