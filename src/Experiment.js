@@ -11,11 +11,14 @@ import * as FirestoreService from "./firebase";
 import Loader from "react-loader-spinner";
 import Obstacle from "./obstacle";
 import Results from "./components/results";
+import TermsDialog from "./components/termsDialog";
+import Instructions from "./components/termsDialog";
 import { BrowserRouter as Router, useParams } from "react-router-dom";
 
 function Experiment() {
   let { id } = useParams();
 
+  const [termsDialogOpen, setTermsDialogOpen] = useState(true);
   const [score, setScore] = useState(0);
   const [obstaclesNum, setObstaclesNum] = useState(0);
   const obstaclesNumRef = useRef(obstaclesNum);
@@ -202,85 +205,109 @@ function Experiment() {
     return () => clearTimeout(driveTimeout);
   };
 
+  const onTermsDialogClose = function () {
+    window.open("about:blank", "_self");
+    window.close();
+  };
+
   // if a session wasn't initialized yet
   if (!sessionId || !parameters || !global) {
     return (
-      <div className="center-spinner">
-        <Loader type="ThreeDots" color="#00BFFF" height={100} width={100} />
-      </div>
+      <>
+        <div className="center-spinner">
+          <Loader type="ThreeDots" color="#00BFFF" height={100} width={100} />
+        </div>
+      </>
     );
   }
 
   return ended ? (
     <Results score={score} obstacles={obstaclesNum} />
   ) : (
-    <div class="flex-container">
-      <ToastContainer limit="2" style={{ fontSize: 30, textAlign: "center" }} />
-      <div className="top-left">
-        <p></p>
-        <Score
-          score={score}
-          scoreBoard={{
-            calculation: parameters.calculation,
-            pass: parameters.pass,
-            fail: parameters.fail,
-            rescue: parameters.rescue,
-            success: parameters.success,
-          }}
-          onChange={scoreAddition}
+    <>
+      <TermsDialog
+        open={termsDialogOpen}
+        onAgree={() => setTermsDialogOpen(false)}
+        onDecline={onTermsDialogClose}
+      />
+      <Instructions
+        open={false}
+        onAgree={() => setTermsDialogOpen(false)}
+        onDecline={onTermsDialogClose}
+      />
+
+      <div class="flex-container">
+        <ToastContainer
+          limit="2"
+          style={{ fontSize: 30, textAlign: "center" }}
         />
+        <div className="top-left">
+          <p></p>
+          <Score
+            score={score}
+            scoreBoard={{
+              calculation: parameters.calculation,
+              pass: parameters.pass,
+              fail: parameters.fail,
+              rescue: parameters.rescue,
+              success: parameters.success,
+            }}
+            onChange={scoreAddition}
+          />
+        </div>
+        <div className="top-right">
+          <TopConsole
+            userAutoMode={autoMode}
+            autoMode={autoMode}
+            onChange={modeChange}
+            isMoving={isMoving}
+            sessionId={sessionId}
+            obstaclesNum={obstaclesNum}
+            started={started}
+          />
+        </div>
+        <div class="bottom-left">
+          <br />
+          <Calculator
+            score={score}
+            onChange={scoreAddition}
+            started={started}
+            scoreBoard={{
+              calculation: parameters.calculation,
+              pass: parameters.pass,
+              fail: parameters.fail,
+              rescue: parameters.rescue,
+              success: parameters.success,
+            }}
+          />
+        </div>
+        <div class="bottom-right bordered">
+          <DriveConsole
+            isMoving={isMoving}
+            autoMode={autoMode}
+            score={score}
+            scoreBoard={{
+              calculation: parameters.calculation,
+              pass: parameters.pass,
+              fail: parameters.fail,
+              rescue: parameters.rescue,
+              success: parameters.success,
+            }}
+            onChange={{
+              scoreAddition: scoreAddition,
+              obstaclesAddition: obstaclesAddition,
+            }}
+            isMoving={isMoving}
+            onArrowClick={drive}
+            isFirstRun={obstaclesNum == 0}
+            currentObstacle={currentObstacle}
+            started={started}
+            startOnClick={start}
+            obstacles={obstaclesNum}
+          />
+        </div>
       </div>
-      <div className="top-right">
-        <TopConsole
-          userAutoMode={autoMode}
-          autoMode={autoMode}
-          onChange={modeChange}
-          isMoving={isMoving}
-          sessionId={sessionId}
-          obstaclesNum={obstaclesNum}
-          started={started}
-        />
-      </div>
-      <div class="bottom-left">
-        <br />
-        <Calculator
-          score={score}
-          onChange={scoreAddition}
-          started={started}
-          scoreBoard={{
-            calculation: parameters.calculation,
-            pass: parameters.pass,
-            fail: parameters.fail,
-            rescue: parameters.rescue,
-            success: parameters.success,
-          }}
-        />
-      </div>
-      <div class="bottom-right bordered">
-        <DriveConsole
-          isMoving={isMoving}
-          autoMode={autoMode}
-          score={score}
-          scoreBoard={{
-            calculation: parameters.calculation,
-            pass: parameters.pass,
-            fail: parameters.fail,
-            rescue: parameters.rescue,
-            success: parameters.success,
-          }}
-          onChange={{
-            scoreAddition: scoreAddition,
-            obstaclesAddition: obstaclesAddition,
-          }}
-          isMoving={isMoving}
-          onArrowClick={drive}
-          isFirstRun={obstaclesNum == 0}
-          currentObstacle={currentObstacle}
-          started={started}
-          startOnClick={start}
-        />
-      </div>
-    </div>
+    </>
   );
 }
 

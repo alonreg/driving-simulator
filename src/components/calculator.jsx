@@ -44,7 +44,7 @@ function Calculator(props) {
   return (
     <>
       <form onSubmit={handleSubmit} id="input">
-        <h1>{problemParameters[0] + " + " + problemParameters[1] + " = "}</h1>
+        <p>{problemParameters[0] + " + " + problemParameters[1] + " = "}</p>
         <input
           className="inputRounded calculator"
           type="text"
@@ -59,7 +59,7 @@ function Calculator(props) {
         {"    "}
         <Button
           variant="primary"
-          size="lg"
+          className="calculator-submit"
           type="submit"
           disabled={!props.started}
         >

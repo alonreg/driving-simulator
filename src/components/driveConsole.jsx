@@ -61,6 +61,16 @@ function RescueButton({ onClick, disabled }) {
   );
 }
 
+function Counter({ number }) {
+  return (
+    <>
+      <div className="counter" draggable={false}>
+        <p className="counter-text">{number}</p>
+      </div>
+    </>
+  );
+}
+
 // A function to create an arrow image, according to a direction
 function Arrow({
   progressBar,
@@ -113,6 +123,7 @@ function DriveConsole({
   started,
   startOnClick,
   scoreBoard,
+  obstacles,
 }) {
   const computerDesicion = () => {
     const direction = currentObstacle?.decision ?? null;
@@ -176,6 +187,7 @@ function DriveConsole({
 
   return (
     <>
+      <Counter number={obstacles} />
       {started ? (
         <>
           <RescueButton

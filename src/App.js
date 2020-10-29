@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Experiment from "./Experiment";
 import Settings from "./Settings";
+import Consent from "./Consent";
 const queryString = require("query-string");
 
 export default function App() {
@@ -11,10 +12,9 @@ export default function App() {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
-          <Route path="/settings">
-            <Settings />
-          </Route>
+          <Route path="/settings" children={<Settings />} />
           <Route path="/:id" children={<Experiment />} />
+          <Route path="/" children={<Consent />} />
         </Switch>
       </div>
     </Router>

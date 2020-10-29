@@ -6,6 +6,12 @@ import "react-toastify/dist/ReactToastify.css";
 import drivingGif from "../assets/endless_road.gif";
 import drivingPaused from "../assets/endless_road.jpg";
 
+import DirectionsCarIcon from "@material-ui/icons/DirectionsCar";
+import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
+
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+
 function TopConsole(props) {
   // const [checked, setChecked] = useState({ status: true });
 
@@ -13,8 +19,8 @@ function TopConsole(props) {
     //console.log(checked["status"]);
   };
 
-  const handleChange = (checked) => props.onChange(checked); //setChecked({ status: checked });
-  const notify = () => toast("Wow so easy !");
+  const handleChange = (event, newAutoMode) =>
+    props.onChange(newAutoMode == "auto"); //setChecked({ status: checked });
 
   return (
     <>
@@ -23,15 +29,15 @@ function TopConsole(props) {
       ) : (
         <img draggable={false} src={drivingPaused} className="driving-gif" />
       )}
-      <h1>
-        {props.isMoving
-          ? "Driving..."
-          : props.started
-          ? "Oops, we hit an obstacle"
-          : "Press Start"}
-      </h1>
-      <p>obstacles: {props.obstaclesNum}</p>
-      <label className="switch">
+      <p>
+        {!props.started
+          ? "Press Start"
+          : !props.isMoving
+          ? "Obstacle Detected"
+          : "Vehicle is moving"}
+      </p>
+
+      {/**<label className="switch">
         <span>Mode</span>
         <br />
         <Switch
@@ -42,8 +48,6 @@ function TopConsole(props) {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                height: "100%",
-                fontSize: 22,
                 color: "white",
                 paddingRight: 2,
               }}
@@ -57,8 +61,6 @@ function TopConsole(props) {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                height: "100%",
-                fontSize: 24,
                 color: "white",
                 paddingRight: 2,
               }}
@@ -66,13 +68,37 @@ function TopConsole(props) {
               Auto
             </div>
           }
-          height={70}
-          width={150}
+          height={20}
+          width={100}
           onColor="#0080FF"
           onChange={handleChange}
           checked={props.userAutoMode}
         />
-      </label>
+        </label>**/}
+      <ToggleButtonGroup
+        value={props.userAutoMode ? "auto" : "manual"}
+        exclusive
+        onChange={handleChange}
+        aria-label="text alignment"
+      >
+        <ToggleButton
+          value="auto"
+          aria-label="auto"
+          disabled={!props.isMoving || !props.started}
+          className="no-outline"
+        >
+          <DirectionsCarIcon />
+          AUTO
+        </ToggleButton>
+        <ToggleButton
+          value="manual"
+          aria-label="manual"
+          disabled={!props.isMoving || !props.started}
+          className="no-outline"
+        >
+          <EmojiPeopleIcon /> MAN
+        </ToggleButton>
+      </ToggleButtonGroup>
     </>
   );
 }

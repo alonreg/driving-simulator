@@ -44,7 +44,7 @@ NEW!
   position: relative;
   background-color: #dac6c66b;
   width: 60vw;
-  height: 57vh;
+  height: 54vh;
   margin: 5px;
   justify-content: right;
   align-items: flex-start;
@@ -64,7 +64,7 @@ NEW!
 .flex-container > div.bottom-left {
   background-color: #6b656579;
   width: 20vw;
-  height: 57vh;
+  height: 54vh;
   margin: 5px;
   justify-content: right;
   align-items: flex-start;
@@ -77,7 +77,7 @@ NEW!
   position: relative;
 
   background-color: #dddddddd;
-  width: 60vw;
+  width: 50vw;
   height: 40vh;
   margin: 5px;
   justify-content: right;
@@ -88,8 +88,9 @@ NEW!
 }
 
 .flex-container > div.top-left {
+  overflow: scroll;
   background-color: #f1f2f5;
-  width: 20vw;
+  width: 30vw;
   height: 40vh;
   margin: 5px;
   justify-content: right;
@@ -129,20 +130,19 @@ NEW!
 }
 
 .score {
-  width: 150px;
-  font-size: large;
-  line-height: 30px;
+  width: 50%;
+  font-size: 400%;
+  line-height: 10%;
   border-radius: 10px;
   border: 3px solid rgb(138, 162, 212);
   background-color: #f8f5f5;
 }
 
-.score-title {
-  font-size: 12px;
-}
-
 .calculator {
-  width: 200px;
+  width: 50%;
+}
+.calculator-submit {
+  width: 50%;
 }
 
 .font-small {
@@ -153,6 +153,7 @@ NEW!
 .score-board {
   font-weight: 500;
   text-align: left;
+  font-size: 100%;
 }
 
 .font-green {
@@ -181,18 +182,58 @@ NEW!
 }
 
 .hazard {
-  display: block;
-  margin-top: 14%;
-  margin-left: auto;
+  position: relative;
+  display: flex;
+  bottom: -30%;
+  margin-left: 50%;
+  transform: translate(-50%, 0);
+  margin-right: auto;
+  width: 13%;
+}
+
+.start-button {
+  position: relative;
+  display: flex;
+  bottom: -30%;
+  margin-left: 50%;
+  transform: translate(-50%, 0);
   margin-right: auto;
   width: 13%;
 }
 
 .rescue {
+  text-align: center;
   margin-top: -1%;
-  margin-right: -91%;
+  margin-right: -81%;
   margin-left: auto;
-  width: 7%;
+  width: 15%;
+  height: 10%;
+}
+
+.counter {
+  position: absolute;
+  background-color: #9c9fa3;
+  width: 5%;
+  height: 12%;
+  border-radius: 15%;
+  top: 0%;
+  left: 0;
+  margin: 0.5%;
+}
+
+.counter-text {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 100%;
+}
+
+.results-page {
+  height: 10em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .arrow-left {
@@ -290,6 +331,11 @@ NEW!
   font-weight: 500;
 }
 
+.no-outline {
+  outline: none;
+  outline-color: blue;
+}
+
 .form-control {
   background-color: #0066ff;
   color: #0066ff;
@@ -330,6 +376,14 @@ NEW!
   font-size: medium;
   background-color: #4b6cfc3d;
   padding: 0.25%;
+}
+
+.terms-dialog-text {
+  white-space: pre-line;
+}
+
+.terms-dialog-button {
+  outline: "none" !important;
 }
 
 /*                      
