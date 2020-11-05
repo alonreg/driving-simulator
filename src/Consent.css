@@ -22,6 +22,7 @@ body {
 .consent-text {
   display: flex;
   flex-direction: column;
+  font-family: "Roboto";
 }
 
 .consent-button {
@@ -37,4 +38,12 @@ body {
 
 .disagree-button {
   padding: 2%;
+}
+
+.instructions-image {
+  display: flex;
+  max-width: 80%;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
 }

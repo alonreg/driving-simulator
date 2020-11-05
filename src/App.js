@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Experiment from "./Experiment";
 import Settings from "./Settings";
-import Consent from "./Consent";
+import InformationPage from "./informationPage";
 const queryString = require("query-string");
 
 export default function App() {
@@ -14,7 +14,7 @@ export default function App() {
         <Switch>
           <Route path="/settings" children={<Settings />} />
           <Route path="/:id" children={<Experiment />} />
-          <Route path="/" children={<Consent />} />
+          <Route path="/" children={<InformationPage />} />
         </Switch>
       </div>
     </Router>

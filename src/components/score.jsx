@@ -8,7 +8,7 @@ import createSpacing from "@material-ui/core/styles/createSpacing";
 
 function Score({ score, scoreBoard, onChange }) {
   const data = [
-    { actionName: "Succesful", score: scoreBoard.success },
+    { actionName: "Successful", score: scoreBoard.success },
     { actionName: "Passing", score: scoreBoard.pass },
     { actionName: "Stuck", score: scoreBoard.fail },
     { actionName: "Rescue", score: scoreBoard.rescue },

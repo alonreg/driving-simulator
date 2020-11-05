@@ -1,0 +1,57 @@
+{
+    "consent": {
+      "1": {
+        "title": "Before we start...",
+        "body": "",
+        "buttonText": "I agree to the terms",
+        "leftButton": "quit",
+        "image": null
+      }
+    },
+    "instructions": {
+      "1": {
+        "title": "Instructions",
+        "body": text1,
+        "buttonText": "next",
+        "leftButton": "back",
+        "image": ""
+      },
+      "2": {
+        "title": "Instructions 2",
+        "body": consentText,
+        "buttonText": "next",
+        "leftButton": "back",
+        "image": ""
+      },
+      "3": {
+        "title": "Instructions 3",
+        "body": consentText,
+        "buttonText": "next",
+        "leftButton": "back",
+        "image": ""
+      }
+    },
+    "questionare": {
+      "1": {
+        "title": "Question 1",
+        "body": consentText,
+        "buttonText": "next",
+        "leftButton": "back",
+        "image": null,
+      },
+      "2": {
+        "title": "Question 2",
+        "body": consentText,
+        "buttonText": "next",
+        "leftButton": "back",
+        "image": null,
+      },
+      "3": {
+        "title": "Question 3",
+        "body": consentText,
+        "buttonText": "begin experiment",
+        "leftButton": "back",
+        "image": null,
+      },
+    },
+  }

@@ -131,6 +131,7 @@ function DriveConsole({
       setTimeout(
         (function (localDirectionDecided) {
           return function () {
+            //inputref.click() instead.
             localDirectionDecided(direction);
           };
         })(directionDecided),

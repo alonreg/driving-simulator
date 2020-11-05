@@ -225,17 +225,6 @@ function Experiment() {
     <Results score={score} obstacles={obstaclesNum} />
   ) : (
     <>
-      <TermsDialog
-        open={termsDialogOpen}
-        onAgree={() => setTermsDialogOpen(false)}
-        onDecline={onTermsDialogClose}
-      />
-      <Instructions
-        open={false}
-        onAgree={() => setTermsDialogOpen(false)}
-        onDecline={onTermsDialogClose}
-      />
-
       <div class="flex-container">
         <ToastContainer
           limit="2"
