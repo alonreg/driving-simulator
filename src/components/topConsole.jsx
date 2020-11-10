@@ -5,12 +5,15 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import drivingGif from "../assets/endless_road.gif";
 import drivingPaused from "../assets/endless_road.jpg";
+import CenterSign from "../components/centerSign.jsx";
 
 import DirectionsCarIcon from "@material-ui/icons/DirectionsCar";
 import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
 
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+
+import "./topConsole.css";
 
 function TopConsole(props) {
   // const [checked, setChecked] = useState({ status: true });
@@ -24,19 +27,6 @@ function TopConsole(props) {
 
   return (
     <>
-      {props.isMoving && props.started ? (
-        <img draggable={false} src={drivingGif} className="driving-gif" />
-      ) : (
-        <img draggable={false} src={drivingPaused} className="driving-gif" />
-      )}
-      <p>
-        {!props.started
-          ? "Press Start"
-          : !props.isMoving
-          ? "Obstacle Detected"
-          : "Vehicle is moving"}
-      </p>
-
       {/**<label className="switch">
         <span>Mode</span>
         <br />
@@ -75,30 +65,63 @@ function TopConsole(props) {
           checked={props.userAutoMode}
         />
         </label>**/}
-      <ToggleButtonGroup
-        value={props.userAutoMode ? "auto" : "manual"}
-        exclusive
-        onChange={handleChange}
-        aria-label="text alignment"
-      >
-        <ToggleButton
-          value="auto"
-          aria-label="auto"
-          disabled={!props.isMoving || !props.started}
-          className="no-outline"
-        >
-          <DirectionsCarIcon />
-          AUTO
-        </ToggleButton>
-        <ToggleButton
-          value="manual"
-          aria-label="manual"
-          disabled={!props.isMoving || !props.started}
-          className="no-outline"
-        >
-          <EmojiPeopleIcon /> MAN
-        </ToggleButton>
-      </ToggleButtonGroup>
+
+      <div className="parent">
+        <div className="div1-topConsole">
+          <CenterSign
+            className="center-sign"
+            isMoving={props.isMoving}
+            started={props.started}
+          />
+        </div>
+        <div className="div2-topConsole">
+          <p className="center-text">
+            {!props.started
+              ? "Press Start"
+              : !props.isMoving
+              ? "Obstacle Detected"
+              : "Vehicle is moving"}
+          </p>
+        </div>
+        <div className="div3-topConsole">
+          <ToggleButtonGroup
+            value={props.userAutoMode ? "auto" : "manual"}
+            exclusive
+            onChange={handleChange}
+            aria-label="text alignment"
+            className="mode-toggle"
+          >
+            <ToggleButton
+              value="auto"
+              aria-label="auto"
+              disabled={!props.isMoving || !props.started}
+              className="mode-toggle"
+            >
+              <DirectionsCarIcon />
+              AUTO
+            </ToggleButton>
+            <ToggleButton
+              value="manual"
+              aria-label="manual"
+              disabled={!props.isMoving || !props.started}
+              className="mode-toggle"
+            >
+              <EmojiPeopleIcon /> MAN
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+        <div className="div4-topConsole">
+          {props.isMoving && props.started ? (
+            <img draggable={false} src={drivingGif} className="driving-gif" />
+          ) : (
+            <img
+              draggable={false}
+              src={drivingPaused}
+              className="driving-gif"
+            />
+          )}
+        </div>
+      </div>
     </>
   );
 }

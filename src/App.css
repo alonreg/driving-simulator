@@ -12,26 +12,11 @@ code {
     monospace;
 }
 
-.div1 {
-  position: absolute;
-  top: 0;
-  bottom: 70%;
-  width: 100%;
-}
-
-.div2 {
-  position: absolute;
-  top: 18%;
-  bottom: 15%;
-  width: 100%;
-}
-
 /*
 NEW!
 */
 .flex-container {
   display: flex;
-  position: absolute;
   top: 0;
   bottom: 0;
   flex-wrap: wrap;
@@ -74,17 +59,10 @@ NEW!
 }
 
 .flex-container > div.top-right {
-  position: relative;
-
   background-color: #dddddddd;
   width: 50vw;
   height: 40vh;
   margin: 5px;
-  justify-content: right;
-  align-items: flex-start;
-  text-align: center;
-  line-height: 50px;
-  font-size: 24px;
 }
 
 .flex-container > div.top-left {
@@ -98,10 +76,6 @@ NEW!
   text-align: center;
   line-height: 50px;
   font-size: 5px;
-}
-
-.top-right {
-  flex-grow: 10;
 }
 
 .top-left {
@@ -169,16 +143,6 @@ NEW!
   margin-left: auto;
   margin-right: auto;
   width: 3%;
-}
-
-.driving-gif {
-  position: absolute;
-  display: block;
-  margin-top: 2%;
-  margin-left: 77%;
-  margin-right: auto;
-  width: 22%;
-  border-radius: 5%;
 }
 
 .hazard {

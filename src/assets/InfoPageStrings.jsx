@@ -18,7 +18,7 @@ export const instructions_title_6 = `Solving math problems`;
 export const instructions_title_7 = `Good Luck!`;
 export const instructions_title_8 = `inst 1`;
 
-export const instructions_body_1 = `There're 2 goals:
+export const instructions_body_1 = `There are 2 goals:
 
 1.	Control an autonomous vehicle – The vehicle will drive on its own, until encountering an obstacle. Try to pass those obstacles successfully.
 
@@ -56,9 +56,9 @@ export const instructions_body_6 = `On the bottom-right you will be able to answ
 export const instructions_body_7 = `On the next screen you’ll need to answer a short questionnaire. After that, you’ll be prompted to the driving screen, in which you’ll need to press the Start button in order to start.`;
 export const instructions_body_8 = ``;
 
-export const questionare_body_1 = `TBD`;
-export const questionare_body_2 = `TBD`;
-export const questionare_body_3 = `TBD`;
+export const questionare_body_1 = `What is your age?`;
+export const questionare_body_2 = `What is your education?`;
+export const questionare_body_3 = `What is your gender?`;
 export const questionare_body_4 = ``;
 export const questionare_body_5 = ``;
 export const questionare_body_6 = ``;

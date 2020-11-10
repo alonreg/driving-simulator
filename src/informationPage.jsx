@@ -9,14 +9,15 @@ import ModeImage from "./assets/instructions/mode.png";
 import RightImage from "./assets/instructions/right.png";
 import ScoreboardImage from "./assets/instructions/scoreboard.png";
 import StartImage from "./assets/instructions/start.png";
+import Poll from "./components/poll.jsx";
 
 const InformationPage = () => {
-  const [page, setPage] = useState(["consent"]);
+  const [page, setPage] = useState(["questionare"]);
   const [pageNumber, setPageNumber] = useState([1]);
-  const [questionare, setQuestionare] = useState({
+  const [pollStatus, setPollStatus] = useState({
     question1: "",
-    question1: "",
-    question1: "",
+    question2: "",
+    question3: "",
   });
 
   const goToPreviousPage = () => {
@@ -110,6 +111,7 @@ const InformationPage = () => {
   
   By clicking the button below, you acknowledge that your participation in the study is voluntary, you are 18 years of age or older, and you are aware that you may choose to terminate your participation in the study at any time and for any reason.`;
 
+  //TODO: CONVERT THIS TO ARRAY!!!!
   const infoData = {
     consent: {
       1: {
@@ -173,25 +175,30 @@ const InformationPage = () => {
     },
     questionare: {
       1: {
-        title: "Question 1",
+        title: "Please answer the following question:",
         body: strings.questionare_body_1,
         buttonText: "next",
         leftButton: "back",
-        image: null,
+        poll: ["18-27", "28-36", "37-50", "51+"],
       },
       2: {
-        title: "Question 2",
+        title: "Please answer the following question:",
         body: strings.questionare_body_2,
         buttonText: "next",
         leftButton: "back",
-        image: null,
+        poll: [
+          "Some high school education",
+          "Full High School eduction",
+          "College degree",
+          "2nd college degree",
+        ],
       },
       3: {
-        title: "Question 3",
+        title: "Please answer the following question:",
         body: strings.questionare_body_3,
         buttonText: "begin experiment",
         leftButton: "back",
-        image: null,
+        poll: ["Male", "Female", "Other", "Prefer not to say"],
       },
     },
   };
@@ -213,8 +220,20 @@ const InformationPage = () => {
             alt="image"
             className="instructions-image"
           ></img>
+        ) : currentPage.poll ? (
+          <Poll
+            questions={currentPage.poll}
+            pollStatus={pollStatus}
+            setCurrentAnswer={(value) =>
+              setPollStatus({
+                question1: value,
+                question2: "",
+                question3: "",
+              })
+            }
+          />
         ) : (
-          <br></br>
+          <p1></p1>
         )}
         <div className="consent-button">
           <div className="agree-button">
