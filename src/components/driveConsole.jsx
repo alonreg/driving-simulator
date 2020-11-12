@@ -10,8 +10,10 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
+import "../components/driveConsole.css";
+import ListGroup from "react-bootstrap/ListGroup";
 
-function CenterSign({ autoModeInit, isMoving, autoMode, started }) {
+function InitiatePixel({ autoModeInit, isMoving, autoMode, started }) {
   useEffect(() => {
     if (autoMode && !isMoving && started) {
       //|| isFirstRun
@@ -22,37 +24,37 @@ function CenterSign({ autoModeInit, isMoving, autoMode, started }) {
   return (
     <>
       {isMoving ? (
-        <img draggable={false} src={go} className="hazard" />
+        <></> //<img draggable={false} src={go} className="hazard" />
       ) : (
-        <img draggable={false} src={hazard} className="hazard" />
+        <></> //<img draggable={false} src={hazard} className="hazard" />
       )}
     </>
   );
 }
 
-function StartButton({ onClick }) {
+function StartButton({ onClick, className }) {
   return (
     <>
       <Button
         onClick={() => onClick()}
         variant="success"
-        className="hazard"
+        className={className}
         size="lg"
       >
-        Start
+        <h1>Start</h1>
       </Button>
     </>
   );
 }
 
 // this currently doesnt get re-render so ill need to use the hazard as a re-render
-function RescueButton({ onClick, disabled }) {
+function RescueButton({ onClick, disabled, className }) {
   return (
     <>
       <Button
         onClick={() => onClick("rescue")}
         variant="danger"
-        className="rescue"
+        className={className}
         disabled={disabled}
       >
         Rescue
@@ -79,36 +81,58 @@ function Arrow({
   direction,
   onClick,
   isMoving,
+  className,
+  divClassName,
+  statsDivClassName,
 }) {
-  const capitalizedDirection = {
-    src: direction.charAt(0).toUpperCase() + direction.slice(1),
-  };
-  const imageName = require(`../assets/arrow-${direction}.png`);
+  //const capitalizedDirection = {
+  // src: direction.charAt(0).toUpperCase() + direction.slice(1),
+  // };
+  // const imageName = require(`../assets/arrow-${direction}.png`);
+
+  const directionDictionary = { left: "<", forward: "^", right: ">" };
   return (
-    <>
-      {!autoMode && !isMoving ? (
-        <h1
-          type="button"
-          className={`arrow-${direction} estimate-${direction}`}
-        >
-          {Math.round((estimate + Number.EPSILON) * 100)}%
-        </h1>
-      ) : null}
-      {!isMoving ? (
-        <ProgressBar
-          className={`arrow-${direction} progress-${direction}`}
-          striped
-          now={progressBar * 100}
-        />
-      ) : null}
-      <input
+    /**className={`arrow-${direction} estimate-${direction}`}
+     * className={`arrow-${direction} progress-${direction}`}
+     */ <>
+      <div className={statsDivClassName}>
+        <ListGroup className="stats-info">
+          {!autoMode && !isMoving && (
+            <ListGroup.Item action variant="info" className="stats-info">
+              <p className="computer-assesment">Computer Assesment:</p>
+              {Math.round((estimate + Number.EPSILON) * 100)}%
+            </ListGroup.Item>
+          )}
+          {!isMoving && (
+            <ListGroup.Item action variant="dark">
+              <ProgressBar
+                striped
+                now={progressBar * 100}
+                className={className}
+              />
+            </ListGroup.Item>
+          )}
+        </ListGroup>
+      </div>
+
+      {/*<input
         disabled={autoMode || isMoving}
         draggable="false"
         type="image"
         src={imageName}
-        className={`arrow-${direction}`}
+        className={className}
         onClick={() => onClick(direction)}
-      />
+      />*/}
+      <div className={divClassName}>
+        <Button
+          onClick={() => onClick(direction)}
+          variant="primary"
+          className={className}
+          disabled={autoMode || isMoving}
+        >
+          <h1>{directionDictionary[direction]}</h1>
+        </Button>
+      </div>
     </>
   );
 }
@@ -188,7 +212,76 @@ function DriveConsole({
 
   return (
     <>
-      <Counter number={obstacles} />
+      <div className="parent-drivingConsole">
+        {started && (
+          <>
+            <InitiatePixel
+              autoModeInit={computerDesicion}
+              isMoving={isMoving}
+              autoMode={autoMode}
+              started={started}
+            />
+            <Arrow
+              key="123"
+              direction="left"
+              onClick={directionDecided}
+              progressBar={
+                currentObstacle?.obstacleValueWithError_human_l ?? 50
+              }
+              estimate={currentObstacle?.obstacleValueWithError_computer_l ?? 0}
+              autoMode={autoMode}
+              isMoving={isMoving}
+              className="arrow"
+              divClassName="div1-drivingConsole"
+              statsDivClassName="div6-drivingConsole"
+            />
+            <Arrow
+              direction="forward"
+              onClick={directionDecided}
+              progressBar={currentObstacle?.obstacleValueWithError_human_f ?? 0}
+              estimate={currentObstacle?.obstacleValueWithError_computer_f ?? 0}
+              autoMode={autoMode}
+              isMoving={isMoving}
+              className="arrow"
+              divClassName="div2-drivingConsole"
+              statsDivClassName="div7-drivingConsole"
+            />
+
+            <Arrow
+              direction="right"
+              onClick={directionDecided}
+              progressBar={currentObstacle?.obstacleValueWithError_human_r ?? 0}
+              estimate={currentObstacle?.obstacleValueWithError_computer_r ?? 0}
+              autoMode={autoMode}
+              isMoving={isMoving}
+              className="arrow"
+              divClassName="div3-drivingConsole"
+              statsDivClassName="div8-drivingConsole"
+            />
+
+            <div className="div4-drivingConsole ">
+              <div className="rescue-container">
+                <RescueButton
+                  onClick={directionDecided}
+                  disabled={isMoving || autoMode}
+                  className="rescue"
+                />
+              </div>
+            </div>
+          </>
+        )}
+
+        {!started && (
+          <div className="div23-drivingConsole">
+            <div className="start-button-container">
+              <StartButton onClick={startOnClick} className="start-button" />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/**<Counter number={obstacles} />
+
       {started ? (
         <>
           <RescueButton
@@ -231,6 +324,7 @@ function DriveConsole({
       ) : (
         <StartButton onClick={startOnClick} className="start-button" />
       )}
+      **/}
     </>
   );
 }

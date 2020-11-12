@@ -62,14 +62,17 @@
   grid-area: 1 / 3 / 3 / 4;
 }
 
+/**
+
+**/
 .driving-gif {
   margin: auto;
-  width: 150px;
+  width: 200px;
   border-radius: 5%;
 }
 .center-sign {
   margin: auto;
-  width: 150px;
+  width: 200px;
 }
 
 .mode-toggle {
