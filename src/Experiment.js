@@ -225,12 +225,12 @@ function Experiment() {
     <Results score={score} obstacles={obstaclesNum} />
   ) : (
     <>
-      <div class="flex-container">
+      <div class="parent-experiment">
         <ToastContainer
           limit="2"
           style={{ fontSize: 30, textAlign: "center" }}
         />
-        <div className="top-left">
+        {/*<div className="top-left">
           <p></p>
           <Score
             score={score}
@@ -243,8 +243,8 @@ function Experiment() {
             }}
             onChange={scoreAddition}
           />
-        </div>
-        <div className="top-right">
+        </div>*/}
+        <div className="div1-experiment">
           <TopConsole
             userAutoMode={autoMode}
             autoMode={autoMode}
@@ -253,24 +253,11 @@ function Experiment() {
             sessionId={sessionId}
             obstaclesNum={obstaclesNum}
             started={started}
-          />
-        </div>
-        <div class="bottom-left">
-          <br />
-          <Calculator
             score={score}
-            onChange={scoreAddition}
-            started={started}
-            scoreBoard={{
-              calculation: parameters.calculation,
-              pass: parameters.pass,
-              fail: parameters.fail,
-              rescue: parameters.rescue,
-              success: parameters.success,
-            }}
           />
         </div>
-        <div class="bottom-right bordered">
+
+        <div class="div3-experiment">
           <DriveConsole
             isMoving={isMoving}
             autoMode={autoMode}
@@ -293,6 +280,21 @@ function Experiment() {
             started={started}
             startOnClick={start}
             obstacles={obstaclesNum}
+          />
+        </div>
+        <div class="div2-experiment">
+          <br />
+          <Calculator
+            score={score}
+            onChange={scoreAddition}
+            started={started}
+            scoreBoard={{
+              calculation: parameters.calculation,
+              pass: parameters.pass,
+              fail: parameters.fail,
+              rescue: parameters.rescue,
+              success: parameters.success,
+            }}
           />
         </div>
       </div>

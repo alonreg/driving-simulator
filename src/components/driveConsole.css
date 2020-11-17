@@ -1,10 +1,11 @@
 .parent-drivingConsole {
   display: grid;
-  grid-template-columns: repeat(3, 1fr) 0.5fr;
+  grid-template-columns: repeat(3, minmax(20px, 1fr)) 0.5fr;
   grid-template-rows: 1fr 2fr;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
   height: 100%;
+  width: 100%;
 }
 
 /** **/
@@ -15,6 +16,7 @@
 .div6-drivingConsole {
   margin: auto;
   grid-area: 1 / 1 / 2 / 2;
+  width: 100%;
 }
 
 /** **/
@@ -24,8 +26,8 @@
 }
 .div7-drivingConsole {
   margin: auto;
-
   grid-area: 1 / 2 / 2 / 3;
+  width: 100%;
 }
 
 /** **/
@@ -36,6 +38,7 @@
 .div8-drivingConsole {
   margin: auto;
   grid-area: 1 / 3 / 2 / 4;
+  width: 100%;
 }
 
 /** **/
@@ -49,7 +52,7 @@
 
 .div23-drivingConsole {
   display: flex;
-  grid-area: 2 / 2 / 3 / 4;
+  grid-area: 1 / 1 / 3 / 5;
 }
 
 /****/
@@ -70,19 +73,17 @@
   width: 100%;
   height: 100%;
 }
-/**
 
-
-  margin: auto;
-**/
 .progress {
-  width: 150px;
+  width: 100%;
   border-radius: 30px;
+  min-height: 40px;
 }
 
 .stats-info {
+  margin: auto;
   padding: 5px;
-  width: 100%;
+  width: 50%;
   text-align: center;
 }
 .computer-assesment {
@@ -98,7 +99,7 @@
 }
 
 .start-button {
-  width: 500px;
+  width: 100%;
   height: 100px;
 }
 
@@ -110,11 +111,28 @@
 .rescue {
   margin-bottom: 65px;
   width: 100%;
-  height: 80%;
+  height: 100%;
 }
 
-@media (max-width: 1000px) {
+.list-group-item {
+  border: salmon;
+  padding: 0%;
+}
+
+@media (max-width: 500px) {
   .progress {
-    width: 80px;
+    width: 120%;
+    min-height: 20px;
+  }
+  .stats-info {
+    margin: auto;
+    padding: 5px;
+    width: 100%;
+    text-align: center;
+  }
+  .arrow {
+    margin: auto;
+    width: 80%;
+    height: 98%;
   }
 }

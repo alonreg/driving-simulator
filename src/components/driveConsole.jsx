@@ -12,6 +12,7 @@ import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import "../components/driveConsole.css";
 import ListGroup from "react-bootstrap/ListGroup";
+import Badge from "react-bootstrap/Badge";
 
 function InitiatePixel({ autoModeInit, isMoving, autoMode, started }) {
   useEffect(() => {
@@ -35,20 +36,15 @@ function InitiatePixel({ autoModeInit, isMoving, autoMode, started }) {
 function StartButton({ onClick, className }) {
   return (
     <>
-      <Button
-        onClick={() => onClick()}
-        variant="success"
-        className={className}
-        size="lg"
-      >
-        <h1>Start</h1>
+      <Button onClick={() => onClick()} variant="success" className={className}>
+        <h1>Press to Start</h1>
       </Button>
     </>
   );
 }
 
 // this currently doesnt get re-render so ill need to use the hazard as a re-render
-function RescueButton({ onClick, disabled, className }) {
+function RescueButton({ onClick, disabled, className, rescueScore }) {
   return (
     <>
       <Button
@@ -57,7 +53,8 @@ function RescueButton({ onClick, disabled, className }) {
         className={className}
         disabled={disabled}
       >
-        Rescue
+        <p>Rescue</p>
+        <Badge variant="dark">{rescueScore}</Badge>
       </Button>
     </>
   );
@@ -84,6 +81,8 @@ function Arrow({
   className,
   divClassName,
   statsDivClassName,
+  successScore,
+  failScore,
 }) {
   //const capitalizedDirection = {
   // src: direction.charAt(0).toUpperCase() + direction.slice(1),
@@ -98,8 +97,8 @@ function Arrow({
       <div className={statsDivClassName}>
         <ListGroup className="stats-info">
           {!autoMode && !isMoving && (
-            <ListGroup.Item action variant="info" className="stats-info">
-              <p className="computer-assesment">Computer Assesment:</p>
+            <ListGroup.Item action variant="primary" className="stats-info">
+              {/*Computer Assesment:&nbsp;*/}
               {Math.round((estimate + Number.EPSILON) * 100)}%
             </ListGroup.Item>
           )}
@@ -131,6 +130,8 @@ function Arrow({
           disabled={autoMode || isMoving}
         >
           <h1>{directionDictionary[direction]}</h1>
+          <Badge variant="danger">{failScore}</Badge>&nbsp;/&nbsp;
+          <Badge variant="success">{successScore}</Badge>
         </Button>
       </div>
     </>
@@ -234,6 +235,8 @@ function DriveConsole({
               className="arrow"
               divClassName="div1-drivingConsole"
               statsDivClassName="div6-drivingConsole"
+              successScore={scoreBoard.success + scoreBoard.pass}
+              failScore={scoreBoard.fail + scoreBoard.pass}
             />
             <Arrow
               direction="forward"
@@ -245,6 +248,8 @@ function DriveConsole({
               className="arrow"
               divClassName="div2-drivingConsole"
               statsDivClassName="div7-drivingConsole"
+              successScore={scoreBoard.success}
+              failScore={scoreBoard.fail}
             />
 
             <Arrow
@@ -257,6 +262,8 @@ function DriveConsole({
               className="arrow"
               divClassName="div3-drivingConsole"
               statsDivClassName="div8-drivingConsole"
+              successScore={scoreBoard.success + scoreBoard.pass}
+              failScore={scoreBoard.fail + scoreBoard.pass}
             />
 
             <div className="div4-drivingConsole ">
@@ -265,6 +272,7 @@ function DriveConsole({
                   onClick={directionDecided}
                   disabled={isMoving || autoMode}
                   className="rescue"
+                  rescueScore={scoreBoard.rescue}
                 />
               </div>
             </div>
