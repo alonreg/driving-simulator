@@ -5,7 +5,6 @@
   grid-column-gap: 0px;
   grid-row-gap: 0px;
   height: 100%;
-  width: 100%;
 }
 
 /** **/
@@ -41,15 +40,16 @@
   width: 100%;
 }
 
-/** **/
+/** rescue button**/
 .div4-drivingConsole {
   display: flex;
-  grid-area: 2 / 4 / 3 / 5;
+  grid-area: 1 / 4 / 3 / 5;
 }
 .div9-drivingConsole {
   grid-area: 1 / 4 / 2 / 5;
 }
 
+/** start button **/
 .div23-drivingConsole {
   display: flex;
   grid-area: 1 / 1 / 3 / 5;
@@ -114,12 +114,40 @@
   height: 100%;
 }
 
+.rescue-text {
+}
+
+.rescue-text-container {
+  margin: auto;
+}
+
 .list-group-item {
   border: salmon;
   padding: 0%;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
+  .parent-drivingConsole {
+    grid-template-columns: repeat(3, minmax(20px, 1fr));
+    grid-template-rows: 2fr 2fr 1fr;
+  }
+
+  /** start button **/
+  .div23-drivingConsole {
+    grid-area: 1 / 1 / 4 / 4;
+  }
+  .div4-drivingConsole {
+    grid-area: 3 / 1 / 4 / 4;
+  }
+  .rescue-container {
+    width: 100%;
+    height: 100%;
+    padding: 1%;
+  }
+  .rescue {
+    margin: auto;
+  }
+
   .progress {
     width: 120%;
     min-height: 20px;

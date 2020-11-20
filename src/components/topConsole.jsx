@@ -65,67 +65,65 @@ function TopConsole(props) {
           checked={props.userAutoMode}
         />
         </label>**/}
-      <div className="safari-div">
-        <div className="parent-topConsole">
-          <div className="div1-topConsole">
-            <CenterSign
-              className="center-sign"
-              isMoving={props.isMoving}
-              started={props.started}
-            />
-          </div>
-          <div className="div2-topConsole">
-            <div className="text-and-score-div">
-              <div className="score-topConsole inputRounded">
-                <p>{props.score}</p>
-              </div>
-              <p className="center-text">
-                {!props.started
-                  ? "Press Start"
-                  : !props.isMoving
-                  ? "Obstacle Detected"
-                  : "Vehicle is moving"}
-              </p>
+      <div className="parent-topConsole">
+        <div className="div1-topConsole">
+          <CenterSign
+            className="center-sign"
+            isMoving={props.isMoving}
+            started={props.started}
+          />
+        </div>
+        <div className="div2-topConsole">
+          <div className="text-and-score-div">
+            <div className="score-topConsole inputRounded">
+              <p>{props.score}</p>
             </div>
+            <p className="center-text">
+              {!props.started
+                ? "Press Start"
+                : !props.isMoving
+                ? "Obstacle Detected"
+                : "Vehicle is moving"}
+            </p>
           </div>
-          <div className="div3-topConsole">
-            <ToggleButtonGroup
-              value={props.userAutoMode ? "auto" : "manual"}
-              exclusive
-              onChange={handleChange}
-              aria-label="text alignment"
+        </div>
+        <div className="div3-topConsole">
+          <ToggleButtonGroup
+            value={props.userAutoMode ? "auto" : "manual"}
+            exclusive
+            onChange={handleChange}
+            aria-label="text alignment"
+            className="mode-toggle"
+          >
+            <ToggleButton
+              value="auto"
+              aria-label="auto"
+              disabled={!props.isMoving || !props.started}
               className="mode-toggle"
             >
-              <ToggleButton
-                value="auto"
-                aria-label="auto"
-                disabled={!props.isMoving || !props.started}
-                className="mode-toggle"
-              >
-                <DirectionsCarIcon />
-                AUTO
-              </ToggleButton>
-              <ToggleButton
-                value="manual"
-                aria-label="manual"
-                disabled={!props.isMoving || !props.started}
-                className="mode-toggle"
-              >
-                <EmojiPeopleIcon /> MAN
-              </ToggleButton>
-            </ToggleButtonGroup>
-          </div>
-          <div className="div4-topConsole">
-            {props.isMoving && props.started ? (
-              <img draggable={false} src={drivingGif} className="driving-gif" />
-            ) : (
-              <img
-                draggable={false}
-                src={drivingPaused}
-                className="driving-gif"
-              />
-            )}
-          </div>
+              <DirectionsCarIcon />
+              AUTO
+            </ToggleButton>
+            <ToggleButton
+              value="manual"
+              aria-label="manual"
+              disabled={!props.isMoving || !props.started}
+              className="mode-toggle"
+            >
+              <EmojiPeopleIcon /> MAN
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+        <div className="div4-topConsole">
+          {props.isMoving && props.started ? (
+            <img draggable={false} src={drivingGif} className="driving-gif" />
+          ) : (
+            <img
+              draggable={false}
+              src={drivingPaused}
+              className="driving-gif"
+            />
+          )}
         </div>
       </div>
     </>

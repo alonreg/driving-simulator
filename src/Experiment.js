@@ -282,6 +282,7 @@ function Experiment() {
             obstacles={obstaclesNum}
           />
         </div>
+
         <div class="div2-experiment">
           <br />
           <Calculator

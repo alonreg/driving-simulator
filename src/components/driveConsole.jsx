@@ -53,8 +53,12 @@ function RescueButton({ onClick, disabled, className, rescueScore }) {
         className={className}
         disabled={disabled}
       >
-        <p>Rescue</p>
-        <Badge variant="dark">{rescueScore}</Badge>
+        <div className="rescue-text-container">
+          <p className="rescue-text">
+            Rescue&nbsp;
+            <Badge variant="dark">{rescueScore}</Badge>
+          </p>
+        </div>
       </Button>
     </>
   );
@@ -130,7 +134,7 @@ function Arrow({
           disabled={autoMode || isMoving}
         >
           <h1>{directionDictionary[direction]}</h1>
-          <Badge variant="danger">{failScore}</Badge>&nbsp;/&nbsp;
+          <Badge variant="danger">{failScore}</Badge>&nbsp;
           <Badge variant="success">{successScore}</Badge>
         </Button>
       </div>
