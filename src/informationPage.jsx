@@ -12,13 +12,119 @@ import StartImage from "./assets/instructions/start.png";
 import Poll from "./components/poll.jsx";
 
 const InformationPage = () => {
+  //data from firestore!!!
+  const consentText = `The study should take about 20 minutes, but you are free to go through it at your own pace. Your participation in this research is voluntary.
+  If you complete the study, you will receive payment for your participation. You have the right to withdraw at any point during the
+  study, for any reason, and without any negative consequences for you. Your responses are completely anonymous, and we do not collect any
+  individually identifiable information about you. Any information about responses published as a result of the study will be reported
+  anonymously. Upon your request, the researchers are obliged to delete any information provided by you during the course of the study.
+  
+  Contact details: 
+  Principle Investigator: Prof. Joachim Meyer, Email: jmeyer@tauex.tau.ac.il.
+  
+  By clicking the button below, you acknowledge that your participation in the study is voluntary, you are 18 years of age or older, and you are aware that you may choose to terminate your participation in the study at any time and for any reason.`;
+  const infoData = [
+    {
+      type: "consent",
+      title: "Before we start...",
+      body: strings.consentBody,
+      buttonText: "I agree",
+      leftButton: "quit",
+      image: null,
+    },
+    {
+      type: "instructions",
+      title: strings.instructions_title_1,
+      body: strings.instructions_body_1,
+      buttonText: "next",
+      leftButton: "back",
+      image: null,
+    },
+    {
+      type: "instructions",
+      title: strings.instructions_title_2,
+      body: strings.instructions_body_2,
+      buttonText: "next",
+      leftButton: "back",
+      image: DrivingConsoleImage,
+    },
+    {
+      type: "instructions",
+      title: strings.instructions_title_3,
+      body: strings.instructions_body_3,
+      buttonText: "next",
+      leftButton: "back",
+      image: RightImage,
+    },
+    {
+      type: "instructions",
+      title: strings.instructions_title_4,
+      body: strings.instructions_body_4,
+      buttonText: "next",
+      leftButton: "back",
+      image: ModeImage,
+    },
+    {
+      type: "instructions",
+      title: strings.instructions_title_5,
+      body: strings.instructions_body_5,
+      buttonText: "next",
+      leftButton: "back",
+      image: ScoreboardImage,
+    },
+    {
+      type: "instructions",
+      title: strings.instructions_title_6,
+      body: strings.instructions_body_6,
+      buttonText: "next",
+      leftButton: "back",
+      image: CalculatorImage,
+    },
+    {
+      type: "instructions",
+      title: strings.instructions_title_7,
+      body: strings.instructions_body_7,
+      buttonText: "next",
+      leftButton: "back",
+      image: null,
+    },
+    {
+      type: "questionare",
+      title: "Please answer the following question:",
+      body: strings.questionare_body_1,
+      buttonText: "next",
+      leftButton: "back",
+      poll: ["18-27", "28-36", "37-50", "51+"],
+    },
+    {
+      type: "questionare",
+      title: "Please answer the following question:",
+      body: strings.questionare_body_2,
+      buttonText: "next",
+      leftButton: "back",
+      poll: [
+        "Some high school education",
+        "Full High School eduction",
+        "College degree",
+        "2nd college degree",
+      ],
+    },
+    {
+      type: "questionare",
+      title: "Please answer the following question:",
+      body: strings.questionare_body_3,
+      buttonText: "begin experiment",
+      leftButton: "back",
+      poll: ["Male", "Female", "Other", "Prefer not to say"],
+    },
+  ];
+  const totalPages = 11; //splice later
+  //data from firestore!!!
+
   const [page, setPage] = useState(["questionare"]);
-  const [pageNumber, setPageNumber] = useState([1]);
-  const [pollStatus, setPollStatus] = useState({
-    question1: "",
-    question2: "",
-    question3: "",
-  });
+  const [pageNumber, setPageNumber] = useState([8]);
+  const [pollState, setPollState] = useState(new Array(3).fill(0));
+  const [currentChecked, setCurrentChecked] = useState("");
 
   const goToPreviousPage = () => {
     const newPageNumber = pageNumber.slice();
@@ -31,11 +137,17 @@ const InformationPage = () => {
 
   const goToNextPage = () => {
     const currentPage = page[page.length - 1];
-    console.log("in go to next in infopage - ");
     console.log(pageNumber);
     console.log(page);
 
-    switch (currentPage) {
+    if (pageNumber[pageNumber.length - 1] + 1 > 10) {
+      history.push("/set-1");
+    }
+
+    setPageNumber([...pageNumber, pageNumber[pageNumber.length - 1] + 1]);
+
+    /**
+     switch (currentPage) {
       case "consent":
         //if this is not the last page of consent
         if (
@@ -82,6 +194,7 @@ const InformationPage = () => {
       default:
         break;
     }
+     */
   };
 
   let history = useHistory();
@@ -93,144 +206,48 @@ const InformationPage = () => {
 
   const handleClick = (direction) => {
     console.log("in handle click in infopage - " + direction);
-    direction == "quit"
-      ? onClose()
-      : direction == "back"
-      ? goToPreviousPage()
-      : goToNextPage();
+    if (direction == "quit") {
+      onClose();
+    } else if (direction == "back") {
+      goToPreviousPage();
+    } else {
+      setCurrentChecked("");
+      goToNextPage();
+    }
   };
 
-  const consentText = `The study should take about 20 minutes, but you are free to go through it at your own pace. Your participation in this research is voluntary.
-  If you complete the study, you will receive payment for your participation. You have the right to withdraw at any point during the
-  study, for any reason, and without any negative consequences for you. Your responses are completely anonymous, and we do not collect any
-  individually identifiable information about you. Any information about responses published as a result of the study will be reported
-  anonymously. Upon your request, the researchers are obliged to delete any information provided by you during the course of the study.
-  
-  Contact details: 
-  Principle Investigator: Prof. Joachim Meyer, Email: jmeyer@tauex.tau.ac.il.
-  
-  By clicking the button below, you acknowledge that your participation in the study is voluntary, you are 18 years of age or older, and you are aware that you may choose to terminate your participation in the study at any time and for any reason.`;
-
-  //TODO: CONVERT THIS TO ARRAY!!!!
-  const infoData = {
-    consent: {
-      1: {
-        title: "Before we start...",
-        body: strings.consentBody,
-        buttonText: "I agree",
-        leftButton: "quit",
-        image: null,
-      },
-    },
-    instructions: {
-      1: {
-        title: strings.instructions_title_1,
-        body: strings.instructions_body_1,
-        buttonText: "next",
-        leftButton: "back",
-        image: null,
-      },
-      2: {
-        title: strings.instructions_title_2,
-        body: strings.instructions_body_2,
-        buttonText: "next",
-        leftButton: "back",
-        image: DrivingConsoleImage,
-      },
-      3: {
-        title: strings.instructions_title_3,
-        body: strings.instructions_body_3,
-        buttonText: "next",
-        leftButton: "back",
-        image: RightImage,
-      },
-      4: {
-        title: strings.instructions_title_4,
-        body: strings.instructions_body_4,
-        buttonText: "next",
-        leftButton: "back",
-        image: ModeImage,
-      },
-      5: {
-        title: strings.instructions_title_5,
-        body: strings.instructions_body_5,
-        buttonText: "next",
-        leftButton: "back",
-        image: ScoreboardImage,
-      },
-      6: {
-        title: strings.instructions_title_6,
-        body: strings.instructions_body_6,
-        buttonText: "next",
-        leftButton: "back",
-        image: CalculatorImage,
-      },
-      7: {
-        title: strings.instructions_title_7,
-        body: strings.instructions_body_7,
-        buttonText: "next",
-        leftButton: "back",
-        image: null,
-      },
-    },
-    questionare: {
-      1: {
-        title: "Please answer the following question:",
-        body: strings.questionare_body_1,
-        buttonText: "next",
-        leftButton: "back",
-        poll: ["18-27", "28-36", "37-50", "51+"],
-      },
-      2: {
-        title: "Please answer the following question:",
-        body: strings.questionare_body_2,
-        buttonText: "next",
-        leftButton: "back",
-        poll: [
-          "Some high school education",
-          "Full High School eduction",
-          "College degree",
-          "2nd college degree",
-        ],
-      },
-      3: {
-        title: "Please answer the following question:",
-        body: strings.questionare_body_3,
-        buttonText: "begin experiment",
-        leftButton: "back",
-        poll: ["Male", "Female", "Other", "Prefer not to say"],
-      },
-    },
-  };
-
-  let currentPage =
-    infoData[page[page.length - 1]][pageNumber[pageNumber.length - 1]];
+  let currentPageData = infoData[pageNumber[pageNumber.length - 1]];
+  console.log(pageNumber[pageNumber.length - 1] + " this is the current page");
   return (
     <>
       <div className="rectangle">
         <div className="consent-text">
-          <h1>{currentPage.title}</h1>
+          <h1>{currentPageData.title}</h1>
         </div>
-        <div className="consent-text">{currentPage.body}</div>
+        <div className="consent-text">{currentPageData.body}</div>
         <br></br>
         <br></br>
-        {currentPage.image ? (
+        {currentPageData.image ? (
           <img
-            src={currentPage.image}
+            src={currentPageData.image}
             alt="image"
             className="instructions-image"
           ></img>
-        ) : currentPage.poll ? (
+        ) : currentPageData.poll ? (
           <Poll
-            questions={currentPage.poll}
-            pollStatus={pollStatus}
-            setCurrentAnswer={(value) =>
-              setPollStatus({
-                question1: value,
-                question2: "",
-                question3: "",
-              })
-            }
+            currentChecked={currentChecked}
+            currentPageData={currentPageData}
+            questions={currentPageData.poll}
+            pollState={pollState}
+            setCurrentAnswer={(value) => {
+              const currentPollState = [...pollState];
+              currentPollState[pageNumber[pageNumber.length - 1] - 8] =
+                value.target.value;
+              setPollState(currentPollState);
+              setCurrentChecked(value.target.value);
+              console.log("current poll state:" + currentPollState);
+              console.log("poll num: " + pageNumber[pageNumber.length - 8]);
+            }}
           />
         ) : (
           <p1></p1>
@@ -240,17 +257,17 @@ const InformationPage = () => {
             <Button
               type="button"
               variant="danger"
-              onClick={() => handleClick(currentPage.leftButton)}
+              onClick={() => handleClick(currentPageData.leftButton)}
             >
-              {currentPage.leftButton}
+              {currentPageData.leftButton}
             </Button>
 
             <Button
               type="button"
               variant="success"
-              onClick={() => handleClick(currentPage.buttonText)}
+              onClick={() => handleClick(currentPageData.buttonText)}
             >
-              {currentPage.buttonText}
+              {currentPageData.buttonText}
             </Button>
           </div>
         </div>
