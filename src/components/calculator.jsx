@@ -53,7 +53,7 @@ function Calculator(props) {
           </div>
           <div className="div2-calc">
             <input
-              className="inputRounded calculator"
+              className="inputRounded calculator-input"
               type="number"
               name="answer"
               onKeyPress={() => false}

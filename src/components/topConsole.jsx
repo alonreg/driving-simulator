@@ -73,6 +73,19 @@ function TopConsole(props) {
             started={props.started}
           />
         </div>
+
+        <div className="div4-topConsole">
+          {props.isMoving && props.started ? (
+            <img draggable={false} src={drivingGif} className="driving-gif" />
+          ) : (
+            <img
+              draggable={false}
+              src={drivingPaused}
+              className="driving-gif"
+            />
+          )}
+        </div>
+
         <div className="div2-topConsole">
           <div className="text-and-score-div">
             <div className="score-topConsole inputRounded">
@@ -80,13 +93,14 @@ function TopConsole(props) {
             </div>
             <p className="center-text">
               {!props.started
-                ? "Press Start"
+                ? "Press Start Below"
                 : !props.isMoving
                 ? "Obstacle Detected"
                 : "Vehicle is moving"}
             </p>
           </div>
         </div>
+
         <div className="div3-topConsole">
           <ToggleButtonGroup
             value={props.userAutoMode ? "auto" : "manual"}
@@ -113,17 +127,6 @@ function TopConsole(props) {
               <EmojiPeopleIcon /> MAN
             </ToggleButton>
           </ToggleButtonGroup>
-        </div>
-        <div className="div4-topConsole">
-          {props.isMoving && props.started ? (
-            <img draggable={false} src={drivingGif} className="driving-gif" />
-          ) : (
-            <img
-              draggable={false}
-              src={drivingPaused}
-              className="driving-gif"
-            />
-          )}
         </div>
       </div>
     </>

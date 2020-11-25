@@ -11,39 +11,51 @@
 .div1-drivingConsole {
   display: flex;
   grid-area: 2 / 1 / 3 / 2;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 .div6-drivingConsole {
   margin: auto;
   grid-area: 1 / 1 / 2 / 2;
   width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 /** **/
 .div2-drivingConsole {
   display: flex;
   grid-area: 2 / 2 / 3 / 3;
+  padding-left: 7px;
+  padding-right: 7px;
 }
 .div7-drivingConsole {
   margin: auto;
   grid-area: 1 / 2 / 2 / 3;
   width: 100%;
+  padding: 13px;
 }
 
 /** **/
 .div3-drivingConsole {
   display: flex;
   grid-area: 2 / 3 / 3 / 4;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 .div8-drivingConsole {
   margin: auto;
   grid-area: 1 / 3 / 2 / 4;
   width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 /** rescue button**/
 .div4-drivingConsole {
   display: flex;
   grid-area: 1 / 4 / 3 / 5;
+  padding: 5px;
 }
 .div9-drivingConsole {
   grid-area: 1 / 4 / 2 / 5;
@@ -126,10 +138,37 @@
   padding: 0%;
 }
 
+.alert-driveConsole {
+  text-align: center;
+  padding: 0%;
+  font-size: large;
+}
+.alert {
+  padding: 3% !important;
+}
+
+.alert-text-driveConsole {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 3px;
+}
+
 @media (max-width: 600px) {
   .parent-drivingConsole {
     grid-template-columns: repeat(3, minmax(20px, 1fr));
-    grid-template-rows: 2fr 2fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+  }
+
+  .div6-drivingConsole {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  .div7-drivingConsole {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  .div8-drivingConsole {
+    padding-left: 5px;
+    padding-right: 5px;
   }
 
   /** start button **/
@@ -146,6 +185,7 @@
   }
   .rescue {
     margin: auto;
+    height: 50%;
   }
 
   .progress {
@@ -160,7 +200,12 @@
   }
   .arrow {
     margin: auto;
-    width: 80%;
-    height: 98%;
+    width: 100%;
+    height: 80%;
+  }
+
+  .alert-driveConsole {
+    margin: auto;
+    font-size: small;
   }
 }

@@ -1,0 +1,17 @@
+.poll-label {
+  width: auto;
+}
+
+.poll-option {
+}
+
+.info-box {
+  padding: 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  min-height: 100vh;
+  background-image: url(../assets/particle-bg.jpg);
+  background-size: 100%;
+}

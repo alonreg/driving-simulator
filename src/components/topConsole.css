@@ -94,11 +94,11 @@
   }
 
   .driving-gif {
-    width: 90%;
+    width: 80%;
   }
 
   .center-sign {
-    width: 90%;
+    width: 80%;
   }
 }
 
@@ -106,13 +106,14 @@
   .parent-topConsole {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 75px 150px 75px;
+    grid-template-rows: 50px 100px 50px;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
     height: 300px;
   }
 
   .div2-topConsole {
+    padding-top: 20px;
     display: flex;
     grid-area: 1 / 1 / 2 / 3;
   }
@@ -135,15 +136,15 @@
   }
 
   .mode-toggle {
-    height: 50px;
+    height: 30px;
     width: 70%;
   }
 
   .driving-gif {
-    width: 70%;
+    width: 50%;
   }
   .center-sign {
-    width: 70%;
+    width: 55%;
     padding: 2px;
   }
 }

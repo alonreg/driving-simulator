@@ -10,6 +10,8 @@ import RightImage from "./assets/instructions/right.png";
 import ScoreboardImage from "./assets/instructions/scoreboard.png";
 import StartImage from "./assets/instructions/start.png";
 import Poll from "./components/poll.jsx";
+import Alert from "react-bootstrap/Alert";
+import infoBg from "./assets/particle-bg.jpg";
 
 const InformationPage = () => {
   //data from firestore!!!
@@ -118,11 +120,14 @@ const InformationPage = () => {
       poll: ["Male", "Female", "Other", "Prefer not to say"],
     },
   ];
+
+  const experimentPath = "set-1";
   const totalPages = 11; //splice later
   //data from firestore!!!
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [page, setPage] = useState(["questionare"]);
-  const [pageNumber, setPageNumber] = useState([8]);
+  const [pageNumber, setPageNumber] = useState([0]);
   const [pollState, setPollState] = useState(new Array(3).fill(0));
   const [currentChecked, setCurrentChecked] = useState("");
 
@@ -141,7 +146,11 @@ const InformationPage = () => {
     console.log(page);
 
     if (pageNumber[pageNumber.length - 1] + 1 > 10) {
-      history.push("/set-1");
+      history.push({
+        pathname: experimentPath,
+        pollData: pollState,
+      });
+      return;
     }
 
     setPageNumber([...pageNumber, pageNumber[pageNumber.length - 1] + 1]);
@@ -211,21 +220,27 @@ const InformationPage = () => {
     } else if (direction == "back") {
       goToPreviousPage();
     } else {
-      setCurrentChecked("");
-      goToNextPage();
+      if (
+        currentChecked == "" &&
+        infoData[pageNumber[pageNumber.length - 1]].type == "questionare"
+      ) {
+        alert("Please choose one of the options");
+      } else {
+        setCurrentChecked("");
+        goToNextPage();
+      }
     }
   };
 
   let currentPageData = infoData[pageNumber[pageNumber.length - 1]];
   console.log(pageNumber[pageNumber.length - 1] + " this is the current page");
   return (
-    <>
-      <div className="rectangle">
-        <div className="consent-text">
-          <h1>{currentPageData.title}</h1>
-        </div>
+    <div className="info-box">
+      <Alert variant="secondary ">
+        <Alert.Heading>{currentPageData.title}</Alert.Heading>
+        <hr />
+
         <div className="consent-text">{currentPageData.body}</div>
-        <br></br>
         <br></br>
         {currentPageData.image ? (
           <img
@@ -271,8 +286,8 @@ const InformationPage = () => {
             </Button>
           </div>
         </div>
-      </div>
-    </>
+      </Alert>
+    </div>
   );
 };
 

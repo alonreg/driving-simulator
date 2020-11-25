@@ -4,6 +4,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+  overflow: hidden;
 }
 
 code {
@@ -17,7 +19,7 @@ code {
   grid-template-rows: minmax(300px, 1fr) minmax(300px, 1fr);
   grid-column-gap: 10px;
   grid-row-gap: 10px;
-  height: 95vh;
+  height: 93vh;
 }
 
 .div1-experiment {
@@ -147,13 +149,20 @@ code {
   outline: "none" !important;
 }
 
+.results-image {
+  margin: auto;
+  display: flex;
+  width: 30%;
+}
+
 /**MOBILE-1000**/
 
 /**MOBILE-500**/
 @media (max-width: 600px) {
   .parent-experiment {
+    display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(300px, 300px) 300px 300px;
+    grid-template-rows: minmax(200px, 200px) 100px 2fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
   }
@@ -161,22 +170,26 @@ code {
   .div1-experiment {
     grid-area: 1 / 1 / 2 / 2;
   }
-  .div3-experiment {
+  .div2-experiment {
     grid-area: 2 / 1 / 3 / 2;
   }
-  .div2-experiment {
+  .div3-experiment {
     grid-area: 3 / 1 / 4 / 2;
   }
 
   /** top console **/
   .div1-experiment {
     /**display: grid;**/
-    height: 300px;
+    height: 200px;
   }
   .div2-experiment {
-    height: 300px;
+    height: 100px;
   }
   .div3-experiment {
-    height: 300px;
+    height: auto;
+  }
+
+  .results-image {
+    width: 80%;
   }
 }

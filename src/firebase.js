@@ -111,33 +111,50 @@ export const setSessionData = ({
   successByComp,
   failByHuman,
   failByComp,
+  rescueCount,
   score,
   scoreBoard,
+  startTime,
+  endTime,
   totalTime,
   timeOnAuto,
   modeChanges,
-}) => {
+  pollData,
+  parameters,
+  global,
+} = {}) => {
   console.log("firebase > setSesstionData > " + session);
+  console.log("firebase > setSesstionData2 > " + pollData);
+
+  const data = {
+    obstacles: {
+      successByHuman: successByHuman ?? "empty",
+      successByComp: successByComp ?? "empty",
+      failByHuman: failByHuman ?? "empty",
+      failByComp: failByComp ?? "empty",
+      rescueCount: rescueCount ?? "empty",
+    },
+    startTime: startTime ?? 0,
+    endTime: endTime ?? 0,
+    totalTime: totalTime ?? 0,
+    score: score ?? 0,
+    totalTime: totalTime ?? 0,
+    timeOnAuto: timeOnAuto ?? 0,
+    modeChanges: modeChanges ?? 0,
+  };
+
+  if (parameters) data["parameters"] = parameters;
+  if (global) data["global"] = global;
+  if (scoreBoard) data["scoreBoard"] = scoreBoard; //deprected?
+  if (startTime) data["startTime"] = startTime;
+  if (pollData) data["pollData"] = pollData;
+  console.log("firebase > setSessionData data: > " + session);
+
   db.collection("sessions")
     .doc(session)
-    .set(
-      {
-        obstacles: {
-          successByHuman: successByHuman ?? 0,
-          successByComp: successByComp ?? 0,
-          failByHuman: failByHuman ?? 0,
-          failByComp: failByComp ?? 0,
-        },
-        score: score ?? 0,
-        totalTime: totalTime ?? 0,
-        timeOnAuto: timeOnAuto ?? 0,
-        modeChanges: modeChanges ?? 0,
-        scoreBoard: scoreBoard ?? "",
-      },
-      { merge: true }
-    )
+    .set(data, { merge: true })
     .then((ref) => {
-      console.log("ref of setSessionData in fIREBASE.JS: " + ref);
+      console.log("ref of setSessionData in fIREBASE.JS: " + ref + session);
     }); //catch error  - .catch()
 };
 

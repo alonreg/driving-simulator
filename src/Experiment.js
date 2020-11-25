@@ -13,9 +13,14 @@ import Obstacle from "./obstacle";
 import Results from "./components/results";
 import TermsDialog from "./components/termsDialog";
 import Instructions from "./components/termsDialog";
-import { BrowserRouter as Router, useParams } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  useParams,
+  useLocation,
+} from "react-router-dom";
 
-function Experiment() {
+function Experiment(props) {
+  const location = useLocation();
   let { id } = useParams();
 
   const [termsDialogOpen, setTermsDialogOpen] = useState(true);
@@ -34,17 +39,45 @@ function Experiment() {
   const [started, setStarted] = useState(false);
   const [ended, setEnded] = useState(false);
   ////////////////////////////////////////// SESSION DATA ////////
-  const [sessionData, setSessionData] = useState({
+  const [successByHuman, setSuccessByHuman] = useState(0);
+  const [successByComp, setSuccessByComp] = useState(0);
+  const [failByHuman, setSailByHuman] = useState(0);
+  const [failByComp, setFailByComp] = useState(0);
+  const [rescueCount, setRescueCount] = useState(0);
+  const [startTime, setStartTime] = useState(Date.now());
+  const [modeChanges, setModeChanges] = useState(0);
+  const addSuccessFailToSessionData = (addTo) => {
+    console.log(addTo + "   in add to ");
+    switch (addTo) {
+      case "successByHuman":
+        setSuccessByHuman(successByHuman + 1);
+        break;
+      case "successByComp":
+        setSuccessByComp(successByComp + 1);
+        break;
+      case "failByHuman":
+        setSailByHuman(failByHuman + 1);
+        break;
+      case "failByComp":
+        setFailByComp(failByComp + 1);
+        break;
+      case "rescue":
+        setRescueCount(rescueCount + 1);
+        break;
+    }
+  };
+
+  /**
+    const [sessionData, setSessionData] = useState({
     session: sessionId,
     successByHuman: 0,
     successByComp: 0,
     failByHuman: 0,
     failByComp: 0,
     startTime: Date.now(), //delta
-    totalTimeInSeconds: 0,
     modeChanges: 0,
-    parameters: "",
   });
+   */
 
   // Use an effect to authenticate and load the grocery list from the database
   useEffect(() => {
@@ -64,7 +97,13 @@ function Experiment() {
         if (sessionId && sessionId == userCredential.user.id) {
         } else if (userCredential.user.uid) {
           setSessionId(userCredential.user.uid);
-          FirestoreService.setSessionData(userCredential.user.uid);
+          FirestoreService.setSessionData({
+            session: userCredential.user.uid,
+            pollData: location.pollData,
+            startTime: startTime,
+            parameters: parameters,
+            global: global,
+          });
         }
       })
       .catch(() => setError("anonymous-auth-failed"));
@@ -88,17 +127,6 @@ function Experiment() {
       );
     }
   }, [obstaclesNum]);
-
-  //ssss
-  function onSessionCreate(sessionId) {
-    setSessionId(sessionId);
-  }
-
-  // ???
-  function onCloseSession() {
-    setSessionId();
-    setSessionData();
-  }
 
   const notifyGood = (message) =>
     toast.success(message, {
@@ -143,10 +171,7 @@ function Experiment() {
   };
 
   const modeChange = (mode) => {
-    setSessionData({
-      ...sessionData,
-      modeChanges: sessionData["modeChanges"] + 1,
-    });
+    setModeChanges(modeChanges + 1);
     setMode(mode);
   };
 
@@ -156,11 +181,20 @@ function Experiment() {
 
   const end = () => {
     FirestoreService.setSessionData({
-      ...sessionData,
       session: sessionId,
       score: score,
       scoreBoard: parameters.scoreBoard,
-      parameters: "enter-set-dynamically",
+      successByHuman: successByHuman,
+      successByComp: successByComp,
+      failByHuman: failByHuman,
+      failByComp: failByComp,
+      rescueCount: rescueCount,
+      startTime: startTime,
+      endTime: Date.now(),
+      totalTime: Date.now() - startTime,
+      timeOnAuto: "tbd",
+      modeChanges: modeChanges,
+      parameters: parameters,
     });
     setEnded(true);
   };
@@ -257,7 +291,21 @@ function Experiment() {
           />
         </div>
 
-        <div class="div3-experiment">
+        <div className="div2-experiment">
+          <Calculator
+            score={score}
+            onChange={scoreAddition}
+            started={started}
+            scoreBoard={{
+              calculation: parameters.calculation,
+              pass: parameters.pass,
+              fail: parameters.fail,
+              rescue: parameters.rescue,
+              success: parameters.success,
+            }}
+          />
+        </div>
+        <div className="div3-experiment">
           <DriveConsole
             isMoving={isMoving}
             autoMode={autoMode}
@@ -272,6 +320,7 @@ function Experiment() {
             onChange={{
               scoreAddition: scoreAddition,
               obstaclesAddition: obstaclesAddition,
+              addSuccessFailToSessionData: addSuccessFailToSessionData,
             }}
             isMoving={isMoving}
             onArrowClick={drive}
@@ -280,22 +329,6 @@ function Experiment() {
             started={started}
             startOnClick={start}
             obstacles={obstaclesNum}
-          />
-        </div>
-
-        <div class="div2-experiment">
-          <br />
-          <Calculator
-            score={score}
-            onChange={scoreAddition}
-            started={started}
-            scoreBoard={{
-              calculation: parameters.calculation,
-              pass: parameters.pass,
-              fail: parameters.fail,
-              rescue: parameters.rescue,
-              success: parameters.success,
-            }}
           />
         </div>
       </div>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Alert from "react-bootstrap/Alert";
+import AutonomousCarImage from "../assets/autonomous-vehicles.png";
 
 function Results({ score, obstacles }) {
   return (
@@ -18,6 +19,11 @@ function Results({ score, obstacles }) {
             By the way, your final score is: {score}.{" "}
             {score > 0 ? "Nice work!" : "What a bumpy ride!"}
           </p>
+          <img
+            src={AutonomousCarImage}
+            alt="image"
+            className="results-image"
+          ></img>
         </Alert>
       </div>
     </>

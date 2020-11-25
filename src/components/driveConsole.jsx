@@ -13,6 +13,7 @@ import Button from "react-bootstrap/Button";
 import "../components/driveConsole.css";
 import ListGroup from "react-bootstrap/ListGroup";
 import Badge from "react-bootstrap/Badge";
+import Alert from "react-bootstrap/Alert";
 
 function InitiatePixel({ autoModeInit, isMoving, autoMode, started }) {
   useEffect(() => {
@@ -99,10 +100,10 @@ function Arrow({
      * className={`arrow-${direction} progress-${direction}`}
      */ <>
       <div className={statsDivClassName}>
-        <ListGroup className="stats-info">
+        {/**<ListGroup className="stats-info">
           {!autoMode && !isMoving && (
             <ListGroup.Item action variant="primary" className="stats-info">
-              {/*Computer Assesment:&nbsp;*/}
+              
               {Math.round((estimate + Number.EPSILON) * 100)}%
             </ListGroup.Item>
           )}
@@ -116,6 +117,31 @@ function Arrow({
             </ListGroup.Item>
           )}
         </ListGroup>
+         */}
+        {!isMoving && (
+          <Alert className="alert-driveConsole" variant="warning">
+            {!autoMode && !isMoving && (
+              <>
+                <p className="alert-text-driveConsole">
+                  <i>AutoAssist: </i>
+                  <br></br>
+                  <b>{Math.round((estimate + Number.EPSILON) * 100)}%</b>
+                </p>
+              </>
+            )}
+
+            {!isMoving && (
+              <>
+                <i>Human: </i>
+                <ProgressBar
+                  striped
+                  now={progressBar * 100}
+                  className={className}
+                />
+              </>
+            )}
+          </Alert>
+        )}
       </div>
 
       {/*<input
@@ -181,22 +207,49 @@ function DriveConsole({
     const rnd = Math.random();
     switch (direction) {
       case "right":
-        rnd >= currentObstacle.real_r
-          ? onChange["scoreAddition"](scoreBoard.success + scoreBoard.pass)
-          : onChange["scoreAddition"](scoreBoard.fail + scoreBoard.pass);
+        if (rnd >= currentObstacle.real_r) {
+          onChange["scoreAddition"](scoreBoard.success + scoreBoard.pass);
+          autoMode
+            ? onChange["addSuccessFailToSessionData"]("successByComp")
+            : onChange["addSuccessFailToSessionData"]("successByHuman");
+        } else {
+          onChange["scoreAddition"](scoreBoard.fail + scoreBoard.pass);
+          autoMode
+            ? onChange["addSuccessFailToSessionData"]("failByComp")
+            : onChange["addSuccessFailToSessionData"]("failByHuman");
+        }
+
         break;
       case "left":
-        rnd >= currentObstacle.real_l
-          ? onChange["scoreAddition"](scoreBoard.success + scoreBoard.pass)
-          : onChange["scoreAddition"](scoreBoard.fail + scoreBoard.pass);
+        if (rnd >= currentObstacle.real_l) {
+          onChange["scoreAddition"](scoreBoard.success + scoreBoard.pass);
+          autoMode
+            ? onChange["addSuccessFailToSessionData"]("successByComp")
+            : onChange["addSuccessFailToSessionData"]("successByHuman");
+        } else {
+          onChange["scoreAddition"](scoreBoard.fail + scoreBoard.pass);
+          autoMode
+            ? onChange["addSuccessFailToSessionData"]("failByComp")
+            : onChange["addSuccessFailToSessionData"]("failByHuman");
+        }
+
         break;
       case "forward":
-        rnd >= currentObstacle.real_f
-          ? onChange["scoreAddition"](scoreBoard.success)
-          : onChange["scoreAddition"](scoreBoard.fail);
+        if (rnd >= currentObstacle.real_f) {
+          onChange["scoreAddition"](scoreBoard.success);
+          autoMode
+            ? onChange["addSuccessFailToSessionData"]("successByComp")
+            : onChange["addSuccessFailToSessionData"]("successByHuman");
+        } else {
+          onChange["scoreAddition"](scoreBoard.fail);
+          autoMode
+            ? onChange["addSuccessFailToSessionData"]("failByComp")
+            : onChange["addSuccessFailToSessionData"]("failByHuman");
+        }
         break;
       case "rescue":
         onChange["scoreAddition"](scoreBoard.rescue);
+        onChange["addSuccessFailToSessionData"]("rescue");
       default:
         break;
     }
