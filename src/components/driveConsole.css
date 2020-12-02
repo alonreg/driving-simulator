@@ -1,7 +1,7 @@
 .parent-drivingConsole {
   display: grid;
-  grid-template-columns: repeat(3, minmax(20px, 1fr)) 0.5fr;
-  grid-template-rows: 1fr 2fr;
+  grid-template-columns: minmax(20px, 1fr) minmax(20px, 1fr) minmax(20px, 1fr) 0.5fr;
+  grid-template-rows: 1fr 1fr;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
   height: 100%;
@@ -33,7 +33,8 @@
   margin: auto;
   grid-area: 1 / 2 / 2 / 3;
   width: 100%;
-  padding: 13px;
+  padding-left: 13px;
+  padding-right: 13px;
 }
 
 /** **/
@@ -71,8 +72,13 @@
 
 .arrow {
   margin: auto;
-  width: 60%;
+  width: 70%;
   height: 60%;
+}
+
+.arrow-text {
+  font-size: 30px;
+  font-weight: 700;
 }
 
 .arrow-container {
@@ -155,7 +161,7 @@
 @media (max-width: 600px) {
   .parent-drivingConsole {
     grid-template-columns: repeat(3, minmax(20px, 1fr));
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 0.5fr;
   }
 
   .div6-drivingConsole {
@@ -180,12 +186,12 @@
   }
   .rescue-container {
     width: 100%;
-    height: 100%;
+    height: 80%;
     padding: 1%;
   }
   .rescue {
     margin: auto;
-    height: 50%;
+    height: 100%;
   }
 
   .progress {

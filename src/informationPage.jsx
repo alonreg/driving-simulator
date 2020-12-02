@@ -14,7 +14,8 @@ import Alert from "react-bootstrap/Alert";
 import infoBg from "./assets/particle-bg.jpg";
 
 const InformationPage = () => {
-  //data from firestore!!!
+  //data from firestore!!!/////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
   const consentText = `The study should take about 20 minutes, but you are free to go through it at your own pace. Your participation in this research is voluntary.
   If you complete the study, you will receive payment for your participation. You have the right to withdraw at any point during the
   study, for any reason, and without any negative consequences for you. Your responses are completely anonymous, and we do not collect any
@@ -123,13 +124,21 @@ const InformationPage = () => {
 
   const experimentPath = "set-1";
   const totalPages = 11; //splice later
-  //data from firestore!!!
-
+  //data from firestore!!!////
+  ////////////////////////////
+  ////////////////////////////
+  ////////////////////////////
+  ////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [page, setPage] = useState(["questionare"]);
   const [pageNumber, setPageNumber] = useState([0]);
   const [pollState, setPollState] = useState(new Array(3).fill(0));
   const [currentChecked, setCurrentChecked] = useState("");
+
+  // This function sets the css body class name
+  useEffect(() => {
+    document.body.className = "body-informationPage";
+  }, []);
 
   const goToPreviousPage = () => {
     const newPageNumber = pageNumber.slice();

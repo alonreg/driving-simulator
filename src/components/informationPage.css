@@ -1,3 +1,7 @@
+.body-informationPage {
+  overflow: scroll;
+}
+
 .poll-label {
   width: auto;
 }

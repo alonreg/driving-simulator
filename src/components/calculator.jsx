@@ -35,9 +35,15 @@ function Calculator(props) {
   } = useCustomForm({
     initialValues,
     onSubmit: (values) => {
-      values.values.answer == problemParameters[0] + problemParameters[1]
-        ? props.onChange(props.scoreBoard.calculation) //change scoring to get properties from db
-        : props.onChange(0);
+      if (values.values.answer == problemParameters[0] + problemParameters[1]) {
+        props.onChange(props.scoreBoard.calculation);
+        props.addToLog("calcSuccess", "human");
+        props.addSuccessFailToSessionData("calcSuccess");
+      } else {
+        props.onChange(0);
+        props.addToLog("calcSuccess", "human");
+        props.addSuccessFailToSessionData("calcFail");
+      }
       setParameters(generateMathProblem());
     },
   });

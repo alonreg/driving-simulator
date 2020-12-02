@@ -22,6 +22,7 @@ code {
   height: 93vh;
 }
 
+/* top console */
 .div1-experiment {
   grid-area: 1 / 1 / 2 / 3;
   background-color: #f1f2f5;
@@ -29,18 +30,16 @@ code {
   background-size: 100%;
 }
 
+/* calc */
 .div2-experiment {
   grid-area: 2 / 1 / 3 / 2;
   background-color: #6b656579;
 }
+
+/* drive console */
 .div3-experiment {
   grid-area: 2 / 2 / 3 / 3;
   background-color: #dac6c66b;
-}
-
-.bordered {
-  border-color: #ee0c0cde;
-  border-width: 5px;
 }
 
 .font-small {
@@ -92,6 +91,13 @@ code {
 
 .results-page {
   padding: 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  min-height: 100vh;
+  background-image: url(./assets/particle-bg.jpg);
+  background-size: 100%;
 }
 
 .no-outline {
@@ -162,19 +168,21 @@ code {
   .parent-experiment {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(200px, 200px) 100px 2fr;
+    grid-template-rows: minmax(200px, 200px) 330px 2fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
   }
-
+  /* top console */
   .div1-experiment {
     grid-area: 1 / 1 / 2 / 2;
   }
+  /* calc */
   .div2-experiment {
-    grid-area: 2 / 1 / 3 / 2;
-  }
-  .div3-experiment {
     grid-area: 3 / 1 / 4 / 2;
+  }
+  /* drive console */
+  .div3-experiment {
+    grid-area: 2 / 1 / 3 / 2;
   }
 
   /** top console **/
@@ -183,10 +191,10 @@ code {
     height: 200px;
   }
   .div2-experiment {
-    height: 100px;
+    height: auto;
   }
   .div3-experiment {
-    height: auto;
+    height: 330px;
   }
 
   .results-image {

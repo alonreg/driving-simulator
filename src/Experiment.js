@@ -44,8 +44,12 @@ function Experiment(props) {
   const [failByHuman, setSailByHuman] = useState(0);
   const [failByComp, setFailByComp] = useState(0);
   const [rescueCount, setRescueCount] = useState(0);
+  const [calcSuccess, setCalcSuccessCount] = useState(0);
+  const [calcFail, setCalcFailCount] = useState(0);
   const [startTime, setStartTime] = useState(Date.now());
   const [modeChanges, setModeChanges] = useState(0);
+  const [log, setLog] = useState([]);
+
   const addSuccessFailToSessionData = (addTo) => {
     console.log(addTo + "   in add to ");
     switch (addTo) {
@@ -63,6 +67,12 @@ function Experiment(props) {
         break;
       case "rescue":
         setRescueCount(rescueCount + 1);
+        break;
+      case "calcSuccess":
+        setCalcSuccessCount(calcSuccess + 1);
+        break;
+      case "calcFail":
+        setCalcFailCount(calcFail + 1);
         break;
     }
   };
@@ -104,9 +114,13 @@ function Experiment(props) {
             parameters: parameters,
             global: global,
           });
+          addToLog("started", "none");
         }
       })
-      .catch(() => setError("anonymous-auth-failed"));
+      .catch(() => {
+        addToLog("error", "anonymous-auth-failed");
+        setError("anonymous-auth-failed");
+      });
   }, []); //sessionId, setSessionId
 
   useEffect(() => {
@@ -171,15 +185,17 @@ function Experiment(props) {
   };
 
   const modeChange = (mode) => {
+    addToLog(`mode-change-${mode}`, "human");
     setModeChanges(modeChanges + 1);
     setMode(mode);
   };
 
   const start = () => {
+    addToLog("pressed-start", "human");
     setStarted(true);
   };
 
-  const end = () => {
+  const end = async () => {
     FirestoreService.setSessionData({
       session: sessionId,
       score: score,
@@ -189,12 +205,38 @@ function Experiment(props) {
       failByHuman: failByHuman,
       failByComp: failByComp,
       rescueCount: rescueCount,
+      calcSuccess: calcSuccess,
+      calcFail: calcFail,
       startTime: startTime,
       endTime: Date.now(),
-      totalTime: Date.now() - startTime,
       timeOnAuto: "tbd",
       modeChanges: modeChanges,
+      parametersSet: id,
       parameters: parameters,
+      log: [
+        ...log,
+        {
+          timestamp: Date.now(),
+          action: "end",
+          host: "empty",
+          currentScore: score ?? "empty",
+          currentObstacle_computerDecision:
+            currentObstacle?.decision ?? "empty",
+          currentObstacle_ev_f: currentObstacle?.ev_f ?? "empty",
+          currentObstacle_ev_r: currentObstacle?.ev_r ?? "empty",
+          currentObstacle_ev_l: currentObstacle?.ev_l ?? "empty",
+          currentObstacle_ev_rescue: currentObstacle?.ev_rescue ?? "empty",
+          autonomousMode: autoMode ?? "empty",
+          successByHuman: successByHuman ?? "empty",
+          successByComp: successByComp ?? "empty",
+          failByHuman: failByHuman ?? "empty",
+          failByComp: failByComp ?? "empty",
+          rescueCount: rescueCount ?? "empty",
+          calcSuccess: calcSuccess ?? "empty",
+          calcFail: calcFail ?? "empty",
+          modeChanges: modeChanges ?? "empty",
+        },
+      ],
     });
     setEnded(true);
   };
@@ -242,6 +284,30 @@ function Experiment(props) {
   const onTermsDialogClose = function () {
     window.open("about:blank", "_self");
     window.close();
+  };
+
+  const addToLog = (action, host) => {
+    const newLog = {
+      timestamp: Date.now(),
+      action: action ?? "empty",
+      host: host ?? "empty",
+      currentScore: score ?? "empty",
+      currentObstacle_computerDecision: currentObstacle?.decision ?? "empty",
+      currentObstacle_ev_f: currentObstacle?.ev_f ?? "empty",
+      currentObstacle_ev_r: currentObstacle?.ev_r ?? "empty",
+      currentObstacle_ev_l: currentObstacle?.ev_l ?? "empty",
+      currentObstacle_ev_rescue: currentObstacle?.ev_rescue ?? "empty",
+      autonomousMode: autoMode ?? "empty",
+      successByHuman: successByHuman ?? "empty",
+      successByComp: successByComp ?? "empty",
+      failByHuman: failByHuman ?? "empty",
+      failByComp: failByComp ?? "empty",
+      rescueCount: rescueCount ?? "empty",
+      calcSuccess: calcSuccess ?? "empty",
+      calcFail: calcFail ?? "empty",
+      modeChanges: modeChanges ?? "empty",
+    };
+    setLog([...log, newLog]);
   };
 
   // if a session wasn't initialized yet
@@ -296,6 +362,8 @@ function Experiment(props) {
             score={score}
             onChange={scoreAddition}
             started={started}
+            addToLog={addToLog}
+            addSuccessFailToSessionData={addSuccessFailToSessionData}
             scoreBoard={{
               calculation: parameters.calculation,
               pass: parameters.pass,
@@ -321,6 +389,7 @@ function Experiment(props) {
               scoreAddition: scoreAddition,
               obstaclesAddition: obstaclesAddition,
               addSuccessFailToSessionData: addSuccessFailToSessionData,
+              addToLog: addToLog,
             }}
             isMoving={isMoving}
             onArrowClick={drive}
@@ -332,6 +401,7 @@ function Experiment(props) {
           />
         </div>
       </div>
+      <p>sessionid for debug: {sessionId}</p>
     </>
   );
 }

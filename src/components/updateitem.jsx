@@ -13,7 +13,7 @@ const UpdateItem = ({ setEditing, currentItem, updateItem }) => {
       setItem({ ...item, [name]: false });
       return;
     }
-    setItem({ ...item, [name]: value });
+    setItem({ ...item, [name]: +value || value });
   };
 
   useEffect(() => {
@@ -25,6 +25,7 @@ const UpdateItem = ({ setEditing, currentItem, updateItem }) => {
     //delete currentItem.name;
     updateItem({ currentItem }, item);
   };
+
   return (
     <>
       <form onSubmit={onSubmit}>
@@ -43,7 +44,7 @@ const UpdateItem = ({ setEditing, currentItem, updateItem }) => {
           <input
             className="input-settings"
             type="number"
-            value={item.computerError}
+            value={+item.computerError}
             onChange={onChange}
             name="computerError"
           />
@@ -53,7 +54,7 @@ const UpdateItem = ({ setEditing, currentItem, updateItem }) => {
           <input
             className="input-settings"
             type="number"
-            value={item.humanError}
+            value={+item.humanError}
             onChange={onChange}
             name="humanError"
           />
@@ -63,7 +64,7 @@ const UpdateItem = ({ setEditing, currentItem, updateItem }) => {
           <input
             className="input-settings"
             type="number"
-            value={item.obstaclesNum}
+            value={+item.obstaclesNum}
             onChange={onChange}
             name="obstaclesNum"
           />
@@ -85,7 +86,7 @@ const UpdateItem = ({ setEditing, currentItem, updateItem }) => {
           <input
             className="input-settings"
             type="number"
-            value={item.calculation}
+            value={+item.calculation}
             onChange={onChange}
             name="calculation"
           />
@@ -96,7 +97,7 @@ const UpdateItem = ({ setEditing, currentItem, updateItem }) => {
           <input
             className="input-settings"
             type="number"
-            value={item.fail}
+            value={+item.fail}
             onChange={onChange}
             name="fail"
           />
@@ -105,7 +106,7 @@ const UpdateItem = ({ setEditing, currentItem, updateItem }) => {
             <input
               className="input-settings"
               type="number"
-              value={item.pass}
+              value={+item.pass}
               onChange={onChange}
               name="pass"
             />
@@ -117,7 +118,7 @@ const UpdateItem = ({ setEditing, currentItem, updateItem }) => {
           <input
             className="input-settings"
             type="number"
-            value={item.rescue}
+            value={+item.rescue}
             onChange={onChange}
             name="rescue"
           />
@@ -128,7 +129,7 @@ const UpdateItem = ({ setEditing, currentItem, updateItem }) => {
           <input
             className="input-settings"
             type="number"
-            value={item.success}
+            value={+item.success}
             onChange={onChange}
             name="success"
           />

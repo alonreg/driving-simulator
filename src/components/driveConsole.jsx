@@ -159,7 +159,8 @@ function Arrow({
           className={className}
           disabled={autoMode || isMoving}
         >
-          <h1>{directionDictionary[direction]}</h1>
+          <span className="arrow-text">{directionDictionary[direction]}</span>
+          <br />
           <Badge variant="danger">{failScore}</Badge>&nbsp;
           <Badge variant="success">{successScore}</Badge>
         </Button>
@@ -209,11 +210,16 @@ function DriveConsole({
       case "right":
         if (rnd >= currentObstacle.real_r) {
           onChange["scoreAddition"](scoreBoard.success + scoreBoard.pass);
+          onChange["addToLog"](
+            "right-success",
+            autoMode ? "computer" : "human"
+          );
           autoMode
             ? onChange["addSuccessFailToSessionData"]("successByComp")
             : onChange["addSuccessFailToSessionData"]("successByHuman");
         } else {
           onChange["scoreAddition"](scoreBoard.fail + scoreBoard.pass);
+          onChange["addToLog"]("right-fail", autoMode ? "computer" : "human");
           autoMode
             ? onChange["addSuccessFailToSessionData"]("failByComp")
             : onChange["addSuccessFailToSessionData"]("failByHuman");
@@ -223,11 +229,13 @@ function DriveConsole({
       case "left":
         if (rnd >= currentObstacle.real_l) {
           onChange["scoreAddition"](scoreBoard.success + scoreBoard.pass);
+          onChange["addToLog"]("left-success", autoMode ? "computer" : "human");
           autoMode
             ? onChange["addSuccessFailToSessionData"]("successByComp")
             : onChange["addSuccessFailToSessionData"]("successByHuman");
         } else {
           onChange["scoreAddition"](scoreBoard.fail + scoreBoard.pass);
+          onChange["addToLog"]("left-fail", autoMode ? "computer" : "human");
           autoMode
             ? onChange["addSuccessFailToSessionData"]("failByComp")
             : onChange["addSuccessFailToSessionData"]("failByHuman");
@@ -237,11 +245,16 @@ function DriveConsole({
       case "forward":
         if (rnd >= currentObstacle.real_f) {
           onChange["scoreAddition"](scoreBoard.success);
+          onChange["addToLog"](
+            "forward-success",
+            autoMode ? "computer" : "human"
+          );
           autoMode
             ? onChange["addSuccessFailToSessionData"]("successByComp")
             : onChange["addSuccessFailToSessionData"]("successByHuman");
         } else {
           onChange["scoreAddition"](scoreBoard.fail);
+          onChange["addToLog"]("forward-fail", autoMode ? "computer" : "human");
           autoMode
             ? onChange["addSuccessFailToSessionData"]("failByComp")
             : onChange["addSuccessFailToSessionData"]("failByHuman");
@@ -249,6 +262,7 @@ function DriveConsole({
         break;
       case "rescue":
         onChange["scoreAddition"](scoreBoard.rescue);
+        onChange["addToLog"]("rescue", autoMode ? "computer" : "human");
         onChange["addSuccessFailToSessionData"]("rescue");
       default:
         break;

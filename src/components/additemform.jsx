@@ -42,15 +42,15 @@ const AddItemForm = () => {
     }
     FirestoreService.setParameters({
       set: name,
-      computerError: computerError,
-      humanError: humanError,
-      obstaclesNum: obstaclesNum,
+      computerError: +computerError,
+      humanError: +humanError,
+      obstaclesNum: +obstaclesNum,
       startWithAuto: startWithAuto == "true" ? true : false,
-      calculation: calculation,
-      fail: fail,
-      pass: pass,
-      rescue: rescue,
-      success: success,
+      calculation: +calculation,
+      fail: +fail,
+      pass: +pass,
+      rescue: +rescue,
+      success: +success,
     })
       //.then will reset the form to nothing
       .then(

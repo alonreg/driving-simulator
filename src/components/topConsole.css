@@ -76,6 +76,7 @@
   background-color: #f8f5f5;
 }
 
+/*  1000px    */
 @media (max-width: 1000px) {
   .parent-topConsole {
     grid-template-columns: 1fr 2fr 1fr;
@@ -102,6 +103,7 @@
   }
 }
 
+/*  600px    */
 @media (max-width: 600px) {
   .parent-topConsole {
     display: grid;
@@ -141,10 +143,21 @@
   }
 
   .driving-gif {
+    width: 30%;
+  }
+  .center-sign {
+    width: 35%;
+    padding: 2px;
+  }
+}
+
+/*  400px    */
+@media (max-width: 400px) {
+  .driving-gif {
     width: 50%;
   }
   .center-sign {
-    width: 55%;
+    width: 43%;
     padding: 2px;
   }
 }

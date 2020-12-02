@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import * as FirestoreService from "./firebase";
 import AddItemForm from "./components/additemform";
 import ItemList from "./components/itemList";
+import ViewLog from "./components/viewLog";
 import UpdateItem from "./components/updateitem";
+import Tabs from "react-bootstrap/Tabs";
+import Tab from "react-bootstrap/Tab";
 import "./settings.css";
 
 function Settings() {
@@ -22,6 +25,11 @@ function Settings() {
   ];
   const [editing, setEditing] = useState(false);
   const [currentItem, setCurrentItem] = useState(initialItemState);
+
+  // This function sets the css body class name
+  useEffect(() => {
+    document.body.className = "body-settings";
+  }, []);
 
   const editItem = (item) => {
     setEditing(true);
@@ -46,25 +54,34 @@ function Settings() {
 
   return (
     <div className="div1">
-      <h1>Settings</h1>
-      <ItemList editItem={editItem} />
+      <Tabs defaultActiveKey="log" id="uncontrolled-tab-example">
+        <Tab eventKey="parameters" title="Parameters">
+          <h1>Edit Parameters</h1>
+          <ItemList editItem={editItem} />
 
-      {editing ? (
-        <>
-          <h2>Edit Item</h2>
+          {editing ? (
+            <>
+              <h2>Edit Parameters Set</h2>
 
-          <UpdateItem
-            setEditing={setEditing}
-            currentItem={currentItem}
-            updateItem={updateItem}
-          />
-        </>
-      ) : (
-        <>
-          <h2>Add Item</h2>
-          <AddItemForm />
-        </>
-      )}
+              <UpdateItem
+                setEditing={setEditing}
+                currentItem={currentItem}
+                updateItem={updateItem}
+              />
+            </>
+          ) : (
+            <>
+              <h2>Add New Parameter Set</h2>
+              <AddItemForm />
+            </>
+          )}
+        </Tab>
+        <Tab eventKey="global" title="Global Parameters"></Tab>
+        <Tab eventKey="log" title="Log">
+          <h1>View Experiment Log</h1>
+          <ViewLog />
+        </Tab>
+      </Tabs>
     </div>
   );
 }

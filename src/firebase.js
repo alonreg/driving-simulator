@@ -32,6 +32,9 @@ export const createSession = (userId) => {
       successByComp: 0,
       failByHuman: 0,
       failByComp: 0,
+      rescueCount: 0,
+      calcSuccess: 0,
+      calcFail: 0,
     },
     score: 0,
     parameterSet: "?",
@@ -47,6 +50,10 @@ export const getParametersData = (parameterSet) => {
 
 export const getAllParametersData = () => {
   return db.collection("parameters");
+};
+
+export const getAllSessions = () => {
+  return db.collection("sessions").orderBy("startTime");
 };
 
 export const getSessionData = (sessionId) => {
@@ -112,6 +119,8 @@ export const setSessionData = ({
   failByHuman,
   failByComp,
   rescueCount,
+  calcSuccess,
+  calcFail,
   score,
   scoreBoard,
   startTime,
@@ -122,17 +131,21 @@ export const setSessionData = ({
   pollData,
   parameters,
   global,
+  log,
+  parametersSet,
 } = {}) => {
   console.log("firebase > setSesstionData > " + session);
   console.log("firebase > setSesstionData2 > " + pollData);
 
   const data = {
     obstacles: {
-      successByHuman: successByHuman ?? "empty",
-      successByComp: successByComp ?? "empty",
-      failByHuman: failByHuman ?? "empty",
-      failByComp: failByComp ?? "empty",
-      rescueCount: rescueCount ?? "empty",
+      successByHuman: successByHuman ?? 0,
+      successByComp: successByComp ?? 0,
+      failByHuman: failByHuman ?? 0,
+      failByComp: failByComp ?? 0,
+      rescueCount: rescueCount ?? 0,
+      calcSuccess: calcSuccess ?? 0,
+      calcFail: calcFail ?? 0,
     },
     startTime: startTime ?? 0,
     endTime: endTime ?? 0,
@@ -141,6 +154,7 @@ export const setSessionData = ({
     totalTime: totalTime ?? 0,
     timeOnAuto: timeOnAuto ?? 0,
     modeChanges: modeChanges ?? 0,
+    log: log ?? "empty",
   };
 
   if (parameters) data["parameters"] = parameters;
@@ -148,7 +162,8 @@ export const setSessionData = ({
   if (scoreBoard) data["scoreBoard"] = scoreBoard; //deprected?
   if (startTime) data["startTime"] = startTime;
   if (pollData) data["pollData"] = pollData;
-  console.log("firebase > setSessionData data: > " + session);
+  if (parametersSet) data["parametersSet"] = parametersSet;
+  console.log("firebase > setSessionData data: > " + parametersSet);
 
   db.collection("sessions")
     .doc(session)
@@ -193,6 +208,9 @@ export const deleteParameters = (set) => {
   db.collection("parameters").doc(set).delete();
 };
 //export const setParameters = {};
+export const deleteSession = (session) => {
+  db.collection("sessions").doc(session).delete();
+};
 
 export const updateParameters = (set, updatedItem) => {
   delete updatedItem.id;
