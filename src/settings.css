@@ -32,3 +32,7 @@ label {
 .success {
   color: rgb(15, 109, 12);
 }
+
+.info-tooltip {
+  color: white;
+}

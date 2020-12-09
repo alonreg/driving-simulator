@@ -185,7 +185,7 @@ function Experiment(props) {
   };
 
   const modeChange = (mode) => {
-    addToLog(`mode-change-${mode}`, "human");
+    mode ? addToLog("switch-auto", "human") : addToLog("switch-man", "human");
     setModeChanges(modeChanges + 1);
     setMode(mode);
   };

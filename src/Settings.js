@@ -54,7 +54,7 @@ function Settings() {
 
   return (
     <div className="div1">
-      <Tabs defaultActiveKey="log" id="uncontrolled-tab-example">
+      <Tabs defaultActiveKey="log" id="uncontrolled-tab">
         <Tab eventKey="parameters" title="Parameters">
           <h1>Edit Parameters</h1>
           <ItemList editItem={editItem} />
@@ -76,7 +76,10 @@ function Settings() {
             </>
           )}
         </Tab>
-        <Tab eventKey="global" title="Global Parameters"></Tab>
+        <Tab eventKey="pretext" title="Pre-Experiment">
+          <h1>Edit Pre-Experiment Text and Images</h1>
+          <AddItemForm />
+        </Tab>
         <Tab eventKey="log" title="Log">
           <h1>View Experiment Log</h1>
           <ViewLog />

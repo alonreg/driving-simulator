@@ -13,8 +13,8 @@ export default function App() {
             renders the first one that matches the current URL. */}
         <Switch>
           <Route path="/settings" children={<Settings />} />
-          <Route path="/:id" children={<Experiment />} />
-          <Route path="/" children={<InformationPage />} />
+          <Route path="/:id/2" children={<Experiment />} />
+          <Route path="/:id/1" children={<InformationPage />} />
         </Switch>
       </div>
     </Router>

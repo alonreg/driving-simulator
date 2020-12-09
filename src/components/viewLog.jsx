@@ -9,8 +9,41 @@ import Tooltip from "react-bootstrap/Tooltip";
 import PopoverContent from "react-bootstrap/PopoverContent";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 
+function InfoTooltip({ text }) {
+  const [show, setShow] = useState(false);
+  const target = useRef(null);
+
+  return (
+    <>
+      <Button variant="light" ref={target} onClick={() => setShow(!show)}>
+        view
+      </Button>
+      <Overlay target={target.current} show={show} placement="bottom">
+        {(props) => (
+          <Tooltip id="overlay" {...props}>
+            <pre className="info-tooltip">{text}</pre>
+          </Tooltip>
+        )}
+      </Overlay>
+    </>
+  );
+}
+
 const renderTooltip = (props, text) => (
-  <Tooltip id="button-tooltip">{text}</Tooltip>
+  <Tooltip id="button-tooltip">aaa</Tooltip>
+
+  /*
+  <Overlay
+  target={pointsTarget.current}
+  show={showPoints}
+  placement="bottom"
+>
+  {(props) => (
+    <Tooltip id="overlay-example" {...props}>
+      {JSON.stringify(item.parameters.calculation)}
+    </Tooltip>
+  )}
+</Overlay>*/
 );
 
 const useItems = () => {
@@ -33,11 +66,6 @@ const useItems = () => {
 };
 
 const ViewLog = ({ editItem }) => {
-  const [show, setShow] = useState(false);
-  const [showPoints, setShowPoints] = useState(false);
-  const target = useRef(null);
-  const pointsTarget = useRef(null);
-
   function getFormattedTime() {
     var today = new Date();
     var y = today.getFullYear();
@@ -87,37 +115,22 @@ const ViewLog = ({ editItem }) => {
           <td>empty</td>
         )}
         <td>
-          <Button
-            variant="light"
-            ref={pointsTarget}
-            onClick={() => setShow(!showPoints)}
-          >
-            view
-          </Button>
-          <Overlay
-            target={pointsTarget.current}
-            show={showPoints}
-            placement="bottom"
-          >
-            {(props) => (
-              <Tooltip id="overlay-example" {...props}>
-                {JSON.stringify(item.parameters.calculation)}
-              </Tooltip>
-            )}
-          </Overlay>
+          <InfoTooltip text={JSON.stringify(item.parameters, null, 2)} />
         </td>
-        {item.log != "empty" ? (
+        {item.log != "empty" && item.log != undefined ? (
           <td>
-            <Button variant="light" ref={target} onClick={() => setShow(!show)}>
-              view
-            </Button>
-            <Overlay target={target.current} show={show} placement="bottom">
-              {(props) => (
-                <Tooltip id="overlay-example" {...props}>
-                  {item.log.map((action) => JSON.stringify(action) + ", ")}
-                </Tooltip>
+            <InfoTooltip
+              text={item.log.map(
+                (action) => JSON.stringify(action.action) + ",\n"
               )}
-            </Overlay>
+            />
+
+            <CSVLink
+              data={item.log}
+              filename={"sim-export-" + getFormattedTime() + ".csv"}
+            >
+              <p>download</p>
+            </CSVLink>
           </td>
         ) : (
           <td>empty</td>
@@ -134,9 +147,17 @@ const ViewLog = ({ editItem }) => {
   };
 
   const itemsFromFirestore = useItems();
+  let itemsForExport = itemsFromFirestore;
+  delete itemsForExport["log"];
+  console.log("alon2" + itemsForExport.log);
+  /*
+  Object.keys(itemsFromFirestore["parameters"]).forEach(
+    (key) => (itemsForExport[key] = itemsFromFirestore["parameters"][key])
+  );*/
+
   const listItems = itemsFromFirestore.map(mapToTable);
   //const csvData =
-  console.log("alon");
+
   console.log(itemsFromFirestore);
   return (
     <>
@@ -177,7 +198,7 @@ const ViewLog = ({ editItem }) => {
       </Table>
 
       <CSVLink
-        data={itemsFromFirestore}
+        data={itemsForExport}
         filename={"sim-export-" + getFormattedTime() + ".csv"}
       >
         <Button variant="outline-primary">Export to CSV</Button>

@@ -1,17 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import "./Consent.css";
 import Button from "react-bootstrap/Button";
 import * as strings from "./assets/InfoPageStrings.jsx";
-import DrivingConsoleImage from "./assets/instructions/arrows.png";
-import CalculatorImage from "./assets/instructions/calculator.png";
-import ModeImage from "./assets/instructions/mode.png";
-import RightImage from "./assets/instructions/right.png";
-import ScoreboardImage from "./assets/instructions/scoreboard.png";
-import StartImage from "./assets/instructions/start.png";
+
 import Poll from "./components/poll.jsx";
 import Alert from "react-bootstrap/Alert";
 import infoBg from "./assets/particle-bg.jpg";
+import autoModeGif from "./assets/instructions/arrows-auto.gif";
+import manModeGif from "./assets/instructions/arrows-man.gif";
+import calcGif from "./assets/instructions/calc.gif";
+import fullscreenGif from "./assets/instructions/fullscreen.gif";
+import rescueGif from "./assets/instructions/rescue.gif";
+import modeSwitchGif from "./assets/instructions/switch-mode.gif";
+import topConsoleGif from "./assets/instructions/top-console.gif";
+import scoreImg from "./assets/instructions/score.png";
+import howToChoose from "./assets/instructions/how-to-choose.png";
+
+function NewlineText(props) {
+  const text = props.text;
+  const newText = text
+    .split("\n")
+    .map((str) => <p className="new-line-text">{str}</p>);
+
+  return newText;
+}
 
 const InformationPage = () => {
   //data from firestore!!!/////////////////////////////////////////////////////
@@ -41,7 +54,7 @@ const InformationPage = () => {
       body: strings.instructions_body_1,
       buttonText: "next",
       leftButton: "back",
-      image: null,
+      image: fullscreenGif,
     },
     {
       type: "instructions",
@@ -49,7 +62,7 @@ const InformationPage = () => {
       body: strings.instructions_body_2,
       buttonText: "next",
       leftButton: "back",
-      image: DrivingConsoleImage,
+      image: manModeGif,
     },
     {
       type: "instructions",
@@ -57,7 +70,7 @@ const InformationPage = () => {
       body: strings.instructions_body_3,
       buttonText: "next",
       leftButton: "back",
-      image: RightImage,
+      image: howToChoose,
     },
     {
       type: "instructions",
@@ -65,7 +78,7 @@ const InformationPage = () => {
       body: strings.instructions_body_4,
       buttonText: "next",
       leftButton: "back",
-      image: ModeImage,
+      image: rescueGif,
     },
     {
       type: "instructions",
@@ -73,7 +86,7 @@ const InformationPage = () => {
       body: strings.instructions_body_5,
       buttonText: "next",
       leftButton: "back",
-      image: ScoreboardImage,
+      image: autoModeGif,
     },
     {
       type: "instructions",
@@ -81,12 +94,36 @@ const InformationPage = () => {
       body: strings.instructions_body_6,
       buttonText: "next",
       leftButton: "back",
-      image: CalculatorImage,
+      image: modeSwitchGif,
     },
     {
       type: "instructions",
       title: strings.instructions_title_7,
       body: strings.instructions_body_7,
+      buttonText: "next",
+      leftButton: "back",
+      image: scoreImg,
+    },
+    {
+      type: "instructions",
+      title: strings.instructions_title_8,
+      body: strings.instructions_body_8,
+      buttonText: "next",
+      leftButton: "back",
+      image: calcGif,
+    },
+    {
+      type: "instructions",
+      title: strings.instructions_title_9,
+      body: strings.instructions_body_9,
+      buttonText: "next",
+      leftButton: "back",
+      image: topConsoleGif,
+    },
+    {
+      type: "instructions",
+      title: strings.instructions_title_10,
+      body: strings.instructions_body_10,
       buttonText: "next",
       leftButton: "back",
       image: null,
@@ -122,8 +159,9 @@ const InformationPage = () => {
     },
   ];
 
-  const experimentPath = "set-1";
-  const totalPages = 11; //splice later
+  let { id } = useParams();
+  const experimentPath = id;
+  const totalPages = 13; //splice later
   //data from firestore!!!////
   ////////////////////////////
   ////////////////////////////
@@ -154,9 +192,9 @@ const InformationPage = () => {
     console.log(pageNumber);
     console.log(page);
 
-    if (pageNumber[pageNumber.length - 1] + 1 > 10) {
+    if (pageNumber[pageNumber.length - 1] + 1 > totalPages) {
       history.push({
-        pathname: experimentPath,
+        pathname: "2",
         pollData: pollState,
       });
       return;
@@ -249,7 +287,7 @@ const InformationPage = () => {
         <Alert.Heading>{currentPageData.title}</Alert.Heading>
         <hr />
 
-        <div className="consent-text">{currentPageData.body}</div>
+        <NewlineText text={currentPageData.body} />
         <br></br>
         {currentPageData.image ? (
           <img
@@ -276,6 +314,7 @@ const InformationPage = () => {
         ) : (
           <p1></p1>
         )}
+        <br></br>
         <div className="consent-button">
           <div className="agree-button">
             <Button

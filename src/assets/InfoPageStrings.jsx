@@ -1,60 +1,47 @@
-export const consentBody = `The study should take about 20 minutes, but you are free to go through it at your own pace. Your participation in this research is voluntary.
-If you complete the study, you will receive payment for your participation. You have the right to withdraw at any point during the
-study, for any reason, and without any negative consequences for you. Your responses are completely anonymous, and we do not collect any
-individually identifiable information about you. Any information about responses published as a result of the study will be reported
-anonymously. Upon your request, the researchers are obliged to delete any information provided by you during the course of the study.
+export const consentBody =
+  "The study should take about 20 minutes, but you are free to go through it at your own pace. Your participation in this research is voluntary. If you complete the study, you will receive payment for your participation. You have the right to withdraw at any point during the study, for any reason, and without any negative consequences for you. Your responses are completely anonymous, and we do not collect any individually identifiable information about you. Any information about responses published as a result of the study will be reported anonymously.\n Upon your request, the researchers are obliged to delete any information provided by you during the course of the study. \n \n Contact details: Principle Investigator: Prof. Joachim Meyer, Email: jmeyer@tauex.tau.ac.il. \n By clicking the button below, you acknowledge that your participation in the study is voluntary, you are 18 years of age or older, and you are aware that you may choose to terminate your participation in the study at any time and for any reason.";
 
-Contact details: 
-Principle Investigator: Prof. Joachim Meyer, Email: jmeyer@tauex.tau.ac.il.
+// put in array
+export const instructions_title_1 = `Introduction`;
+export const instructions_title_2 = `Controlling the vehicle - Manual Mode`;
+export const instructions_title_3 = `How to choose`;
+export const instructions_title_4 = `Call for a rescue`;
+export const instructions_title_5 = `Using the AutoAssist - Auto Mode`;
+export const instructions_title_6 = `Switching modes`;
+export const instructions_title_7 = `Score`;
+export const instructions_title_8 = `Solving math problems`;
+export const instructions_title_9 = `At the top of the screen`;
+export const instructions_title_10 = `Good Luck!`;
 
-By clicking the button below, you acknowledge that your participation in the study is voluntary, you are 18 years of age or older, and you are aware that you may choose to terminate your participation in the study at any time and for any reason.`;
+export const instructions_body_1 =
+  "In this experiment you'll remoteley control an autonomous vehicle. The goal is simple - gain as many points as you can. \n2 ways to gain points:\n\n  \n \u2022 Avoid hitting obstacles - every time the vehicle gets close to an obstacle, you'll be able to decide what direction to take.\n   \u2022 Solve simple math problems - for every correct answer you'll receive points. You won't lose points for wrong answers.";
 
-export const instructions_title_1 = `Instructions`;
-export const instructions_title_2 = `Controlling the vehicle`;
-export const instructions_title_3 = `Choosing your path`;
-export const instructions_title_4 = `Driving modes`;
-export const instructions_title_5 = `Score`;
-export const instructions_title_6 = `Solving math problems`;
-export const instructions_title_7 = `Good Luck!`;
-export const instructions_title_8 = `inst 1`;
+export const instructions_body_2 =
+  "This vehicle is autonomous. However, it may need some human assistance when reaching an obstacle.\nYou can help the vehicle avoid obstacles by choosing the best direction to move.";
 
-export const instructions_body_1 = `There are 2 goals:
+export const instructions_body_3 =
+  "For each direction, the vehicle will provide you 2 outputs to help you decide: \n \u2022 AutoAssist - an AI system, that calculates the chance of hitting an obstacle. For example, 5% means that the vehicle has 5% chance to hit the obstacle, and lose point. \n\u2022 Human - the blue bar will provide you with the camera output. The larger the blue area is - the higher the chance to hit the obstacle, and lose points. \n In this example, the AutoAssist suggests a 5% chance to hit the obstacle when choosing this direction. \nHowever, the human vision (the blue area) suggests almost 50% chance \n Remember - You want to avoid hitting the obstacles. The lower the chance - the better!";
 
-1.	Control an autonomous vehicle – The vehicle will drive on its own, until encountering an obstacle. Try to pass those obstacles successfully.
+export const instructions_body_4 =
+  "If you think you're chances of passing are bad, you can always call for a rescue. You will lose less points than you would have lost if you hit the obstacle!";
 
-2.	Solve simple math problems – as many as possible.
-`;
+export const instructions_body_5 =
+  "You can also let the vehicle AI system, the AutoAssist, decide. In the meanwhile, you can answer math questions instead of controlling the vehicle. \n You can still see the human vision assesment of the obstacle (the blue area), but you can't choose a direction - the AutoAssist will choose for you. ";
 
-export const instructions_body_2 = `This vehicle is autonomous. However, It may need some human assistance when reaching an obstacle. 
-You can assist the vehicle by choosing one of the directions, in which you think the vehicle has a good chance of passing successfully. If you think there’s a low chance of passing successfully, you can instead call for a rescue. 
-A successful pass will gain you points. A failed pass will subtract point. A rescue will also subtract points, but less than a failed pass. Try to collect as many points as you can.
-Here is the driving console:
-`;
+export const instructions_body_6 =
+  "When the vehicle is moving, you can switch between Manual mode and Auto mode (using AutoAssist)";
 
-export const instructions_body_3 = `Each direction has some info displayed above it.
-The percentage number represents what the vehicle’s algorithm suggests is the chance of failing to pass the obstacle. A bigger percentage is tougher to pass, a smaller percentage is easier to pass.
-The bar beneath it, represents how tough the obstacles looks to you, through the vehicle’s cameras. A bigger bar is tougher to pass. A smaller bar is easier to pass.
-The Rescue option calls for a rescue, ensuring you will pass. However, it will subtract you points (but less than failing to pass).
-Here is an example where the vehicle suggests there’s 0% chance to fail when choosing the right direction. However, in your perception, it looks like there’s a somewhat bigger chance to fail (because the bar is about 15% full, meaning there’s about 15% chance to fail in your perception).
-`;
-export const instructions_body_4 = `You can choose between 2 modes – Manual, and Autonomous. 
-Manual will enable you to decide the direction on your own, based on your perception of the obstacle, and the vehicle’s algorithm assessment.
-Autonomous will let the vehicle decide the best course, based on its algorithm solely.
-You can change modes only when the vehicle is driving.
-Here is the mode switch:
-`;
-export const instructions_body_5 = `On the top-left of the screen you’ll be able to see the scoreboard, which will show you your current score. Bellow it you’ll see the scoring details. 
-Here is an example, although your score details might be different.
-Successful – passing the obstacles successfully.
-Passing – whenever you choose to go right or left, your point will be subtracted. Going forward won’t subtract point. (For example, you might go in the left direction, and succeed. You will receive points for your success, but you will lose point for going left. On the contrary, you may choose to go forward, but fail. You will lose points for failing, but you won’t lose points for passing right or left).
-Stuck - failing to pass an obstacle successfully. 
-Rescue – calling for a rescue. This ensures you won’t fail, but you will still lose some points.
-Calculation – when you make a correct calculation.
-Here is an example of a scoreboard.
-`;
-export const instructions_body_6 = `On the bottom-right you will be able to answer simple math problems. Solving correctly will gain you points. Solving incorrectly won’t affect your score.`;
-export const instructions_body_7 = `On the next screen you’ll need to answer a short questionnaire. After that, you’ll be prompted to the driving screen, in which you’ll need to press the Start button in order to start.`;
-export const instructions_body_8 = ``;
+export const instructions_body_7 =
+  "The score for each action you take is mentioned on the action-button itself. \n\u2022 RED - if you fail. \n\u2022 GREEN - if you succeed. \n\u2022 BLACK (on the Rescue button) - if you call a rescue.";
+
+export const instructions_body_8 =
+  "You can also gain points for solving math problems. \nMaking a mistake won't affect your score.";
+
+export const instructions_body_9 =
+  "Here you'll see your score, and information about the vehicle. These images will indicate that the vehicle has encountered an obstacle: \n\u2022 When you see an hazard sign. \n\u2022 When the road image stops moving.";
+
+export const instructions_body_10 =
+  "That's it. On the next screen you’ll need to answer a few questions. When you're done, you'll be prompted to the vehicle screen";
 
 export const questionare_body_1 = `What is your age?`;
 export const questionare_body_2 = `What is your education?`;

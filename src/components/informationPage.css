@@ -1,5 +1,5 @@
 .body-informationPage {
-  overflow: scroll;
+  overflow: visible;
 }
 
 .poll-label {
@@ -10,6 +10,7 @@
 }
 
 .info-box {
+  height: 100vh;
   padding: 10%;
   display: flex;
   flex-direction: column;
@@ -18,4 +19,33 @@
   min-height: 100vh;
   background-image: url(../assets/particle-bg.jpg);
   background-size: 100%;
+}
+
+.instructions-image {
+  display: flex;
+  max-width: 70vw;
+  max-height: 50vh;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.consent-button {
+  display: flex;
+  flex-direction: column;
+}
+
+.agree-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.disagree-button {
+  padding: 2%;
+}
+
+.new-line-text {
+  font-size: large;
+  font-weight: 400;
 }
