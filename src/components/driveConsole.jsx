@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
-import drivingGif from "../assets/endless_road.gif";
-import hazard from "../assets/hazard.png";
-import go from "../assets/go.png";
-import Left from "../assets/arrow-left.png";
-import Forward from "../assets/arrow-forward.png";
-import Right from "../assets/arrow-right.png";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";

@@ -41,7 +41,7 @@ export const instructions_body_9 =
   "Here you'll see your score, and information about the vehicle. These images will indicate that the vehicle has encountered an obstacle: \n\u2022 When you see an hazard sign. \n\u2022 When the road image stops moving.";
 
 export const instructions_body_10 =
-  "That's it. On the next screen you’ll need to answer a few questions. When you're done, you'll be prompted to the vehicle screen";
+  "That's it. On the next screen you’ll need to answer a few questions. When you're done, you'll be prompted to the vehicle screen. \n\n From now on, please don't press the back button on your browser windows.";
 
 export const questionare_body_1 = `What is your age?`;
 export const questionare_body_2 = `What is your education?`;

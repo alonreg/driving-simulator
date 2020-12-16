@@ -8,6 +8,7 @@ import Overlay from "react-bootstrap/Overlay";
 import Tooltip from "react-bootstrap/Tooltip";
 import PopoverContent from "react-bootstrap/PopoverContent";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import downloadIcon from "../assets/download.png";
 
 function InfoTooltip({ text }) {
   const [show, setShow] = useState(false);
@@ -81,10 +82,6 @@ const ViewLog = ({ editItem }) => {
     const start = new Date(item.startTime).toISOString();
     let end = item.endTime;
     if (item.endTime != 0) {
-      console.log(item.endTime);
-      console.log(item.endTime);
-      console.log(item.endTime);
-      console.log(item.endTime);
       end = new Date(item.endTime).toISOString();
     } else {
       console.log(item.endTime);
@@ -118,7 +115,7 @@ const ViewLog = ({ editItem }) => {
           <InfoTooltip text={JSON.stringify(item.parameters, null, 2)} />
         </td>
         {item.log != "empty" && item.log != undefined ? (
-          <td>
+          <td className="table-center">
             <InfoTooltip
               text={item.log.map(
                 (action) => JSON.stringify(action.action) + ",\n"
@@ -127,9 +124,9 @@ const ViewLog = ({ editItem }) => {
 
             <CSVLink
               data={item.log}
-              filename={"sim-export-" + getFormattedTime() + ".csv"}
+              filename={"log-" + item.id + getFormattedTime() + ".csv"}
             >
-              <p>download</p>
+              <img className="download-button" src={downloadIcon} />
             </CSVLink>
           </td>
         ) : (
@@ -147,9 +144,41 @@ const ViewLog = ({ editItem }) => {
   };
 
   const itemsFromFirestore = useItems();
-  let itemsForExport = itemsFromFirestore;
-  delete itemsForExport["log"];
-  console.log("alon2" + itemsForExport.log);
+  const itemsFromFirestoreClone = JSON.parse(
+    JSON.stringify(itemsFromFirestore)
+  );
+  let itemsForExport = [];
+  if (itemsFromFirestore[0]) {
+    itemsForExport = itemsFromFirestoreClone.map((element) => {
+      if (element.log) delete element.log;
+      if (element.parameters) {
+        Object.keys(element.parameters).map((param) => {
+          console.log("param" + element.parameters[param]);
+          element["param_" + param] = element.parameters[param];
+          if (param == "startWithAuto") {
+            element["param_" + param] = element.parameters[param] ? 1 : 0;
+          }
+        });
+        delete element.parameters;
+      }
+      if (element.obstacles) {
+        Object.keys(element.obstacles).map((param) => {
+          console.log("param" + element.obstacles[param]);
+          element["obstaclesSum_" + param] = element.obstacles[param];
+        });
+        delete element.obstacles;
+      }
+      delete element.timeOnAuto;
+      if (element.endTime == 0) {
+        element.totalTime = "undone";
+      } else {
+        element.totalTime = element.endTime - element.startTime;
+      }
+      return element;
+    });
+    console.log("alon2" + itemsForExport[0]["startTime"]);
+    console.log("alon22" + itemsForExport);
+  }
   /*
   Object.keys(itemsFromFirestore["parameters"]).forEach(
     (key) => (itemsForExport[key] = itemsFromFirestore["parameters"][key])
@@ -167,8 +196,8 @@ const ViewLog = ({ editItem }) => {
             {[
               "Id",
               "Params",
-              "Start",
-              "End",
+              "Start (UTC)",
+              "End (UTC)",
               "Tot. Time",
               "Score",
               "Mode Change",
@@ -201,7 +230,12 @@ const ViewLog = ({ editItem }) => {
         data={itemsForExport}
         filename={"sim-export-" + getFormattedTime() + ".csv"}
       >
-        <Button variant="outline-primary">Export to CSV</Button>
+        <Button
+          onClick={() => console.log(itemsForExport)}
+          variant="outline-primary"
+        >
+          Export to CSV
+        </Button>
       </CSVLink>
     </>
   );

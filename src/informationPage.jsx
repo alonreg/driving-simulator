@@ -10,12 +10,13 @@ import infoBg from "./assets/particle-bg.jpg";
 import autoModeGif from "./assets/instructions/arrows-auto.gif";
 import manModeGif from "./assets/instructions/arrows-man.gif";
 import calcGif from "./assets/instructions/calc.gif";
-import fullscreenGif from "./assets/instructions/fullscreen.gif";
+import fullscreenGif from "./assets/instructions/fullscreen-light.gif";
 import rescueGif from "./assets/instructions/rescue.gif";
 import modeSwitchGif from "./assets/instructions/switch-mode.gif";
 import topConsoleGif from "./assets/instructions/top-console.gif";
 import scoreImg from "./assets/instructions/score.png";
 import howToChoose from "./assets/instructions/how-to-choose.png";
+import { Prompt } from "react-router";
 
 function NewlineText(props) {
   const text = props.text;
@@ -159,7 +160,7 @@ const InformationPage = () => {
     },
   ];
 
-  let { id } = useParams();
+  let { id, urlPageNumber } = useParams();
   const experimentPath = id;
   const totalPages = 13; //splice later
   //data from firestore!!!////
@@ -168,96 +169,49 @@ const InformationPage = () => {
   ////////////////////////////
   ////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  const [page, setPage] = useState(["questionare"]);
-  const [pageNumber, setPageNumber] = useState([0]);
+  const [pageNumber, setPageNumber] = useState(urlPageNumber);
   const [pollState, setPollState] = useState(new Array(3).fill(0));
-  const [currentChecked, setCurrentChecked] = useState("");
+  const [image, setImage] = useState(true);
 
   // This function sets the css body class name
   useEffect(() => {
     document.body.className = "body-informationPage";
+    let imageList = [];
+    infoData.forEach(
+      (element) => element.image && imageList.push(element.image)
+    );
+    imageList.forEach((image) => {
+      new Image().src = image;
+    });
+    console.log(imageList);
+    // preload images:
   }, []);
 
   const goToPreviousPage = () => {
-    const newPageNumber = pageNumber.slice();
-    newPageNumber.pop();
-    const newPage = page.slice();
-    newPage.pop();
-    setPageNumber(newPageNumber);
-    setPage(newPage);
+    setPageNumber(+pageNumber - 1);
+    history.push(`/${id}/1/page-${+pageNumber - 1}`);
   };
 
   const goToNextPage = () => {
-    const currentPage = page[page.length - 1];
     console.log(pageNumber);
-    console.log(page);
 
-    if (pageNumber[pageNumber.length - 1] + 1 > totalPages) {
+    if (+pageNumber > totalPages) {
       history.push({
-        pathname: "2",
+        pathname: `/${id}/2`, // the path to the driving simulator
         pollData: pollState,
       });
       return;
     }
-
-    setPageNumber([...pageNumber, pageNumber[pageNumber.length - 1] + 1]);
-
-    /**
-     switch (currentPage) {
-      case "consent":
-        //if this is not the last page of consent
-        if (
-          typeof infoData.consent[pageNumber[pageNumber.length - 1] + 1] !==
-          "undefined"
-        ) {
-          setPageNumber([...pageNumber, pageNumber[pageNumber.length - 1] + 1]);
-          setPage([...page, "consent"]);
-          console.log("111");
-          break;
-        } else {
-          setPageNumber([...pageNumber, 1]);
-          console.log("222");
-          setPage([...page, "instructions"]);
-          break;
-        }
-      case "instructions":
-        if (
-          typeof infoData.instructions[
-            pageNumber[pageNumber.length - 1] + 1
-          ] !== "undefined"
-        ) {
-          setPageNumber([...pageNumber, pageNumber[pageNumber.length - 1] + 1]);
-          setPage([...page, "instructions"]);
-          break;
-        } else {
-          setPageNumber([...pageNumber, 1]);
-          setPage([...page, "questionare"]);
-          break;
-        }
-      case "questionare":
-        if (
-          typeof infoData.questionare[pageNumber[pageNumber.length - 1] + 1] !==
-          "undefined"
-        ) {
-          setPageNumber([...pageNumber, pageNumber[pageNumber.length - 1] + 1]);
-          setPage([...page, "questionare"]);
-
-          break;
-        } else {
-          history.push("/set-1");
-          break;
-        }
-      default:
-        break;
-    }
-     */
+    setPageNumber(+pageNumber + 1);
+    history.push(`/${id}/1/page-${+pageNumber + 1}`);
   };
 
   let history = useHistory();
 
   const onClose = function () {
-    window.open("about:blank", "_self");
-    window.close();
+    history.push("/set-1/0");
+    //window.open("about:blank", "_self");
+    // window.close();
   };
 
   const handleClick = (direction) => {
@@ -268,45 +222,47 @@ const InformationPage = () => {
       goToPreviousPage();
     } else {
       if (
-        currentChecked == "" &&
-        infoData[pageNumber[pageNumber.length - 1]].type == "questionare"
+        pollState[+pageNumber - 9] == 0 &&
+        infoData[+pageNumber - 1].type == "questionare"
       ) {
         alert("Please choose one of the options");
       } else {
-        setCurrentChecked("");
         goToNextPage();
       }
     }
   };
 
-  let currentPageData = infoData[pageNumber[pageNumber.length - 1]];
-  console.log(pageNumber[pageNumber.length - 1] + " this is the current page");
+  let currentPageData = infoData[+pageNumber - 1];
+
+  console.log(+pageNumber - 1 + " this is the current page");
   return (
     <div className="info-box">
+      {/**<Prompt
+        when={pageNumber == [0]}
+        message="Are you sure you want to leave?"
+      />**/}
       <Alert variant="secondary ">
-        <Alert.Heading>{currentPageData.title}</Alert.Heading>
+        <Alert.Heading>
+          {currentPageData.title} and {urlPageNumber} and {+pageNumber - 1}
+        </Alert.Heading>
         <hr />
 
         <NewlineText text={currentPageData.body} />
         <br></br>
         {currentPageData.image ? (
-          <img
-            src={currentPageData.image}
-            alt="image"
-            className="instructions-image"
-          ></img>
+          <>
+            <img src={currentPageData.image} className="instructions-image" />
+          </>
         ) : currentPageData.poll ? (
           <Poll
-            currentChecked={currentChecked}
+            currentChecked={pollState[+pageNumber - 12]}
             currentPageData={currentPageData}
             questions={currentPageData.poll}
             pollState={pollState}
             setCurrentAnswer={(value) => {
               const currentPollState = [...pollState];
-              currentPollState[pageNumber[pageNumber.length - 1] - 8] =
-                value.target.value;
+              currentPollState[+pageNumber - 12] = value.target.value;
               setPollState(currentPollState);
-              setCurrentChecked(value.target.value);
               console.log("current poll state:" + currentPollState);
               console.log("poll num: " + pageNumber[pageNumber.length - 8]);
             }}

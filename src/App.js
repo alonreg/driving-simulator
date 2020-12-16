@@ -14,7 +14,10 @@ export default function App() {
         <Switch>
           <Route path="/settings" children={<Settings />} />
           <Route path="/:id/2" children={<Experiment />} />
-          <Route path="/:id/1" children={<InformationPage />} />
+          <Route
+            path="/:id/1/page-:urlPageNumber"
+            children={<InformationPage />}
+          />
         </Switch>
       </div>
     </Router>

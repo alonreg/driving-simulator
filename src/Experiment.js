@@ -218,7 +218,7 @@ function Experiment(props) {
         {
           timestamp: Date.now(),
           action: "end",
-          host: "empty",
+          host: "none",
           currentScore: score ?? "empty",
           currentObstacle_computerDecision:
             currentObstacle?.decision ?? "empty",
@@ -226,6 +226,21 @@ function Experiment(props) {
           currentObstacle_ev_r: currentObstacle?.ev_r ?? "empty",
           currentObstacle_ev_l: currentObstacle?.ev_l ?? "empty",
           currentObstacle_ev_rescue: currentObstacle?.ev_rescue ?? "empty",
+          currentObstacle_computer_f:
+            currentObstacle?.obstacleValueWithError_computer_f ?? "empty",
+          currentObstacle_computer_r:
+            currentObstacle?.obstacleValueWithError_computer_r ?? "empty",
+          currentObstacle_computer_l:
+            currentObstacle?.obstacleValueWithError_computer_l ?? "empty",
+          currentObstacle_human_f:
+            currentObstacle?.obstacleValueWithError_human_f ?? "empty",
+          currentObstacle_human_r:
+            currentObstacle?.obstacleValueWithError_human_r ?? "empty",
+          currentObstacle_human_l:
+            currentObstacle?.obstacleValueWithError_human_l ?? "empty",
+          currentObstacle_real_f: currentObstacle?.real_f ?? "empty",
+          currentObstacle_real_r: currentObstacle?.real_r ?? "empty",
+          currentObstacle_real_l: currentObstacle?.real_l ?? "empty",
           autonomousMode: autoMode ?? "empty",
           successByHuman: successByHuman ?? "empty",
           successByComp: successByComp ?? "empty",
@@ -297,6 +312,21 @@ function Experiment(props) {
       currentObstacle_ev_r: currentObstacle?.ev_r ?? "empty",
       currentObstacle_ev_l: currentObstacle?.ev_l ?? "empty",
       currentObstacle_ev_rescue: currentObstacle?.ev_rescue ?? "empty",
+      currentObstacle_computer_f:
+        currentObstacle?.obstacleValueWithError_computer_f ?? "empty",
+      currentObstacle_computer_r:
+        currentObstacle?.obstacleValueWithError_computer_r ?? "empty",
+      currentObstacle_computer_l:
+        currentObstacle?.obstacleValueWithError_computer_l ?? "empty",
+      currentObstacle_human_f:
+        currentObstacle?.obstacleValueWithError_human_f ?? "empty",
+      currentObstacle_human_r:
+        currentObstacle?.obstacleValueWithError_human_r ?? "empty",
+      currentObstacle_human_l:
+        currentObstacle?.obstacleValueWithError_human_l ?? "empty",
+      currentObstacle_real_f: currentObstacle?.real_f ?? "empty",
+      currentObstacle_real_r: currentObstacle?.real_r ?? "empty",
+      currentObstacle_real_l: currentObstacle?.real_l ?? "empty",
       autonomousMode: autoMode ?? "empty",
       successByHuman: successByHuman ?? "empty",
       successByComp: successByComp ?? "empty",

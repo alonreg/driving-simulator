@@ -36,3 +36,12 @@ label {
 .info-tooltip {
   color: white;
 }
+
+.download-button {
+  width: 20px;
+}
+
+.table-center {
+  text-align: center;
+  vertical-align: middle;
+}
