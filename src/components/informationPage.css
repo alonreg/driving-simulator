@@ -49,3 +49,7 @@
   font-size: large;
   font-weight: 400;
 }
+
+.hide-image-for-preload {
+  display: none;
+}

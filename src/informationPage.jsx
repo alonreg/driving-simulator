@@ -187,6 +187,10 @@ const InformationPage = () => {
     // preload images:
   }, []);
 
+  useEffect(() => {
+    setPageNumber(urlPageNumber);
+  }, [urlPageNumber]);
+
   const goToPreviousPage = () => {
     setPageNumber(+pageNumber - 1);
     history.push(`/${id}/1/page-${+pageNumber - 1}`);
@@ -222,7 +226,7 @@ const InformationPage = () => {
       goToPreviousPage();
     } else {
       if (
-        pollState[+pageNumber - 9] == 0 &&
+        pollState[+pageNumber - totalPages + 1] == 0 &&
         infoData[+pageNumber - 1].type == "questionare"
       ) {
         alert("Please choose one of the options");
@@ -242,13 +246,18 @@ const InformationPage = () => {
         message="Are you sure you want to leave?"
       />**/}
       <Alert variant="secondary ">
-        <Alert.Heading>
-          {currentPageData.title} and {urlPageNumber} and {+pageNumber - 1}
-        </Alert.Heading>
+        <Alert.Heading>{currentPageData.title}</Alert.Heading>
         <hr />
 
         <NewlineText text={currentPageData.body} />
         <br></br>
+        {infoData[+pageNumber - 1 + 1] &&
+          infoData[+pageNumber - 1 + 1].image && (
+            <img
+              src={infoData[+pageNumber - 1 + 1].image}
+              className="hide-image-for-preload"
+            />
+          )}
         {currentPageData.image ? (
           <>
             <img src={currentPageData.image} className="instructions-image" />
