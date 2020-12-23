@@ -56,7 +56,7 @@ function Settings() {
     <div className="div1">
       <Tabs defaultActiveKey="log" id="uncontrolled-tab">
         <Tab eventKey="parameters" title="Parameters">
-          <h1>Edit Parameters</h1>
+          <h1>Edit Parameters - (IN {process.env.REACT_APP_AUTH_DOMAIN})</h1>
           <ItemList editItem={editItem} />
 
           {editing ? (

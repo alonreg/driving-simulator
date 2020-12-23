@@ -13,6 +13,7 @@ import Obstacle from "./obstacle";
 import Results from "./components/results";
 import TermsDialog from "./components/termsDialog";
 import Instructions from "./components/termsDialog";
+
 import {
   BrowserRouter as Router,
   useParams,

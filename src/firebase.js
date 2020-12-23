@@ -3,16 +3,24 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 
+//let firebaseConfig = require("./env.json");
+
 const firebaseConfig = {
-  apiKey: "AIzaSyCB5wrgUcWJgSm0wpAUmsTPNPK57SJ0nCs",
-  authDomain: "driving-simulator-tau.firebaseapp.com",
-  databaseURL: "https://driving-simulator-tau.firebaseio.com",
-  projectId: "driving-simulator-tau",
-  storageBucket: "driving-simulator-tau.appspot.com",
-  messagingSenderId: "860406815816",
-  appId: "1:860406815816:web:7fd648668de95525834c7d",
-  measurementId: "G-6Z7JZMHK27",
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
+  measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 };
+
+/**
+if (Object.keys(functions.config()).length){
+  firebaseConfig = functions.config().
+}
+ */
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 

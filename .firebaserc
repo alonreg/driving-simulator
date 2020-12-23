@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "driving-simulator-tau"
+    "test": "driving-simulator-tau-test",
+    "prod": "driving-simulator-tau",
+    "default": "driving-simulator-tau-test"
   }
 }
