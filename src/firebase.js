@@ -31,10 +31,19 @@ export const authenticateAnonymously = () => {
   return firebase.auth().signInAnonymously();
 };
 
-export const createSession = (userId) => {
-  return db.collection("sessions").add({
-    created: firebase.firestore.FieldValue.serverTimestamp(),
-    userId: userId,
+export const getInfoData = () => {
+  return db.collection("preExperiment"); //.orderBy("startTime");
+};
+
+export const createSession = ({
+  session,
+  startTime,
+  parameters,
+  global,
+  parametersSet,
+  pollData,
+} = {}) => {
+  const data = {
     obstacles: {
       successByHuman: 0,
       successByComp: 0,
@@ -44,12 +53,30 @@ export const createSession = (userId) => {
       calcSuccess: 0,
       calcFail: 0,
     },
+    startTime: startTime,
+    endTime: 0,
+    totalTime: 0,
     score: 0,
-    parameterSet: "?",
     totalTime: 0,
     timeOnAuto: 0,
     modeChanges: 0,
-  });
+    log: "empty",
+    serverTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    screenWidth: window.innerWidth,
+    screenHeight: window.innerHeight,
+    parametersSet: parametersSet,
+    parameters: parameters,
+    global: global,
+    pollData: pollData ?? [],
+  };
+
+  db.collection("sessions")
+    .doc(session) // sessionID
+    .set({ [startTime]: data }, { merge: true })
+    .then((ref) => {
+      console.log("ref of create session in FIREBASE.JS: " + ref + session);
+      return "sessions";
+    });
 };
 
 export const getParametersData = (parameterSet) => {
@@ -61,64 +88,12 @@ export const getAllParametersData = () => {
 };
 
 export const getAllSessions = () => {
-  return db.collection("sessions").orderBy("startTime");
+  return db.collection("sessions"); //.orderBy("startTime");
 };
 
 export const getSessionData = (sessionId) => {
   return db.collection("sessions").doc(sessionId).get();
 };
-
-/*export const getGroceryList = (groceryListId) => {
-  return db.collection("groceryLists").doc(groceryListId).get();
-};*/
-
-/* export const streamGroceryListItems = (groceryListId, observer) => {
-  return db
-    .collection("groceryLists")
-    .doc(groceryListId)
-    .collection("items")
-    .orderBy("created")
-    .onSnapshot(observer);
-};*/
-
-/*
-export const addUserToGroceryList = (userName, groceryListId, userId) => {
-  return db
-    .collection("groceryLists")
-    .doc(groceryListId)
-    .update({
-      users: firebase.firestore.FieldValue.arrayUnion({
-        userId: userId,
-        name: userName,
-      }),
-    });
-};*/
-
-/*
-export const addGroceryListItem = (item, groceryListId, userId) => {
-  return getGroceryListItems(groceryListId)
-    .then((querySnapshot) => querySnapshot.docs)
-    .then((groceryListItems) =>
-      groceryListItems.find(
-        (groceryListItem) =>
-          groceryListItem.data().name.toLowerCase() === item.toLowerCase()
-      )
-    )
-    .then((matchingItem) => {
-      if (!matchingItem) {
-        return db
-          .collection("groceryLists")
-          .doc(groceryListId)
-          .collection("items")
-          .add({
-            name: item,
-            created: firebase.firestore.FieldValue.serverTimestamp(),
-            createdBy: userId,
-          });
-      }
-      throw new Error("duplicate-item-error");
-    });
-};*/
 
 export const setSessionData = ({
   session,
@@ -155,7 +130,6 @@ export const setSessionData = ({
       calcSuccess: calcSuccess ?? 0,
       calcFail: calcFail ?? 0,
     },
-    startTime: startTime ?? 0,
     endTime: endTime ?? 0,
     totalTime: totalTime ?? 0,
     score: score ?? 0,
@@ -163,21 +137,16 @@ export const setSessionData = ({
     timeOnAuto: timeOnAuto ?? 0,
     modeChanges: modeChanges ?? 0,
     log: log ?? "empty",
+    serverTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
   };
 
-  if (parameters) data["parameters"] = parameters;
-  if (global) data["global"] = global;
-  if (scoreBoard) data["scoreBoard"] = scoreBoard; //deprected?
-  if (startTime) data["startTime"] = startTime;
-  if (pollData) data["pollData"] = pollData;
-  if (parametersSet) data["parametersSet"] = parametersSet;
   console.log("firebase > setSessionData data: > " + parametersSet);
 
   db.collection("sessions")
-    .doc(session)
-    .set(data, { merge: true })
+    .doc(session) // sessionID
+    .set({ [startTime]: data }, { merge: true })
     .then((ref) => {
-      console.log("ref of setSessionData in fIREBASE.JS: " + ref + session);
+      console.log("ref of setSessionData in FIREBASE.JS: " + ref + session);
     }); //catch error  - .catch()
 };
 
@@ -217,7 +186,9 @@ export const deleteParameters = (set) => {
 };
 //export const setParameters = {};
 export const deleteSession = (session) => {
-  db.collection("sessions").doc(session).delete();
+  db.collection("sessions")
+    .doc(session) // user id
+    .delete();
 };
 
 export const updateParameters = (set, updatedItem) => {

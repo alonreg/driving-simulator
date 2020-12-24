@@ -45,3 +45,8 @@ label {
   text-align: center;
   vertical-align: middle;
 }
+
+.new-line-text {
+  font-size: large;
+  font-weight: 400;
+}

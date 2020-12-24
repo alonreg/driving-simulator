@@ -56,7 +56,7 @@ const ItemList = ({ editItem }) => {
   };
 
   const listItems = useItems().map(mapToTable);
-  const listItem = useItems();
+  //const listItem = useItems();
 
   return (
     <>

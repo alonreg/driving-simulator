@@ -52,12 +52,16 @@ const useItems = () => {
   useEffect(() => {
     const unsubscribe = FirestoreService.getAllSessions().onSnapshot(
       (snapshot) => {
-        const listItems = snapshot.docs.map((doc) => ({
+        const listItems = snapshot.docs.map((doc) => {
+          const arr = Object.keys(doc.data()).map((i) => Number(i));
+          const min = Math.min(...arr);
           //map each document into snapshot
-          id: doc.id, //id and data pushed into items array
-          ...doc.data(), //spread operator merges data to id.
-        }));
-        console.log(listItems);
+          return {
+            id: doc.id, //id and data pushed into items array
+            ...doc.data()[min],
+          }; //spread operator merges data to id.
+        });
+
         setItems(listItems); //items is equal to listItems
       }
     );
@@ -66,7 +70,7 @@ const useItems = () => {
   return items;
 };
 
-const ViewLog = ({ editItem }) => {
+const ViewLog = () => {
   function getFormattedTime() {
     var today = new Date();
     var y = today.getFullYear();
@@ -156,7 +160,9 @@ const ViewLog = ({ editItem }) => {
           console.log("param" + element.parameters[param]);
           element["param_" + param] = element.parameters[param];
           if (param == "startWithAuto") {
-            element["param_" + param] = element.parameters[param] ? 1 : 0;
+            element["param_" + param] = element.parameters[param]
+              ? "auto"
+              : "man";
           }
         });
         delete element.parameters;
@@ -176,16 +182,46 @@ const ViewLog = ({ editItem }) => {
       }
       return element;
     });
-    console.log("alon2" + itemsForExport[0]["startTime"]);
-    console.log("alon22" + itemsForExport);
   }
   /*
   Object.keys(itemsFromFirestore["parameters"]).forEach(
     (key) => (itemsForExport[key] = itemsFromFirestore["parameters"][key])
   );*/
 
+  itemsFromFirestore.sort((a, b) => b.startTime - a.startTime); // sort by date, decending
+
   const listItems = itemsFromFirestore.map(mapToTable);
   //const csvData =
+
+  const headers = [
+    { label: "session ID", key: "id" },
+    { label: "param set", key: "parametersSet" },
+    //{ label: "global params", key: "global" },
+    { label: "start at", key: "startTime" },
+    { label: "end time", key: "endTime" },
+    { label: "final score", key: "score" },
+    { label: "total time", key: "totalTime" },
+    { label: "begin with mode", key: "param_startWithAuto" },
+    //////
+    { label: "score - success", key: "param_success" },
+    { label: "score - calculation", key: "param_calculation" },
+    { label: "score - rescue", key: "param_rescue" },
+    { label: "score - pass", key: "param_pass" },
+    { label: "score - fail", key: "param_fail" },
+    /////
+    { label: "total obstacles", key: "param_obstaclesNum" },
+    { label: "human error", key: "param_humanError" },
+    { label: "computer error", key: "param_computerError" },
+    { label: "mode changes", key: "modeChanges" },
+    { label: "total comp fail", key: "obstaclesSum_failByComp" },
+    { label: "total comp success", key: "obstaclesSum_successByComp" },
+    { label: "total human fail", key: "obstaclesSum_failByHuman" },
+    { label: "total human success", key: "obstaclesSum_successByHuman" },
+    { label: "total rescue calls", key: "obstaclesSum_rescueCount" },
+    { label: "total calc fail", key: "obstaclesSum_calcFail" },
+    { label: "total correct calc", key: "obstaclesSum_calcSuccess" },
+    { label: "questions", key: "pollData" },
+  ];
 
   console.log(itemsFromFirestore);
   return (
@@ -228,6 +264,7 @@ const ViewLog = ({ editItem }) => {
 
       <CSVLink
         data={itemsForExport}
+        headers={headers}
         filename={"sim-export-" + getFormattedTime() + ".csv"}
       >
         <Button

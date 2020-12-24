@@ -3,7 +3,6 @@ import logo from "./logo.svg";
 import "./App.css";
 import DriveConsole from "./components/driveConsole";
 import Calculator from "./components/calculator";
-import Score from "./components/score";
 import TopConsole from "./components/topConsole";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,8 +10,6 @@ import * as FirestoreService from "./firebase";
 import Loader from "react-loader-spinner";
 import Obstacle from "./obstacle";
 import Results from "./components/results";
-import TermsDialog from "./components/termsDialog";
-import Instructions from "./components/termsDialog";
 
 import {
   BrowserRouter as Router,
@@ -24,7 +21,6 @@ function Experiment(props) {
   const location = useLocation();
   let { id } = useParams();
 
-  const [termsDialogOpen, setTermsDialogOpen] = useState(true);
   const [score, setScore] = useState(0);
   const [obstaclesNum, setObstaclesNum] = useState(0);
   const obstaclesNumRef = useRef(obstaclesNum);
@@ -103,26 +99,33 @@ function Experiment(props) {
         //drive();
       });
     }
-    FirestoreService.authenticateAnonymously()
-      .then((userCredential) => {
-        if (sessionId && sessionId == userCredential.user.id) {
-        } else if (userCredential.user.uid) {
-          setSessionId(userCredential.user.uid);
-          FirestoreService.setSessionData({
-            session: userCredential.user.uid,
-            pollData: location.pollData,
-            startTime: startTime,
-            parameters: parameters,
-            global: global,
-          });
-          addToLog("started", "none");
-        }
-      })
-      .catch(() => {
-        addToLog("error", "anonymous-auth-failed");
-        setError("anonymous-auth-failed");
-      });
   }, []); //sessionId, setSessionId
+
+  useEffect(() => {
+    // create the new session in firestore
+    if (parameters && global) {
+      FirestoreService.authenticateAnonymously()
+        .then((userCredential) => {
+          if (sessionId && sessionId == userCredential.user.id) {
+          } else if (userCredential.user.uid) {
+            setSessionId(userCredential.user.uid);
+            FirestoreService.createSession({
+              session: userCredential.user.uid,
+              pollData: location.pollData,
+              startTime: startTime,
+              parameters: parameters,
+              global: global,
+              parametersSet: id,
+            });
+            addToLog("started", "none");
+          }
+        })
+        .catch(() => {
+          addToLog("error", "anonymous-auth-failed");
+          setError("anonymous-auth-failed");
+        });
+    }
+  }, [parameters, global]);
 
   useEffect(() => {
     if (global && started && !ended) {
@@ -200,7 +203,6 @@ function Experiment(props) {
     FirestoreService.setSessionData({
       session: sessionId,
       score: score,
-      scoreBoard: parameters.scoreBoard,
       successByHuman: successByHuman,
       successByComp: successByComp,
       failByHuman: failByHuman,
@@ -210,10 +212,7 @@ function Experiment(props) {
       calcFail: calcFail,
       startTime: startTime,
       endTime: Date.now(),
-      timeOnAuto: "tbd",
       modeChanges: modeChanges,
-      parametersSet: id,
-      parameters: parameters,
       log: [
         ...log,
         {
@@ -381,7 +380,6 @@ function Experiment(props) {
             autoMode={autoMode}
             onChange={modeChange}
             isMoving={isMoving}
-            sessionId={sessionId}
             obstaclesNum={obstaclesNum}
             started={started}
             score={score}

@@ -3,6 +3,7 @@ import * as FirestoreService from "./firebase";
 import AddItemForm from "./components/additemform";
 import ItemList from "./components/itemList";
 import ViewLog from "./components/viewLog";
+import ViewPreExperimentData from "./components/ViewPreExperimentData";
 import UpdateItem from "./components/updateitem";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
@@ -78,7 +79,7 @@ function Settings() {
         </Tab>
         <Tab eventKey="pretext" title="Pre-Experiment">
           <h1>Edit Pre-Experiment Text and Images</h1>
-          <AddItemForm />
+          <ViewPreExperimentData />
         </Tab>
         <Tab eventKey="log" title="Log">
           <h1>View Experiment Log</h1>

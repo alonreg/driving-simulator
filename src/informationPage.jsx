@@ -30,16 +30,7 @@ function NewlineText(props) {
 const InformationPage = () => {
   //data from firestore!!!/////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
-  const consentText = `The study should take about 20 minutes, but you are free to go through it at your own pace. Your participation in this research is voluntary.
-  If you complete the study, you will receive payment for your participation. You have the right to withdraw at any point during the
-  study, for any reason, and without any negative consequences for you. Your responses are completely anonymous, and we do not collect any
-  individually identifiable information about you. Any information about responses published as a result of the study will be reported
-  anonymously. Upon your request, the researchers are obliged to delete any information provided by you during the course of the study.
-  
-  Contact details: 
-  Principle Investigator: Prof. Joachim Meyer, Email: jmeyer@tauex.tau.ac.il.
-  
-  By clicking the button below, you acknowledge that your participation in the study is voluntary, you are 18 years of age or older, and you are aware that you may choose to terminate your participation in the study at any time and for any reason.`;
+
   const infoData = [
     {
       type: "consent",
@@ -47,7 +38,8 @@ const InformationPage = () => {
       body: strings.consentBody,
       buttonText: "I agree",
       leftButton: "quit",
-      image: null,
+      image:
+        "https://firebasestorage.googleapis.com/v0/b/driving-simulator-tau-test.appspot.com/o/info-1%2Farrows-gif.gif?alt=media&token=2995f673-3447-40db-b96f-4222be14011b",
     },
     {
       type: "instructions",

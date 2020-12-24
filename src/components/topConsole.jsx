@@ -18,10 +18,6 @@ import "./topConsole.css";
 function TopConsole(props) {
   // const [checked, setChecked] = useState({ status: true });
 
-  const func = () => {
-    //console.log(checked["status"]);
-  };
-
   const handleChange = (event, newAutoMode) =>
     props.onChange(newAutoMode == "auto"); //setChecked({ status: checked });
 
