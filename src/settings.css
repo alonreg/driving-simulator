@@ -46,7 +46,30 @@ label {
   vertical-align: middle;
 }
 
-.new-line-text {
+.new-line-text-settings {
   font-size: large;
   font-weight: 400;
+}
+
+textarea {
+  vertical-align: top;
+}
+
+.preTextGrid {
+  display: grid;
+  grid-template-columns: 1fr 0.001fr 1fr;
+  grid-template-rows: 1fr;
+  grid-column-gap: 30px;
+  grid-row-gap: 0px;
+}
+
+.div1-preText {
+  grid-area: 1 / 1 / 2 / 2;
+}
+.div2-preText {
+  grid-area: 1 / 3 / 2 / 4;
+}
+.div3-preText {
+  grid-area: 1 / 2 / 2 / 3;
+  background-color: rgb(175, 170, 170);
 }

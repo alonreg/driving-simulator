@@ -13,9 +13,9 @@ export default function App() {
             renders the first one that matches the current URL. */}
         <Switch>
           <Route path="/settings" children={<Settings />} />
-          <Route path="/:id/2" children={<Experiment />} />
+          <Route path="/:id/:urlInfoDataId/2" children={<Experiment />} />
           <Route
-            path="/:id/1/page-:urlPageNumber"
+            path="/:id/:urlInfoDataId/1/page-:urlPageNumber"
             children={<InformationPage />}
           />
         </Switch>

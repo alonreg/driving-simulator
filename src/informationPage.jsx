@@ -3,6 +3,8 @@ import { useHistory, useParams } from "react-router-dom";
 import "./Consent.css";
 import Button from "react-bootstrap/Button";
 import * as strings from "./assets/InfoPageStrings.jsx";
+import Loader from "react-loader-spinner";
+import * as FirestoreService from "./firebase";
 
 import Poll from "./components/poll.jsx";
 import Alert from "react-bootstrap/Alert";
@@ -21,162 +23,139 @@ import { Prompt } from "react-router";
 function NewlineText(props) {
   const text = props.text;
   const newText = text
-    .split("\n")
-    .map((str) => <p className="new-line-text">{str}</p>);
+    //.replaceAll("\\u", "&bull;")
+    .split("\\n")
+    .map((str) => {
+      return str.includes("&bull;") ? (
+        <>
+          <p className="new-line-text">
+            <li>{str.replace("&bull;", "")}</li>
+          </p>
+        </>
+      ) : (
+        <p className="new-line-text">{str}</p>
+      );
+    });
 
   return newText;
 }
 
 const InformationPage = () => {
-  //data from firestore!!!/////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-
-  const infoData = [
+  const infoData2 = [
     {
-      type: "consent",
       title: "Before we start...",
       body: strings.consentBody,
-      buttonText: "I agree",
-      leftButton: "quit",
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/driving-simulator-tau-test.appspot.com/o/info-1%2Farrows-gif.gif?alt=media&token=2995f673-3447-40db-b96f-4222be14011b",
+      image: null,
+      //"https://firebasestorage.googleapis.com/v0/b/driving-simulator-tau-test.appspot.com/o/info-1%2Farrows-gif.gif?alt=media&token=2995f673-3447-40db-b96f-4222be14011b",
     },
     {
-      type: "instructions",
       title: strings.instructions_title_1,
       body: strings.instructions_body_1,
-      buttonText: "next",
-      leftButton: "back",
       image: fullscreenGif,
     },
     {
-      type: "instructions",
       title: strings.instructions_title_2,
       body: strings.instructions_body_2,
-      buttonText: "next",
-      leftButton: "back",
       image: manModeGif,
     },
     {
-      type: "instructions",
       title: strings.instructions_title_3,
       body: strings.instructions_body_3,
-      buttonText: "next",
-      leftButton: "back",
       image: howToChoose,
     },
     {
-      type: "instructions",
       title: strings.instructions_title_4,
       body: strings.instructions_body_4,
-      buttonText: "next",
-      leftButton: "back",
       image: rescueGif,
     },
     {
-      type: "instructions",
       title: strings.instructions_title_5,
       body: strings.instructions_body_5,
-      buttonText: "next",
-      leftButton: "back",
       image: autoModeGif,
     },
     {
-      type: "instructions",
       title: strings.instructions_title_6,
       body: strings.instructions_body_6,
-      buttonText: "next",
-      leftButton: "back",
       image: modeSwitchGif,
     },
     {
-      type: "instructions",
       title: strings.instructions_title_7,
       body: strings.instructions_body_7,
-      buttonText: "next",
-      leftButton: "back",
       image: scoreImg,
     },
     {
-      type: "instructions",
       title: strings.instructions_title_8,
       body: strings.instructions_body_8,
-      buttonText: "next",
-      leftButton: "back",
       image: calcGif,
     },
     {
-      type: "instructions",
       title: strings.instructions_title_9,
       body: strings.instructions_body_9,
-      buttonText: "next",
-      leftButton: "back",
       image: topConsoleGif,
     },
     {
-      type: "instructions",
       title: strings.instructions_title_10,
       body: strings.instructions_body_10,
-      buttonText: "next",
-      leftButton: "back",
       image: null,
     },
     {
-      type: "questionare",
       title: "Please answer the following question:",
       body: strings.questionare_body_1,
-      buttonText: "next",
-      leftButton: "back",
-      poll: ["18-27", "28-36", "37-50", "51+"],
+      image: "18-27, 28-36, 37-50, 51+",
     },
     {
-      type: "questionare",
       title: "Please answer the following question:",
       body: strings.questionare_body_2,
-      buttonText: "next",
-      leftButton: "back",
-      poll: [
-        "Some high school education",
-        "Full High School eduction",
-        "College degree",
-        "2nd college degree",
-      ],
+      image:
+        "Some high school education,Full High School eduction,College degree, 2nd college degree",
     },
     {
-      type: "questionare",
       title: "Please answer the following question:",
       body: strings.questionare_body_3,
-      buttonText: "begin experiment",
-      leftButton: "back",
-      poll: ["Male", "Female", "Other", "Prefer not to say"],
+      image: "Male, Female, Other, Prefer not to say",
     },
   ];
 
-  let { id, urlPageNumber } = useParams();
-  const experimentPath = id;
-  const totalPages = 13; //splice later
-  //data from firestore!!!////
-  ////////////////////////////
-  ////////////////////////////
-  ////////////////////////////
-  ////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  const [pageNumber, setPageNumber] = useState(urlPageNumber);
-  const [pollState, setPollState] = useState(new Array(3).fill(0));
-  const [image, setImage] = useState(true);
+  let { urlInfoDataId, id, urlPageNumber } = useParams();
 
-  // This function sets the css body class name
+  const [pageNumber, setPageNumber] = useState(urlPageNumber);
+  const [infoData, setInfoData] = useState(null);
+  const [totalPages, setTotalPages] = useState(0);
+  const [pollState, setPollState] = useState([]);
+
+  useEffect(() => {
+    if (!infoData) {
+      FirestoreService.getInfoDataById(urlInfoDataId).then((infoData) => {
+        const data = infoData.data();
+        setInfoData(data);
+        setTotalPages(data.bodyList.length);
+        let newPollState = [];
+        data.images.forEach((image) => {
+          if (image.includes(",") && !image.includes("png")) {
+            console.log("in pollstate 1");
+            newPollState.push(0);
+          }
+        });
+        setPollState(newPollState);
+        console.log("in pollstate 0 " + pollState.length);
+      });
+    }
+  }, []);
+
+  // This function sets the css body class name and preloads images
   useEffect(() => {
     document.body.className = "body-informationPage";
     let imageList = [];
-    infoData.forEach(
-      (element) => element.image && imageList.push(element.image)
-    );
-    imageList.forEach((image) => {
-      new Image().src = image;
-    });
-    console.log(imageList);
-    // preload images:
+    if (infoData) {
+      infoData.images.forEach(
+        (element) => element.image && imageList.push(element.image)
+      );
+      imageList.forEach((image) => {
+        new Image().src = image;
+      });
+      console.log(imageList);
+      // preload images
+    }
   }, []);
 
   useEffect(() => {
@@ -185,21 +164,19 @@ const InformationPage = () => {
 
   const goToPreviousPage = () => {
     setPageNumber(+pageNumber - 1);
-    history.push(`/${id}/1/page-${+pageNumber - 1}`);
+    history.push(`/${id}/${urlInfoDataId}/1/page-${+pageNumber - 1}`);
   };
 
   const goToNextPage = () => {
-    console.log(pageNumber);
-
-    if (+pageNumber > totalPages) {
+    if (+pageNumber >= totalPages) {
       history.push({
-        pathname: `/${id}/2`, // the path to the driving simulator
+        pathname: `/${id}/${urlInfoDataId}/2`, // the path to the driving simulator
         pollData: pollState,
       });
       return;
     }
     setPageNumber(+pageNumber + 1);
-    history.push(`/${id}/1/page-${+pageNumber + 1}`);
+    history.push(`/${id}/${urlInfoDataId}/1/page-${+pageNumber + 1}`);
   };
 
   let history = useHistory();
@@ -211,7 +188,6 @@ const InformationPage = () => {
   };
 
   const handleClick = (direction) => {
-    console.log("in handle click in infopage - " + direction);
     if (direction == "quit") {
       onClose();
     } else if (direction == "back") {
@@ -219,7 +195,8 @@ const InformationPage = () => {
     } else {
       if (
         pollState[+pageNumber - totalPages + 1] == 0 &&
-        infoData[+pageNumber - 1].type == "questionare"
+        infoData.images[+pageNumber - 1] &&
+        infoData.images[+pageNumber - 1].includes(",")
       ) {
         alert("Please choose one of the options");
       } else {
@@ -228,44 +205,59 @@ const InformationPage = () => {
     }
   };
 
-  let currentPageData = infoData[+pageNumber - 1];
-
   console.log(+pageNumber - 1 + " this is the current page");
+
+  if (!infoData) {
+    console.log("in spingger");
+    return (
+      <>
+        <div className="center-spinner">
+          <Loader type="ThreeDots" color="#00BFFF" height={100} width={100} />
+        </div>
+      </>
+    );
+  }
+
+  console.log("out spingger");
   return (
     <div className="info-box">
-      {/**<Prompt
-        when={pageNumber == [0]}
-        message="Are you sure you want to leave?"
-      />**/}
       <Alert variant="secondary ">
-        <Alert.Heading>{currentPageData.title}</Alert.Heading>
+        <Alert.Heading>{infoData.titles[+pageNumber - 1]}</Alert.Heading>
         <hr />
-
-        <NewlineText text={currentPageData.body} />
+        <NewlineText text={infoData.bodyList[+pageNumber - 1]} />
         <br></br>
-        {infoData[+pageNumber - 1 + 1] &&
-          infoData[+pageNumber - 1 + 1].image && (
-            <img
-              src={infoData[+pageNumber - 1 + 1].image}
-              className="hide-image-for-preload"
-            />
-          )}
-        {currentPageData.image ? (
+        {infoData.images[+pageNumber - 1 + 1] && (
+          <img
+            src={infoData.images[+pageNumber - 1 + 1]}
+            className="hide-image-for-preload"
+          />
+        )}
+        {infoData.images[+pageNumber - 1] &&
+        (infoData.images[+pageNumber - 1].includes("data:image") ||
+          infoData.images[+pageNumber - 1].includes("gif")) ? (
           <>
-            <img src={currentPageData.image} className="instructions-image" />
+            <img
+              src={infoData.images[+pageNumber - 1]}
+              className="instructions-image"
+            />
           </>
-        ) : currentPageData.poll ? (
+        ) : infoData &&
+          infoData.images[+pageNumber - 1] &&
+          infoData.images[+pageNumber - 1].includes(",") ? (
           <Poll
-            currentChecked={pollState[+pageNumber - 12]}
-            currentPageData={currentPageData}
-            questions={currentPageData.poll}
+            currentChecked={pollState[+pageNumber - pollState.length + 1]}
+            currentPageData={{
+              title: infoData.titles[+pageNumber - 1],
+              body: infoData.bodyList[+pageNumber - 1],
+              image: infoData.images[+pageNumber - 1],
+            }}
+            questions={infoData.images[+pageNumber - 1].split(",")}
             pollState={pollState}
             setCurrentAnswer={(value) => {
               const currentPollState = [...pollState];
-              currentPollState[+pageNumber - 12] = value.target.value;
+              currentPollState[+pageNumber - pollState.length + 1] =
+                value.target.value;
               setPollState(currentPollState);
-              console.log("current poll state:" + currentPollState);
-              console.log("poll num: " + pageNumber[pageNumber.length - 8]);
             }}
           />
         ) : (
@@ -277,17 +269,25 @@ const InformationPage = () => {
             <Button
               type="button"
               variant="danger"
-              onClick={() => handleClick(currentPageData.leftButton)}
+              onClick={() => handleClick(+pageNumber == 1 ? "quit" : "back")}
             >
-              {currentPageData.leftButton}
+              {+pageNumber == 1 ? "quit" : "back"}
             </Button>
 
             <Button
               type="button"
               variant="success"
-              onClick={() => handleClick(currentPageData.buttonText)}
+              onClick={() =>
+                handleClick(
+                  +pageNumber >= totalPages ? "begin experiment" : "next"
+                )
+              }
             >
-              {currentPageData.buttonText}
+              {+pageNumber >= totalPages
+                ? "begin experiment"
+                : +pageNumber == 1
+                ? "I agree"
+                : "next"}
             </Button>
           </div>
         </div>

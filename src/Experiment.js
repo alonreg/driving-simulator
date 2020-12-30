@@ -4,12 +4,14 @@ import "./App.css";
 import DriveConsole from "./components/driveConsole";
 import Calculator from "./components/calculator";
 import TopConsole from "./components/topConsole";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as FirestoreService from "./firebase";
 import Loader from "react-loader-spinner";
 import Obstacle from "./obstacle";
 import Results from "./components/results";
+
+/////
+import Toast from "react-bootstrap/Toast";
 
 import {
   BrowserRouter as Router,
@@ -17,10 +19,26 @@ import {
   useLocation,
 } from "react-router-dom";
 
+const NotificationToast = ({ text, show, setShow }) => {
+  return (
+    <>
+      <Toast onClose={() => setShow(false)} show={show} delay={3000} autohide>
+        <Toast.Header>
+          <img src="holder.js/20x20?text=%20" className="rounded mr-2" alt="" />
+          <strong className="mr-auto">Bootstrap</strong>
+          <small>11 mins ago</small>
+        </Toast.Header>
+        <Toast.Body>{text}</Toast.Body>
+      </Toast>
+      <button onClick={() => setShow(true)}>Show Toast</button>
+    </>
+  );
+};
+
 function Experiment(props) {
   const location = useLocation();
-  let { id } = useParams();
-
+  let { id, urlInfoDataId } = useParams();
+  const [show, setShow] = useState(false);
   const [score, setScore] = useState(0);
   const [obstaclesNum, setObstaclesNum] = useState(0);
   const obstaclesNumRef = useRef(obstaclesNum);
@@ -46,6 +64,7 @@ function Experiment(props) {
   const [startTime, setStartTime] = useState(Date.now());
   const [modeChanges, setModeChanges] = useState(0);
   const [log, setLog] = useState([]);
+  const [showToast, setShowToast] = useState(false);
 
   const addSuccessFailToSessionData = (addTo) => {
     console.log(addTo + "   in add to ");
@@ -146,8 +165,8 @@ function Experiment(props) {
     }
   }, [obstaclesNum]);
 
-  const notifyGood = (message) =>
-    toast.success(message, {
+  const notifyGood = (message) => 1;
+  /*toast.success(message, {
       style: { fontSize: 30 },
       position: "top-left",
       autoClose: 1000,
@@ -156,8 +175,11 @@ function Experiment(props) {
       pauseOnHover: false,
       draggable: false,
       progress: undefined,
-    });
-  const notifyBad = (message) =>
+    });*/
+
+  const notifyBad = (message) => 1;
+
+  /*
     toast.error(message, {
       position: "top-left",
       autoClose: 1000,
@@ -166,7 +188,7 @@ function Experiment(props) {
       pauseOnHover: false,
       draggable: false,
       progress: undefined,
-    });
+    }*/
 
   const scoreAddition = (v) => {
     if (v > 0) {
@@ -356,9 +378,14 @@ function Experiment(props) {
   ) : (
     <>
       <div class="parent-experiment">
-        <ToastContainer
+        {/*<ToastContainer
           limit="2"
-          style={{ fontSize: 30, textAlign: "center" }}
+         style={{ fontSize: 30, textAlign: "center" }}
+        >*/}
+        <NotificationToast
+          text="hi"
+          show={showToast}
+          setShowToast={(show) => setShowToast(show)}
         />
         {/*<div className="top-left">
           <p></p>

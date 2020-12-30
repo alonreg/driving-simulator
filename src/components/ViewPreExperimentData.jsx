@@ -4,12 +4,18 @@ import "../settings.css";
 import Button from "react-bootstrap/Button";
 import Overlay from "react-bootstrap/Overlay";
 import Tooltip from "react-bootstrap/Tooltip";
+import UpdatePreTextItem from "./updatePreTextItem.jsx";
+import AddPreTextItemForm from "./addPreTextItemForm.jsx";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import Dropdown from "react-bootstrap/Dropdown";
 
 function NewlineText(props) {
   const text = props.text;
   const newText = text
+    .replaceAll("\\n", "\n")
     .split("\n")
-    .map((str) => <p className="new-line-text">{str}</p>);
+    .map((str) => <p className="new-line-text-settings">{str}</p>);
 
   return newText;
 }
@@ -55,30 +61,76 @@ const useItems = () => {
 };
 
 const ViewPreExperimentData = () => {
-  function getFormattedTime() {
-    var today = new Date();
-    var y = today.getFullYear();
-    // JavaScript months are 0-based.
-    var m = today.getMonth() + 1;
-    var d = today.getDate();
-    var h = today.getHours();
-    var mi = today.getMinutes();
-    return y + "-" + m + "-" + d + "--" + h + "-" + mi;
-  }
+  const initialItemState = {
+    id: "-",
+    titles: [],
+    bodyList: [],
+    images: [],
+  };
+  const [currentItem, setCurrentItem] = useState(initialItemState);
+
+  const selectItem = (item) => {
+    setCurrentItem({
+      id: item.id,
+      titles: item.titles,
+      bodyList: item.bodyList,
+      images: item.images,
+    });
+  };
+
+  const updateItem = ({ currentItem }, updatedItem) => {
+    FirestoreService.updatePreText(currentItem.id, updatedItem);
+  };
 
   const itemsFromFirestore = useItems();
   //itemsFromFirestore.sort((a, b) => b.startTime - a.startTime); // sort by date, decending
 
   const titles = itemsFromFirestore.map((item) => item.titles[0]);
-  const body = itemsFromFirestore.map((item) => item.body[0]);
+  const body = itemsFromFirestore.map((item) => item.bodyList[0].toString());
+  const bodyList = itemsFromFirestore.map((item) => item.bodyList);
   const images = itemsFromFirestore.map((item) => item.images[0]);
+  console.log("hi hi " + itemsFromFirestore[0]);
 
-  console.log("hi hi " + typeof titles);
+  if (!bodyList[0]) {
+    return <></>;
+  }
+
+  const setsId = itemsFromFirestore.map((item) => {
+    return (
+      <Dropdown.Item
+        onSelect={(eventKey, event) => selectItem(item)}
+        eventKey={item.id}
+      >
+        {item.id}
+      </Dropdown.Item>
+    );
+  });
+
   return (
     <>
-      <NewlineText text={titles.toString()} />
-      <NewlineText text="aaaa \n aaa" />
-      <NewlineText text={images.toString()} />
+      <div className="preTextGrid">
+        <div className="div1-preText">
+          <h3>Add new sets of information</h3>
+
+          <AddPreTextItemForm />
+        </div>
+        <div className="div3-preText"></div>
+        <div className="div2-preText">
+          <h3>Update sets of information</h3>
+          <DropdownButton title="Choose Set" id="bg-nested-dropdown">
+            {setsId}
+          </DropdownButton>
+
+          <UpdatePreTextItem
+            currentItem={currentItem}
+            updateItem={updateItem}
+            setCurrentItem={(item) => setCurrentItem(item)}
+          />
+        </div>
+      </div>
+
+      {/*<NewlineText text={bodyList[0][0]} />
+      <NewlineText text={images.toString()} />*/}
     </>
   );
 };

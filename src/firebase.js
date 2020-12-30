@@ -1,4 +1,3 @@
-import shadows from "@material-ui/core/styles/shadows";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
@@ -194,4 +193,18 @@ export const deleteSession = (session) => {
 export const updateParameters = (set, updatedItem) => {
   delete updatedItem.id;
   db.collection("parameters").doc(set).update(updatedItem);
+};
+
+export const updatePreText = (id, updatedItem) => {
+  delete updatedItem.id;
+  return db.collection("preExperiment").doc(id).update(updatedItem);
+};
+
+export const setPreText = (id, updatedItem) => {
+  delete updatedItem.id;
+  return db.collection("preExperiment").doc(id).set(updatedItem);
+};
+
+export const getInfoDataById = (id) => {
+  return db.collection("preExperiment").doc(id).get();
 };
