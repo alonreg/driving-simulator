@@ -6,25 +6,22 @@ function Results({ score, obstacles }) {
   return (
     <>
       <div className="results-page">
-        <Alert variant="primary ">
-          <Alert.Heading>
-            Thank you! We appreciate your time and effort
-          </Alert.Heading>
-          <p>
-            By participating in this experiment, you helped advance scientific
-            research.
-          </p>
-          <hr />
-          <p className="mb-0">
-            By the way, your final score is: {score}.{" "}
-            {score > 0 ? "Nice work!" : "What a bumpy ride!"}
-          </p>
-          <img
-            src={AutonomousCarImage}
-            alt="image"
-            className="results-image"
-          ></img>
-        </Alert>
+        <h1>Thank you! We appreciate your time and effort</h1>
+        <hr />
+        <h3>
+          By participating in this experiment, you helped advance scientific
+          research.
+        </h3>
+        <hr />
+        <h3 className="mb-0">
+          By the way, your final score is: {score}.{" "}
+          {score > 0 ? "Nice work!" : "What a bumpy ride!"}
+        </h3>
+        <img
+          src={AutonomousCarImage}
+          alt="image"
+          className="results-image"
+        ></img>
       </div>
     </>
   );

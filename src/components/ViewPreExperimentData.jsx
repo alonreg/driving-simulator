@@ -92,7 +92,17 @@ const ViewPreExperimentData = () => {
   console.log("hi hi " + itemsFromFirestore[0]);
 
   if (!bodyList[0]) {
-    return <></>;
+    return (
+      <>
+        <div className="preTextGrid">
+          <div className="div1-preText">
+            <h3>Add new sets of information</h3>
+
+            <AddPreTextItemForm />
+          </div>
+        </div>
+      </>
+    );
   }
 
   const setsId = itemsFromFirestore.map((item) => {

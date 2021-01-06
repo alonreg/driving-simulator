@@ -25,8 +25,16 @@ function Settings() {
     <>
       <Navbar bg="dark" variant="dark">
         <Navbar.Brand>Driving Simulator</Navbar.Brand>
-        <Nav className="mr-auto"></Nav>
-        <Button href="/test-1/1/page-1" variant="outline-info">
+        <Nav className="mr-auto">
+          <Nav.Link disabled={true}>
+            Domain:
+            {process.env.REACT_APP_AUTH_DOMAIN ==
+            "driving-simulator-tau-test.firebaseapp.com"
+              ? " TEST"
+              : " PROD"}
+          </Nav.Link>
+        </Nav>
+        <Button href="/test-1/info-1/1/page-1" variant="outline-info">
           Go to experiment
         </Button>
         {"_"}
@@ -34,7 +42,14 @@ function Settings() {
           href="https://console.firebase.google.com/u/0/project/driving-simulator-tau-test/firestore/"
           variant="outline-info"
         >
-          Go to Firestore
+          Go to Firestore TEST
+        </Button>
+        {"_"}
+        <Button
+          href="https://console.firebase.google.com/u/0/project/driving-simulator-tau/firestore/"
+          variant="outline-info"
+        >
+          Go to Firestore PROD
         </Button>
       </Navbar>
       {/*<Router>

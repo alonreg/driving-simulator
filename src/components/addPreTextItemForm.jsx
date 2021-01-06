@@ -104,7 +104,6 @@ const AddPreTextItemForm = () => {
               cols="80"
               rows="1"
               className="input-settings"
-              placeholder="-10"
               value={titles[page]}
               name="titles"
               onChange={(e) => onChange(e, setTitles, titles)}
@@ -117,7 +116,7 @@ const AddPreTextItemForm = () => {
               rows="10"
               cols="80"
               className="input-settings"
-              placeholder="-40"
+              placeholder="Split rows using the \n annotation, Here is an example: First Row\nSecond Row\nThird Row"
               value={bodyList[page]}
               name="bodyList"
               onChange={(e) => onChange(e, setBodyList, bodyList)}
@@ -125,10 +124,12 @@ const AddPreTextItemForm = () => {
             />
           </div>
           <div>
-            <label>Image</label>
-            <input
+            <label>Image / Questions</label>
+            <textarea
+              cols="80"
+              rows="1"
               className="input-settings"
-              placeholder="100"
+              placeholder="for an image, enter a url. For question options, enter: opt1,opt2,opt3"
               value={images[page]}
               name="images"
               onChange={(e) => onChange(e, setImages, images)}

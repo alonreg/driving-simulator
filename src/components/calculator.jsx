@@ -8,8 +8,10 @@ import Badge from "react-bootstrap/Badge";
 
 function Calculator(props) {
   const generateMathProblem = () => [
-    Math.floor(Math.random() * 9 + 1),
     Math.floor(Math.random() * 900 + 100),
+    Math.random() < 0.5
+      ? Math.floor(Math.random() * 90 + 10)
+      : Math.floor(Math.random() * 90 + 10) * -1,
   ];
 
   const [problemParameters, setParameters] = useState(generateMathProblem());
@@ -39,12 +41,13 @@ function Calculator(props) {
         props.onChange(props.scoreBoard.calculation);
         props.addToLog("calcSuccess", "human");
         props.addSuccessFailToSessionData("calcSuccess");
-      } else {
+        setParameters(generateMathProblem());
+      } else if (values.values.answer) {
         props.onChange(0);
         props.addToLog("calcSuccess", "human");
         props.addSuccessFailToSessionData("calcFail");
+        setParameters(generateMathProblem());
       }
-      setParameters(generateMathProblem());
     },
   });
 
@@ -54,7 +57,12 @@ function Calculator(props) {
         <div className="parent-calc">
           <div className="div1-calc">
             <h1 className="calc-text">
-              {problemParameters[0] + " + " + problemParameters[1] + " = "}
+              {problemParameters[1] > 0
+                ? problemParameters[0] + " + " + problemParameters[1] + " = "
+                : problemParameters[0] +
+                  " - " +
+                  problemParameters[1] * -1 +
+                  " = "}
             </h1>
           </div>
           <div className="div2-calc">
@@ -66,6 +74,7 @@ function Calculator(props) {
               onChange={handleChange}
               value={values.answer}
               disabled={!props.started}
+              autoComplete="off"
             />
           </div>
           <div className="div3-calc">

@@ -92,8 +92,10 @@ const UpdatePreTextItem = ({ currentItem, updateItem, setCurrentItem }) => {
             />
           </div>
           <div>
-            <label>Image</label>
-            <input
+            <label>Image / Questions</label>
+            <textarea
+              cols="80"
+              rows="1"
               className="input-settings"
               value={item.images[page]}
               name="images"

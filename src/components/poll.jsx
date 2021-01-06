@@ -17,7 +17,7 @@ function Poll({ questions, pollStatus, setCurrentAnswer, currentChecked }) {
               />
               {"   "}
               <label className="poll-label" for={question}>
-                {question}
+                <h4>{question}</h4>
               </label>
               <br></br>
             </>

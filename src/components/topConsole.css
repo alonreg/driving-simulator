@@ -44,6 +44,13 @@
   background-color: grey;
 }
 
+.toggle-div {
+  margin: auto;
+  background-color: rgba(255, 255, 255, 0.637);
+  padding: 10px;
+  border-radius: 5px;
+}
+
 .text-and-score-div {
   margin: auto;
   flex: 100%;
@@ -54,6 +61,15 @@
   font-size: xx-large;
   font-weight: 300;
   color: white;
+}
+
+.score-text {
+  display: flex;
+  justify-content: center;
+  white-space: pre-wrap;
+}
+
+.score-change-alert {
 }
 
 .inputRounded {
@@ -74,6 +90,25 @@
   border-radius: 10px;
   border: 3px solid #0066ff9f;
   background-color: #f8f5f5;
+}
+
+/* Grid for the score line */
+.parent-scoreGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 0.5fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+}
+
+.div1-scoreGrid {
+  grid-area: 1 / 1 / 2 / 2;
+}
+.div2-scoreGrid {
+  grid-area: 1 / 2 / 2 / 3;
+}
+.div3-scoreGrid {
+  grid-area: 1 / 3 / 2 / 4;
 }
 
 /*  1000px    */
@@ -118,7 +153,10 @@
     padding-top: 20px;
     display: flex;
     grid-area: 1 / 1 / 2 / 3;
+    margin-top: auto;
+    justify-content: baseline;
   }
+
   .div1-topConsole {
     display: flex;
     grid-area: 2 / 1 / 3 / 2;
@@ -140,6 +178,13 @@
   .mode-toggle {
     height: 30px;
     width: 70%;
+  }
+
+  .toggle-div {
+    margin: auto;
+    background-color: rgba(255, 255, 255, 0.637);
+    padding: 2px;
+    border-radius: 5px;
   }
 
   .driving-gif {

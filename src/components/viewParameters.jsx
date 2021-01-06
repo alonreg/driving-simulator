@@ -46,7 +46,7 @@ function ViewParameters() {
 
   return (
     <>
-      <h1>Edit Parameters - (IN {process.env.REACT_APP_AUTH_DOMAIN})</h1>
+      <h1>Experiment Parameters</h1>
       <ItemList editItem={editItem} />
 
       {editing ? (

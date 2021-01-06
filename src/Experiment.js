@@ -11,29 +11,12 @@ import Obstacle from "./obstacle";
 import Results from "./components/results";
 
 /////
-import Toast from "react-bootstrap/Toast";
 
 import {
   BrowserRouter as Router,
   useParams,
   useLocation,
 } from "react-router-dom";
-
-const NotificationToast = ({ text, show, setShow }) => {
-  return (
-    <>
-      <Toast onClose={() => setShow(false)} show={show} delay={3000} autohide>
-        <Toast.Header>
-          <img src="holder.js/20x20?text=%20" className="rounded mr-2" alt="" />
-          <strong className="mr-auto">Bootstrap</strong>
-          <small>11 mins ago</small>
-        </Toast.Header>
-        <Toast.Body>{text}</Toast.Body>
-      </Toast>
-      <button onClick={() => setShow(true)}>Show Toast</button>
-    </>
-  );
-};
 
 function Experiment(props) {
   const location = useLocation();
@@ -382,11 +365,7 @@ function Experiment(props) {
           limit="2"
          style={{ fontSize: 30, textAlign: "center" }}
         >*/}
-        <NotificationToast
-          text="hi"
-          show={showToast}
-          setShowToast={(show) => setShowToast(show)}
-        />
+
         {/*<div className="top-left">
           <p></p>
           <Score
@@ -457,7 +436,12 @@ function Experiment(props) {
           />
         </div>
       </div>
-      <p>sessionid for debug: {sessionId}</p>
+      {process.env.REACT_APP_AUTH_DOMAIN ==
+      "driving-simulator-tau-test.firebaseapp.com" ? (
+        <p>sessionid for debug: {sessionId}</p>
+      ) : (
+        ""
+      )}
     </>
   );
 }

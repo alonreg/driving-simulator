@@ -16,10 +16,11 @@ code {
 .parent-experiment {
   display: grid;
   grid-template-columns: 1fr 3fr;
-  grid-template-rows: minmax(300px, 1fr) minmax(300px, 1fr);
-  grid-column-gap: 10px;
-  grid-row-gap: 10px;
+  grid-template-rows: minmax(200px, 1fr) minmax(300px, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
   height: 93vh;
+  background-color: #34568b;
 }
 
 /* top console */
@@ -33,13 +34,13 @@ code {
 /* calc */
 .div2-experiment {
   grid-area: 2 / 1 / 3 / 2;
-  background-color: #6b656579;
+  background-color: #92818175;
 }
 
 /* drive console */
 .div3-experiment {
   grid-area: 2 / 2 / 3 / 3;
-  background-color: #dac6c66b;
+  background-color: #ffffff91;
 }
 
 .font-small {
@@ -90,14 +91,16 @@ code {
 }
 
 .results-page {
-  padding: 10%;
+  padding: 7%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: stretch;
   min-height: 100vh;
-  background-image: url(./assets/particle-bg.jpg);
+  /*background-image: url(./assets/particle-bg.jpg);*/
+  background-color: #34568b;
   background-size: 100%;
+  color: white;
 }
 
 .no-outline {

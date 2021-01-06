@@ -1,25 +1,32 @@
 import Switch from "react-switch";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import drivingGif from "../assets/endless_road.gif";
 import drivingPaused from "../assets/endless_road.jpg";
 import CenterSign from "../components/centerSign.jsx";
-
 import DirectionsCarIcon from "@material-ui/icons/DirectionsCar";
 import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
-
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-
+import Nav from "react-bootstrap/Nav";
 import "./topConsole.css";
+import Badge from "react-bootstrap/Badge";
 
 function TopConsole(props) {
-  // const [checked, setChecked] = useState({ status: true });
+  const [scoreDelta, setScoreDelta] = useState(0);
+  const [oldScore, setOldScore] = useState(0);
 
-  const handleChange = (event, newAutoMode) =>
+  const handleChange = (event, newAutoMode) => {
     props.onChange(newAutoMode == "auto"); //setChecked({ status: checked });
+    console.log("handled change " + newAutoMode);
+  };
+
+  useEffect(() => {
+    setScoreDelta(props.score - oldScore);
+    setOldScore(props.score);
+  }, [props.score]);
 
   return (
     <>
@@ -85,7 +92,23 @@ function TopConsole(props) {
         <div className="div2-topConsole">
           <div className="text-and-score-div">
             <div className="score-topConsole inputRounded">
-              <p>{props.score}</p>
+              <div className="parent-scoreGrid">
+                <div className="div2-scoreGrid">
+                  <p className="score-text">
+                    {props.score}
+                    {"  "}
+                  </p>
+                </div>
+                <div className="div3-scoreGrid">
+                  {scoreDelta == 0 ? (
+                    ""
+                  ) : (
+                    <Badge pill variant={scoreDelta > 0 ? "success" : "danger"}>
+                      {scoreDelta > 0 ? "+" + scoreDelta : scoreDelta}
+                    </Badge>
+                  )}
+                </div>
+              </div>
             </div>
             <p className="center-text">
               {!props.started
@@ -98,31 +121,44 @@ function TopConsole(props) {
         </div>
 
         <div className="div3-topConsole">
-          <ToggleButtonGroup
-            value={props.userAutoMode ? "auto" : "manual"}
-            exclusive
-            onChange={handleChange}
-            aria-label="text alignment"
-            className="mode-toggle"
+          <div
+            className="toggle-div"
+            onClick={() => {
+              if (!props.isMoving || !props.started)
+                alert("You can only switch modes when the vehicle is moving");
+            }}
           >
-            <ToggleButton
-              value="auto"
-              aria-label="auto"
-              disabled={!props.isMoving || !props.started}
-              className="mode-toggle"
+            <Nav
+              variant="pills"
+              defaultActiveKey={props.userAutoMode ? "auto" : "manual"}
+              activeKey={props.userAutoMode ? "auto" : "manual"}
             >
-              <DirectionsCarIcon />
-              AUTO
-            </ToggleButton>
-            <ToggleButton
-              value="manual"
-              aria-label="manual"
-              disabled={!props.isMoving || !props.started}
-              className="mode-toggle"
-            >
-              <EmojiPeopleIcon /> MAN
-            </ToggleButton>
-          </ToggleButtonGroup>
+              <Nav.Item color="black">
+                <Nav.Link
+                  draggable={false}
+                  disabled={!props.isMoving || !props.started}
+                  onChange={handleChange}
+                  onClick={() => handleChange("_", "auto")}
+                  eventKey="auto"
+                >
+                  <DirectionsCarIcon />
+                  AutoAssist
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link
+                  draggable={false}
+                  disabled={!props.isMoving || !props.started}
+                  onChange={handleChange}
+                  onClick={() => handleChange("_", "manual")}
+                  eventKey="manual"
+                >
+                  <EmojiPeopleIcon />
+                  Manual
+                </Nav.Link>
+              </Nav.Item>
+            </Nav>
+          </div>
         </div>
       </div>
     </>

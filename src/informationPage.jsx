@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import "./Consent.css";
 import Button from "react-bootstrap/Button";
 import * as strings from "./assets/InfoPageStrings.jsx";
 import Loader from "react-loader-spinner";
@@ -8,17 +7,6 @@ import * as FirestoreService from "./firebase";
 
 import Poll from "./components/poll.jsx";
 import Alert from "react-bootstrap/Alert";
-import infoBg from "./assets/particle-bg.jpg";
-import autoModeGif from "./assets/instructions/arrows-auto.gif";
-import manModeGif from "./assets/instructions/arrows-man.gif";
-import calcGif from "./assets/instructions/calc.gif";
-import fullscreenGif from "./assets/instructions/fullscreen-light.gif";
-import rescueGif from "./assets/instructions/rescue.gif";
-import modeSwitchGif from "./assets/instructions/switch-mode.gif";
-import topConsoleGif from "./assets/instructions/top-console.gif";
-import scoreImg from "./assets/instructions/score.png";
-import howToChoose from "./assets/instructions/how-to-choose.png";
-import { Prompt } from "react-router";
 
 function NewlineText(props) {
   const text = props.text;
@@ -41,87 +29,13 @@ function NewlineText(props) {
 }
 
 const InformationPage = () => {
-  const infoData2 = [
-    {
-      title: "Before we start...",
-      body: strings.consentBody,
-      image: null,
-      //"https://firebasestorage.googleapis.com/v0/b/driving-simulator-tau-test.appspot.com/o/info-1%2Farrows-gif.gif?alt=media&token=2995f673-3447-40db-b96f-4222be14011b",
-    },
-    {
-      title: strings.instructions_title_1,
-      body: strings.instructions_body_1,
-      image: fullscreenGif,
-    },
-    {
-      title: strings.instructions_title_2,
-      body: strings.instructions_body_2,
-      image: manModeGif,
-    },
-    {
-      title: strings.instructions_title_3,
-      body: strings.instructions_body_3,
-      image: howToChoose,
-    },
-    {
-      title: strings.instructions_title_4,
-      body: strings.instructions_body_4,
-      image: rescueGif,
-    },
-    {
-      title: strings.instructions_title_5,
-      body: strings.instructions_body_5,
-      image: autoModeGif,
-    },
-    {
-      title: strings.instructions_title_6,
-      body: strings.instructions_body_6,
-      image: modeSwitchGif,
-    },
-    {
-      title: strings.instructions_title_7,
-      body: strings.instructions_body_7,
-      image: scoreImg,
-    },
-    {
-      title: strings.instructions_title_8,
-      body: strings.instructions_body_8,
-      image: calcGif,
-    },
-    {
-      title: strings.instructions_title_9,
-      body: strings.instructions_body_9,
-      image: topConsoleGif,
-    },
-    {
-      title: strings.instructions_title_10,
-      body: strings.instructions_body_10,
-      image: null,
-    },
-    {
-      title: "Please answer the following question:",
-      body: strings.questionare_body_1,
-      image: "18-27, 28-36, 37-50, 51+",
-    },
-    {
-      title: "Please answer the following question:",
-      body: strings.questionare_body_2,
-      image:
-        "Some high school education,Full High School eduction,College degree, 2nd college degree",
-    },
-    {
-      title: "Please answer the following question:",
-      body: strings.questionare_body_3,
-      image: "Male, Female, Other, Prefer not to say",
-    },
-  ];
-
   let { urlInfoDataId, id, urlPageNumber } = useParams();
 
-  const [pageNumber, setPageNumber] = useState(urlPageNumber);
+  const [pageNumber, setPageNumber] = useState(urlPageNumber - 1);
   const [infoData, setInfoData] = useState(null);
   const [totalPages, setTotalPages] = useState(0);
   const [pollState, setPollState] = useState([]);
+  const [firstPollPosition, setFirstPollPosition] = useState(-1);
 
   useEffect(() => {
     if (!infoData) {
@@ -130,9 +44,13 @@ const InformationPage = () => {
         setInfoData(data);
         setTotalPages(data.bodyList.length);
         let newPollState = [];
-        data.images.forEach((image) => {
+        let firstQuestion = true;
+        data.images.forEach((image, i) => {
           if (image.includes(",") && !image.includes("png")) {
-            console.log("in pollstate 1");
+            if (firstQuestion) {
+              firstQuestion = false;
+              setFirstPollPosition(i);
+            }
             newPollState.push(0);
           }
         });
@@ -159,16 +77,16 @@ const InformationPage = () => {
   }, []);
 
   useEffect(() => {
-    setPageNumber(urlPageNumber);
+    setPageNumber(urlPageNumber - 1);
   }, [urlPageNumber]);
 
   const goToPreviousPage = () => {
     setPageNumber(+pageNumber - 1);
-    history.push(`/${id}/${urlInfoDataId}/1/page-${+pageNumber - 1}`);
+    history.push(`/${id}/${urlInfoDataId}/1/page-${+pageNumber}`);
   };
 
   const goToNextPage = () => {
-    if (+pageNumber >= totalPages) {
+    if (+pageNumber >= totalPages - 1) {
       history.push({
         pathname: `/${id}/${urlInfoDataId}/2`, // the path to the driving simulator
         pollData: pollState,
@@ -176,7 +94,7 @@ const InformationPage = () => {
       return;
     }
     setPageNumber(+pageNumber + 1);
-    history.push(`/${id}/${urlInfoDataId}/1/page-${+pageNumber + 1}`);
+    history.push(`/${id}/${urlInfoDataId}/1/page-${+pageNumber + 2}`);
   };
 
   let history = useHistory();
@@ -194,9 +112,9 @@ const InformationPage = () => {
       goToPreviousPage();
     } else {
       if (
-        pollState[+pageNumber - totalPages + 1] == 0 &&
-        infoData.images[+pageNumber - 1] &&
-        infoData.images[+pageNumber - 1].includes(",")
+        pollState[pageNumber - firstPollPosition] == 0 &&
+        infoData.images[+pageNumber] &&
+        infoData.images[+pageNumber].includes(",")
       ) {
         alert("Please choose one of the options");
       } else {
@@ -220,78 +138,91 @@ const InformationPage = () => {
 
   console.log("out spingger");
   return (
-    <div className="info-box">
-      <Alert variant="secondary ">
-        <Alert.Heading>{infoData.titles[+pageNumber - 1]}</Alert.Heading>
-        <hr />
-        <NewlineText text={infoData.bodyList[+pageNumber - 1]} />
-        <br></br>
-        {infoData.images[+pageNumber - 1 + 1] && (
-          <img
-            src={infoData.images[+pageNumber - 1 + 1]}
-            className="hide-image-for-preload"
-          />
-        )}
-        {infoData.images[+pageNumber - 1] &&
-        (infoData.images[+pageNumber - 1].includes("data:image") ||
-          infoData.images[+pageNumber - 1].includes("gif")) ? (
-          <>
+    <div className="bg-infopage">
+      <div className="parent-infopage">
+        <div className="div1-infopage">
+          <h1>{infoData.titles[+pageNumber]}</h1>
+          <hr />
+        </div>
+        <div className="div2-infopage">
+          <NewlineText text={infoData.bodyList[+pageNumber]} />
+          <br></br>
+        </div>
+        <div className="div3-infopage">
+          {infoData.images[+pageNumber + 1] && (
             <img
-              src={infoData.images[+pageNumber - 1]}
-              className="instructions-image"
+              src={infoData.images[+pageNumber + 1]}
+              className="hide-image-for-preload"
             />
-          </>
-        ) : infoData &&
-          infoData.images[+pageNumber - 1] &&
-          infoData.images[+pageNumber - 1].includes(",") ? (
-          <Poll
-            currentChecked={pollState[+pageNumber - pollState.length + 1]}
-            currentPageData={{
-              title: infoData.titles[+pageNumber - 1],
-              body: infoData.bodyList[+pageNumber - 1],
-              image: infoData.images[+pageNumber - 1],
-            }}
-            questions={infoData.images[+pageNumber - 1].split(",")}
-            pollState={pollState}
-            setCurrentAnswer={(value) => {
-              const currentPollState = [...pollState];
-              currentPollState[+pageNumber - pollState.length + 1] =
-                value.target.value;
-              setPollState(currentPollState);
-            }}
-          />
-        ) : (
-          <p1></p1>
-        )}
-        <br></br>
-        <div className="consent-button">
-          <div className="agree-button">
-            <Button
-              type="button"
-              variant="danger"
-              onClick={() => handleClick(+pageNumber == 1 ? "quit" : "back")}
-            >
-              {+pageNumber == 1 ? "quit" : "back"}
-            </Button>
-
-            <Button
-              type="button"
-              variant="success"
-              onClick={() =>
-                handleClick(
-                  +pageNumber >= totalPages ? "begin experiment" : "next"
-                )
-              }
-            >
-              {+pageNumber >= totalPages
-                ? "begin experiment"
-                : +pageNumber == 1
-                ? "I agree"
-                : "next"}
-            </Button>
+          )}
+          {infoData.images[+pageNumber] &&
+          (infoData.images[+pageNumber].includes("data:image") ||
+            infoData.images[+pageNumber].includes("gif")) ? (
+            <>
+              <img
+                src={infoData.images[+pageNumber - 1]}
+                className="instructions-image"
+              />
+            </>
+          ) : infoData &&
+            infoData.images[+pageNumber] &&
+            infoData.images[+pageNumber].includes(",") ? (
+            <Poll
+              currentChecked={pollState[pageNumber - firstPollPosition]}
+              currentPageData={{
+                title: infoData.titles[+pageNumber],
+                body: infoData.bodyList[+pageNumber],
+                image: infoData.images[+pageNumber],
+              }}
+              questions={infoData.images[+pageNumber].split(",")}
+              pollState={pollState}
+              setCurrentAnswer={(value) => {
+                const currentPollState = [...pollState];
+                currentPollState[pageNumber - firstPollPosition] =
+                  value.target.value;
+                setPollState(currentPollState);
+              }}
+            />
+          ) : (
+            <p1></p1>
+          )}
+          <br></br>
+        </div>
+        <div className="div4-infopage"></div>
+        <div className="div5-infopage"></div>
+        <div className="floating-row">
+          <div className="parent-buttonRow">
+            <div className="div1-buttonRow">
+              <Button
+                size="lg"
+                type="button"
+                variant="danger"
+                onClick={() => handleClick(+pageNumber == 0 ? "quit" : "back")}
+              >
+                {+pageNumber == 0 ? "quit" : "back"}
+              </Button>
+            </div>
+            <div className="div2-buttonRow">
+              <Button
+                size="lg"
+                type="button"
+                variant="success"
+                onClick={() =>
+                  handleClick(
+                    +pageNumber >= totalPages - 1 ? "begin experiment" : "next"
+                  )
+                }
+              >
+                {+pageNumber >= totalPages - 1
+                  ? "begin experiment"
+                  : +pageNumber == 0
+                  ? "I agree"
+                  : "next"}
+              </Button>
+            </div>
           </div>
         </div>
-      </Alert>
+      </div>{" "}
     </div>
   );
 };
