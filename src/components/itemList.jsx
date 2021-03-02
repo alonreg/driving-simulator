@@ -15,7 +15,6 @@ const useItems = () => {
           id: doc.id, //id and data pushed into items array
           ...doc.data(), //spread operator merges data to id.
         }));
-        delete listItems["global"];
         console.log(listItems);
         setItems(listItems); //items is equal to listItems
       }
@@ -27,8 +26,6 @@ const useItems = () => {
 
 const ItemList = ({ editItem }) => {
   const mapToTable = function (item, i) {
-    if (item.id == "global") return;
-
     return (
       <tr key={i} className={`font-italic`}>
         <td>{item.id}</td>
@@ -41,6 +38,10 @@ const ItemList = ({ editItem }) => {
         <td>{item.fail}</td>
         <td>{item.rescue}</td>
         <td>{item.success}</td>
+        <td>{item.timeoutComputerDecision}</td>
+        <td>{item.timeoutNextObstacleFloor}</td>
+        <td>{item.timeoutNextObstacleMax}</td>
+        <td>{item.kValue + ", [" + item.randomValues + "]"}</td>
         <Button onClick={() => editItem(item)} className="input-settings">
           Edit
         </Button>
@@ -73,6 +74,10 @@ const ItemList = ({ editItem }) => {
             <th>Fail</th>
             <th>Rescue</th>
             <th>Success</th>
+            <th>Decision (ms)</th>
+            <th>Wait max (ms)</th>
+            <th>Wait min (ms)</th>
+            <th>k value, randoms</th>
             <th>Options</th>
           </tr>
         </thead>

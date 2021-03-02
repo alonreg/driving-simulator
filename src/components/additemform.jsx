@@ -15,6 +15,12 @@ const AddItemForm = () => {
   const [pass, setPass] = useState(null);
   const [rescue, setRescue] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [timeoutComputerDecision, setTimeoutComputerDecision] = useState(null);
+  const [timeoutNextObstacleFloor, setTimeoutNextObstacleFloor] = useState(
+    null
+  );
+  const [timeoutNextObstacleMax, setTimeoutNextObstacleMax] = useState(null);
+  const [kValue, setKValue] = useState(null);
 
   /* The onSubmit function we takes the 'e'
     or event and submits it to Firebase
@@ -35,22 +41,31 @@ const AddItemForm = () => {
       fail == null ||
       pass == null ||
       rescue == null ||
-      success == null
+      success == null ||
+      timeoutComputerDecision == null ||
+      timeoutNextObstacleFloor == null ||
+      timeoutNextObstacleMax == null ||
+      kValue == null
     ) {
       window.alert("Empty field detected. Please fill all fields.");
       return;
     }
-    FirestoreService.setParameters({
-      set: name,
+
+    FirestoreService.setParameters(name, {
       computerError: +computerError,
       humanError: +humanError,
       obstaclesNum: +obstaclesNum,
-      startWithAuto: startWithAuto == "true" ? true : false,
+      startWithAuto: startWithAuto == "true" && startWithAuto ? true : false,
       calculation: +calculation,
       fail: +fail,
       pass: +pass,
       rescue: +rescue,
       success: +success,
+      timeoutComputerDecision: +timeoutComputerDecision,
+      timeoutNextObstacleFloor: +timeoutNextObstacleFloor,
+      timeoutNextObstacleMax: +timeoutNextObstacleMax,
+      kValue: +kValue,
+      randomValues: [-2.5, 2.5],
     })
       //.then will reset the form to nothing
       .then(
@@ -58,12 +73,16 @@ const AddItemForm = () => {
         setComputerError(0),
         setHumanError(0),
         setObstaclesNum(0),
-        setStartWithAuto(true),
+        setStartWithAuto("true"),
         setCalculation(0),
         setFail(0),
         setPass(0),
         setRescue(0),
-        setSuccess(0)
+        setSuccess(0),
+        setTimeoutComputerDecision(0),
+        setTimeoutNextObstacleFloor(0),
+        setTimeoutNextObstacleMax(0),
+        setKValue(1.5)
       );
   };
 
@@ -119,11 +138,12 @@ const AddItemForm = () => {
           className="input-settings"
           name="startWithAuto"
           value={startWithAuto}
-          onChange={(e) => setStartWithAuto(e.currentTarget.value ?? true)}
+          onChange={(e) => setStartWithAuto(e.currentTarget.value ?? "true")}
         >
           <option name="true">true</option>
           <option name="false">false</option>
         </select>
+        <hr />
         <div>
           <label>Calculation</label>
           <input
@@ -134,8 +154,7 @@ const AddItemForm = () => {
             onChange={(e) => setCalculation(e.currentTarget.value)}
             type="number"
           />
-        </div>
-        <div>
+
           <label> Fail</label>
           <input
             className="input-settings"
@@ -145,8 +164,7 @@ const AddItemForm = () => {
             onChange={(e) => setFail(e.currentTarget.value)}
             type="number"
           />
-        </div>
-        <div>
+
           <label>Pass</label>
           <input
             className="input-settings"
@@ -156,8 +174,7 @@ const AddItemForm = () => {
             onChange={(e) => setPass(e.currentTarget.value)}
             type="number"
           />
-        </div>
-        <div>
+
           <label>Rescue</label>
           <input
             className="input-settings"
@@ -167,8 +184,7 @@ const AddItemForm = () => {
             onChange={(e) => setRescue(e.currentTarget.value)}
             type="number"
           />
-        </div>
-        <div>
+
           <label>Success</label>
           <input
             className="input-settings"
@@ -176,6 +192,49 @@ const AddItemForm = () => {
             value={success}
             name="Successful Pass"
             onChange={(e) => setSuccess(e.currentTarget.value)}
+            type="number"
+          />
+        </div>
+        <hr />
+        <div>
+          <label>Decision (ms)</label>
+          <input
+            className="input-settings"
+            placeholder="1000"
+            value={timeoutComputerDecision}
+            name="timeoutComputerDecision"
+            onChange={(e) => setTimeoutComputerDecision(e.currentTarget.value)}
+            type="number"
+          />
+          <label>Wait max (ms)</label>
+          <input
+            className="input-settings"
+            placeholder="1000"
+            value={timeoutNextObstacleFloor}
+            name="timeoutNextObstacleFloor"
+            onChange={(e) => setTimeoutNextObstacleFloor(e.currentTarget.value)}
+            type="number"
+          />
+          <label>Wait min (ms)</label>
+          <input
+            className="input-settings"
+            placeholder="1000"
+            value={timeoutNextObstacleMax}
+            name="timeoutNextObstacleMax"
+            onChange={(e) => setTimeoutNextObstacleMax(e.currentTarget.value)}
+            type="number"
+          />
+        </div>
+        <hr />
+        <div>
+          <label>k value</label>
+          <input
+            className="input-settings"
+            placeholder="1.5"
+            step="any"
+            value={kValue}
+            name="kValue"
+            onChange={(e) => setKValue(e.currentTarget.value)}
             type="number"
           />
         </div>

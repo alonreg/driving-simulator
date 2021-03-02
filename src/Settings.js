@@ -23,7 +23,7 @@ function Settings() {
 
   return (
     <>
-      <Navbar bg="dark" variant="dark">
+      <Navbar bg="dark" variant="dark" sticky="top">
         <Navbar.Brand>Driving Simulator</Navbar.Brand>
         <Nav className="mr-auto">
           <Nav.Link disabled={true}>

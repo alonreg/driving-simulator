@@ -160,7 +160,7 @@ const InformationPage = () => {
             infoData.images[+pageNumber].includes("gif")) ? (
             <>
               <img
-                src={infoData.images[+pageNumber - 1]}
+                src={infoData.images[+pageNumber]}
                 className="instructions-image"
               />
             </>

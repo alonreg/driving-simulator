@@ -26,8 +26,6 @@ const useItems = () => {
 
 const ItemList = ({ editItem }) => {
   const mapToTable = function (item, i) {
-    if (item.id == "global") return;
-
     return (
       <tr key={i} className={`font-italic`}>
         <td>{item.id}</td>

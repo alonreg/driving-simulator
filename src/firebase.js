@@ -15,12 +15,6 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 };
 
-/**
-if (Object.keys(functions.config()).length){
-  firebaseConfig = functions.config().
-}
- */
-
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 const db = firebaseApp.firestore();
@@ -38,7 +32,6 @@ export const createSession = ({
   session,
   startTime,
   parameters,
-  global,
   parametersSet,
   pollData,
 } = {}) => {
@@ -65,7 +58,6 @@ export const createSession = ({
     screenHeight: window.innerHeight,
     parametersSet: parametersSet,
     parameters: parameters,
-    global: global,
     pollData: pollData ?? [],
   };
 
@@ -112,7 +104,6 @@ export const setSessionData = ({
   modeChanges,
   pollData,
   parameters,
-  global,
   log,
   parametersSet,
 } = {}) => {
@@ -149,7 +140,7 @@ export const setSessionData = ({
     }); //catch error  - .catch()
 };
 
-export const setParameters = ({
+export const setParametersOLD = ({
   set,
   computerError,
   humanError,
@@ -193,6 +184,10 @@ export const deleteSession = (session) => {
 export const updateParameters = (set, updatedItem) => {
   delete updatedItem.id;
   db.collection("parameters").doc(set).update(updatedItem);
+};
+
+export const setParameters = (set, item) => {
+  return db.collection("parameters").doc(set).set(item, { merge: true });
 };
 
 export const updatePreText = (id, updatedItem) => {

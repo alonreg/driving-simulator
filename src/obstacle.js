@@ -135,11 +135,11 @@ class Obstacle {
   getObstacleValueWithError(real, error) {
     const rnd = Math.random();
     //=NORM.DIST(NORM.INV(I2,$B$12,$B$13)+NORM.INV(RAND(),0,$B$14),$B$12,$B$13,TRUE)
-    let obstacleValueWithError = normal.cdf(
-      normal.inv(real, 0, 1) + normal.inv(rnd, 0, error), // should be changed to global variables?
-      0,
-      1
-    );
+    //let obstacleValueWithError = normal.cdf(
+    //  normal.inv(real, 0, 1) + normal.inv(rnd, 0, error), // should be changed to global variables?
+    //  0,
+    //  1
+    //);
 
     /*console.log(
       "value with error => error: " +

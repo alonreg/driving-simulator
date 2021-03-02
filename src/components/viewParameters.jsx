@@ -17,6 +17,10 @@ function ViewParameters() {
       fail: "",
       rescue: "",
       success: "",
+      timeoutComputerDecision: "",
+      timeoutNextObstacleFloor: "",
+      timeoutNextObstacleMax: "",
+      kValues: "",
     },
   ];
 
@@ -36,6 +40,14 @@ function ViewParameters() {
       fail: +item.fail || item.fail,
       rescue: +item.rescue || item.rescue,
       success: +item.success || item.success,
+      timeoutComputerDecision:
+        +item.timeoutComputerDecision || item.timeoutComputerDecision,
+      timeoutNextObstacleFloor:
+        +item.timeoutNextObstacleFloor || item.timeoutNextObstacleFloor,
+      timeoutNextObstacleMax:
+        +item.timeoutNextObstacleMax || item.timeoutNextObstacleMax,
+      kValue: +item.kValue || item.kValue,
+      randomValues: [-2.5, 2.5], // if needed, can be changed to dynamic changable values
     });
   };
 

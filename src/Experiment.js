@@ -18,37 +18,43 @@ import {
   useLocation,
 } from "react-router-dom";
 
+/** Experiment Page:
+ * (Example [test]: https://driving-simulator-tau-test.web.app/set-1/info-1/2)
+ * Handles display and logic for the experiment.
+ * Holds experiment's state
+ */
 function Experiment(props) {
-  const location = useLocation();
-  let { id, urlInfoDataId } = useParams();
-  const [show, setShow] = useState(false);
-  const [score, setScore] = useState(0);
-  const [obstaclesNum, setObstaclesNum] = useState(0);
-  const obstaclesNumRef = useRef(obstaclesNum);
-  obstaclesNumRef.current = obstaclesNum;
-  const [currentObstacle, setCurrentObstacle] = useState();
-  const [userAutoMode, setUserMode] = useState(true); //starting point user mode - take from params
-  const [autoMode, setMode] = useState(true);
+  const location = useLocation(); // passing metadata from the pre-experiment part
+  let { id } = useParams(); // extract experiment-id from URL, to choose experiment config
+  // experiment state:
+  const [score, setScore] = useState(0); // user score
+  const [obstaclesNum, setObstaclesNum] = useState(0); // obstacles passed by user
+  const obstaclesNumRef = useRef(obstaclesNum); // reference to obstacleNum state
+  obstaclesNumRef.current = obstaclesNum; // assign the obstacleNum state to the reference
+  const [currentObstacle, setCurrentObstacle] = useState(); // holds the current obstacle object
+  const [autoMode, setMode] = useState(true); // boolean - is Auto Mode currently on?
   const [isMoving, setIsMoving] = useState(true); //Moving, or hit Obstacle
-  const [sessionId, setSessionId] = useState();
-  const [parameters, setParameters] = useState();
-  const [global, setGlobal] = useState();
-  const [error, setError] = useState();
-  const [started, setStarted] = useState(false);
-  const [ended, setEnded] = useState(false);
-  ////////////////////////////////////////// SESSION DATA ////////
-  const [successByHuman, setSuccessByHuman] = useState(0);
-  const [successByComp, setSuccessByComp] = useState(0);
-  const [failByHuman, setSailByHuman] = useState(0);
-  const [failByComp, setFailByComp] = useState(0);
-  const [rescueCount, setRescueCount] = useState(0);
-  const [calcSuccess, setCalcSuccessCount] = useState(0);
-  const [calcFail, setCalcFailCount] = useState(0);
-  const [startTime, setStartTime] = useState(Date.now());
-  const [modeChanges, setModeChanges] = useState(0);
-  const [log, setLog] = useState([]);
-  const [showToast, setShowToast] = useState(false);
+  const [sessionId, setSessionId] = useState(); // session id is the user identification
+  const [parameters, setParameters] = useState(); // parameters set used in the experiment
+  const [error, setError] = useState(); // error state, currently not being used
+  const [started, setStarted] = useState(false); // boolean flag - true after experiment starts
+  const [ended, setEnded] = useState(false); // boolean flag - true after experiment ends
+  // SESSION DATA ////////
+  const [successByHuman, setSuccessByHuman] = useState(0); // counts no. of successes when manual
+  const [successByComp, setSuccessByComp] = useState(0); //  counts no. of successes when Auto mode
+  const [failByHuman, setSailByHuman] = useState(0); // counts no. of failures when Auto mode
+  const [failByComp, setFailByComp] = useState(0); // counts no. of failures when Auto Mode
+  const [rescueCount, setRescueCount] = useState(0); // counts no. of rescue calls
+  const [calcSuccess, setCalcSuccessCount] = useState(0); // counts no. of calculation successes
+  const [calcFail, setCalcFailCount] = useState(0); // counts no. of calculation failures
+  const [startTime, setStartTime] = useState(Date.now()); // UTC start time
+  const [modeChanges, setModeChanges] = useState(0); // counts no. of mode (Auto / Manual) changes
+  const [log, setLog] = useState([]); // holds the log with info about current session
 
+  /** adds +1 to the success / failure count
+   * gets one of the following strings:
+   * "successByHuman","successByComp","failByComp","rescue","calcSuccess", "calcFail"
+   *  */
   const addSuccessFailToSessionData = (addTo) => {
     console.log(addTo + "   in add to ");
     switch (addTo) {
@@ -76,19 +82,7 @@ function Experiment(props) {
     }
   };
 
-  /**
-    const [sessionData, setSessionData] = useState({
-    session: sessionId,
-    successByHuman: 0,
-    successByComp: 0,
-    failByHuman: 0,
-    failByComp: 0,
-    startTime: Date.now(), //delta
-    modeChanges: 0,
-  });
-   */
-
-  // Use an effect to authenticate and load the grocery list from the database
+  // Use an effect to get parameters data from firebase according to parameters set name (=id)
   useEffect(() => {
     if (!parameters) {
       FirestoreService.getParametersData(id).then((params) => {
@@ -96,16 +90,17 @@ function Experiment(props) {
         setParameters(data);
         setMode(data.startWithAuto);
       });
-      FirestoreService.getParametersData("global").then((params) => {
-        setGlobal(params.data());
-        //drive();
-      });
     }
-  }, []); //sessionId, setSessionId
+  }, []);
 
+  /**
+   * Use an effect to authenticate anonymously, using firebase.
+   * This is used to maintain an identity for each experiment user.
+   * You can view current saved users at the firebase console.
+   * Than, create a new session with that user's id
+   *  */
   useEffect(() => {
-    // create the new session in firestore
-    if (parameters && global) {
+    if (parameters) {
       FirestoreService.authenticateAnonymously()
         .then((userCredential) => {
           if (sessionId && sessionId == userCredential.user.id) {
@@ -113,28 +108,31 @@ function Experiment(props) {
             setSessionId(userCredential.user.uid);
             FirestoreService.createSession({
               session: userCredential.user.uid,
-              pollData: location.pollData,
+              pollData: location.pollData, // user answers to questionare in the pre-experiment stage
               startTime: startTime,
               parameters: parameters,
-              global: global,
               parametersSet: id,
             });
-            addToLog("started", "none");
+            addToLog("started", "none"); // add to log - the session has started
           }
         })
         .catch(() => {
-          addToLog("error", "anonymous-auth-failed");
-          setError("anonymous-auth-failed");
+          addToLog("error", "anonymous-auth-failed"); // add error to the log
+          setError("anonymous-auth-failed"); // set the error state with the current error
         });
     }
-  }, [parameters, global]);
+  }, [parameters]);
 
+  // use effect to start the driving, when the user presses start
+  // makes sure parameters were downloaded
+  // and that the experiment hasn't ended
   useEffect(() => {
-    if (global && started && !ended) {
+    if (parameters && started && !ended) {
       drive();
     }
-  }, [global, started]);
+  }, [parameters, started]);
 
+  // use effect to end the session when max number of obstacles achieved
   useEffect(() => {
     if (parameters && parameters.obstaclesNum == obstaclesNumRef.current) {
       setTimeout(() => {
@@ -148,62 +146,45 @@ function Experiment(props) {
     }
   }, [obstaclesNum]);
 
-  const notifyGood = (message) => 1;
-  /*toast.success(message, {
-      style: { fontSize: 30 },
-      position: "top-left",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: false,
-      progress: undefined,
-    });*/
+  //const notifyGood = (message) => 1; // currently not used
+  //const notifyBad = (message) => 1; // currently not used
+  //const scoreAddition = (v) => {
+  // currently not used
+  //if (v > 0) {
+  //  const message = "+" + v;
+  //  notifyGood(message);
+  //} else if (v < 0) {
+  //  const message = v;
+  // notifyBad(message);
+  //}
+  // setScore((score) => v + score);
+  //};
 
-  const notifyBad = (message) => 1;
-
-  /*
-    toast.error(message, {
-      position: "top-left",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: false,
-      progress: undefined,
-    }*/
-
-  const scoreAddition = (v) => {
-    if (v > 0) {
-      const message = "+" + v;
-      notifyGood(message);
-    } else if (v < 0) {
-      const message = v;
-      notifyBad(message);
-    }
-    setScore((score) => v + score);
+  // adds score addition to the score state
+  const scoreAddition = (addition) => {
+    setScore((score) => addition + score);
   };
 
+  // adds obstacle to the obstacle count state
   const obstaclesAddition = () => {
     setObstaclesNum(obstaclesNum + 1);
-    //console.log(obstaclesNum);
   };
 
-  const userModeChange = (mode) => {
-    setUserMode(mode);
-  };
-
+  // adds a mode-change to the mode-change counter
+  // adds mode-change to the log, log is dependant on the current mode
   const modeChange = (mode) => {
     mode ? addToLog("switch-auto", "human") : addToLog("switch-man", "human");
     setModeChanges(modeChanges + 1);
     setMode(mode);
   };
 
+  // when the user presses the start button
   const start = () => {
     addToLog("pressed-start", "human");
     setStarted(true);
   };
 
+  // when the session ends, upload data to firestore
   const end = async () => {
     FirestoreService.setSessionData({
       session: sessionId,
@@ -261,51 +242,42 @@ function Experiment(props) {
     setEnded(true);
   };
 
-  /*
-  const carStatusChange = (isMoving) => {
-    setIsMoving(isMoving);
-  };
-*/
-
-  //Renders data regarding the chance of the car to pass the obstacle succesfuly
-  const generateObstacleData = () => {
-    //return false;
-    //console.log("decision = " + obstacle.desicion);
-    //let obstacleData = { humanEstimate: 60, computerEstimate: 44 };
-    //setCurrentObstacle(obstacleData);
-  };
-
   const drive = () => {
-    console.log("in drive");
-    const timeout = Math.random() * 2000 + 1500;
-    console.log(timeout);
+    // baseTimeout represents the core timeout parameteres to decide how long to wait between obstacles
+    // this calculation achieves a random timeout between 2 obstacles, while maintaining a min-max timeout
+    // the min-max timeout can be changed in the firestore parameters
+    const baseTimeout =
+      parameters.timeoutNextObstacleMax - parameters.timeoutNextObstacleFloor;
+    const timeout =
+      Math.random() * baseTimeout + parameters.timeoutNextObstacleFloor;
 
+    // moving state changed to true - the car is moving
     setIsMoving(true);
-    //generateObstacleData();
+    // creates a new obstacle object, using firestore parameters
     const obstacle = new Obstacle(
-      global.k_value,
-      global.random_values[0],
-      global.random_values[1],
-      parameters.humanError,
-      parameters.computerError,
-      parameters.success,
-      parameters.fail,
-      parameters.pass,
-      parameters.rescue
+      // notice: parameters can be changed at  https://driving-simulator-tau.web.app/settings
+      // for test, use: https://driving-simulator-tau-test.web.app/settings
+      parameters.kValue, // k-value
+      parameters.randomValues[0], // first random value
+      parameters.randomValues[1], // second random value
+      parameters.humanError, // the human error e-h
+      parameters.computerError, // the computer error e-c
+      parameters.success, // points for succesful pass
+      parameters.fail, // penalty points for failting to pass
+      parameters.pass, // penalty points for passing
+      parameters.rescue // penalty points for calling a rescue
     );
-    setCurrentObstacle(obstacle);
+    setCurrentObstacle(obstacle); // hold the current obstacle in the state
     const driveTimeout = setTimeout(() => {
-      console.log("set is moving - flase");
+      // use the timeout we calculated to delay the next obstacle
       setIsMoving(false);
     }, timeout);
     return () => clearTimeout(driveTimeout);
   };
 
-  const onTermsDialogClose = function () {
-    window.open("about:blank", "_self");
-    window.close();
-  };
-
+  // a function to add actions to the log.
+  // the function creates a new log object each time
+  // and then replaces the old log with the new one
   const addToLog = (action, host) => {
     const newLog = {
       timestamp: Date.now(),
@@ -345,8 +317,8 @@ function Experiment(props) {
     setLog([...log, newLog]);
   };
 
-  // if a session wasn't initialized yet
-  if (!sessionId || !parameters || !global) {
+  // if a session wasn't initialized yet, show a 3-dot loader animation
+  if (!sessionId || !parameters) {
     return (
       <>
         <div className="center-spinner">
@@ -356,17 +328,15 @@ function Experiment(props) {
     );
   }
 
+  // if session has ended - show the Result page
   return ended ? (
     <Results score={score} obstacles={obstaclesNum} />
   ) : (
     <>
       <div class="parent-experiment">
-        {/*<ToastContainer
-          limit="2"
-         style={{ fontSize: 30, textAlign: "center" }}
-        >*/}
-
-        {/*<div className="top-left">
+        {/*
+        SCORE Page, discontinued - currently not in use
+        <div className="top-left">
           <p></p>
           <Score
             score={score}
@@ -380,6 +350,8 @@ function Experiment(props) {
             onChange={scoreAddition}
           />
         </div>*/}
+
+        {/** The top part of the main experiment page */}
         <div className="div1-experiment">
           <TopConsole
             userAutoMode={autoMode}
@@ -389,9 +361,11 @@ function Experiment(props) {
             obstaclesNum={obstaclesNum}
             started={started}
             score={score}
+            autoAssist={parameters.autoAssist ?? "AutoAssist"}
           />
         </div>
 
+        {/** The calculator part of the main experiment page */}
         <div className="div2-experiment">
           <Calculator
             score={score}
@@ -408,6 +382,8 @@ function Experiment(props) {
             }}
           />
         </div>
+
+        {/** The vehicle steering part of the main experiment page (bottom) */}
         <div className="div3-experiment">
           <DriveConsole
             isMoving={isMoving}
@@ -420,6 +396,7 @@ function Experiment(props) {
               rescue: parameters.rescue,
               success: parameters.success,
             }}
+            timeoutComputerDecision={parameters.timeoutComputerDecision}
             onChange={{
               scoreAddition: scoreAddition,
               obstaclesAddition: obstaclesAddition,
@@ -433,6 +410,7 @@ function Experiment(props) {
             started={started}
             startOnClick={start}
             obstacles={obstaclesNum}
+            autoAssist={parameters.autoAssist ?? "AutoAssist"}
           />
         </div>
       </div>

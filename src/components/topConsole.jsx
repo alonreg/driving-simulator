@@ -142,7 +142,7 @@ function TopConsole(props) {
                   eventKey="auto"
                 >
                   <DirectionsCarIcon />
-                  AutoAssist
+                  {props.autoAssist}
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>

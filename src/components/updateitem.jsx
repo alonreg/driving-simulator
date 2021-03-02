@@ -81,6 +81,8 @@ const UpdateItem = ({ setEditing, currentItem, updateItem }) => {
             <option name="false">false</option>
           </select>
         </div>
+        <hr />
+
         <div>
           <label>Calculation</label>
           <input
@@ -90,9 +92,6 @@ const UpdateItem = ({ setEditing, currentItem, updateItem }) => {
             onChange={onChange}
             name="calculation"
           />
-        </div>
-
-        <div>
           <label>Fail</label>
           <input
             className="input-settings"
@@ -101,19 +100,14 @@ const UpdateItem = ({ setEditing, currentItem, updateItem }) => {
             onChange={onChange}
             name="fail"
           />
-          <div>
-            <label>Pass</label>
-            <input
-              className="input-settings"
-              type="number"
-              value={+item.pass}
-              onChange={onChange}
-              name="pass"
-            />
-          </div>
-        </div>
-        <div>
-          {" "}
+          <label>Pass</label>
+          <input
+            className="input-settings"
+            type="number"
+            value={+item.pass}
+            onChange={onChange}
+            name="pass"
+          />{" "}
           <label>Rescue</label>
           <input
             className="input-settings"
@@ -121,10 +115,7 @@ const UpdateItem = ({ setEditing, currentItem, updateItem }) => {
             value={+item.rescue}
             onChange={onChange}
             name="rescue"
-          />
-        </div>
-        <div>
-          {" "}
+          />{" "}
           <label>Success</label>
           <input
             className="input-settings"
@@ -132,6 +123,45 @@ const UpdateItem = ({ setEditing, currentItem, updateItem }) => {
             value={+item.success}
             onChange={onChange}
             name="success"
+          />
+        </div>
+        <hr />
+
+        <div>
+          <label>Decision (ms)</label>
+          <input
+            className="input-settings"
+            type="number"
+            value={+item.timeoutComputerDecision}
+            onChange={onChange}
+            name="timeoutComputerDecision"
+          />
+          <label>Wait max (ms)</label>
+          <input
+            className="input-settings"
+            type="number"
+            value={+item.timeoutNextObstacleFloor}
+            onChange={onChange}
+            name="timeoutNextObstacleFloor"
+          />
+          <label>Wait min (ms)</label>
+          <input
+            className="input-settings"
+            type="number"
+            value={+item.timeoutNextObstacleMax}
+            onChange={onChange}
+            name="timeoutNextObstacleMax"
+          />
+        </div>
+        <hr />
+        <div>
+          <label>k value</label>
+          <input
+            className="input-settings"
+            type="number"
+            value={+item.kValue}
+            onChange={onChange}
+            name="kValue"
           />
         </div>
         <Button type="submit" variant="success" className="input-settings">

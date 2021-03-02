@@ -59,16 +59,6 @@ function RescueButton({ onClick, disabled, className, rescueScore }) {
   );
 }
 
-function Counter({ number }) {
-  return (
-    <>
-      <div className="counter" draggable={false}>
-        <p className="counter-text">{number}</p>
-      </div>
-    </>
-  );
-}
-
 // A function to create an arrow image, according to a direction
 function Arrow({
   progressBar,
@@ -82,6 +72,7 @@ function Arrow({
   statsDivClassName,
   successScore,
   failScore,
+  autoAssist,
 }) {
   //const capitalizedDirection = {
   // src: direction.charAt(0).toUpperCase() + direction.slice(1),
@@ -117,7 +108,7 @@ function Arrow({
             {!autoMode && !isMoving && (
               <>
                 <p className="alert-text-driveConsole">
-                  <i>AutoAssist: </i>
+                  <i>{autoAssist}: </i>
                   <br></br>
                   <b>{Math.round((estimate + Number.EPSILON) * 100)}%</b>
                 </p>
@@ -174,6 +165,8 @@ function DriveConsole({
   startOnClick,
   scoreBoard,
   obstacles,
+  timeoutComputerDecision,
+  autoAssist,
 }) {
   const computerDesicion = () => {
     const direction = currentObstacle?.decision ?? null;
@@ -185,7 +178,7 @@ function DriveConsole({
             localDirectionDecided(direction);
           };
         })(directionDecided),
-        2000
+        timeoutComputerDecision
       );
     }
   };
@@ -302,6 +295,7 @@ function DriveConsole({
               statsDivClassName="div6-drivingConsole"
               successScore={scoreBoard.success + scoreBoard.pass}
               failScore={scoreBoard.fail + scoreBoard.pass}
+              autoAssist={autoAssist}
             />
             <Arrow
               direction="forward"
@@ -315,6 +309,7 @@ function DriveConsole({
               statsDivClassName="div7-drivingConsole"
               successScore={scoreBoard.success}
               failScore={scoreBoard.fail}
+              autoAssist={autoAssist}
             />
 
             <Arrow
@@ -329,6 +324,7 @@ function DriveConsole({
               statsDivClassName="div8-drivingConsole"
               successScore={scoreBoard.success + scoreBoard.pass}
               failScore={scoreBoard.fail + scoreBoard.pass}
+              autoAssist={autoAssist}
             />
 
             <div className="div4-drivingConsole ">

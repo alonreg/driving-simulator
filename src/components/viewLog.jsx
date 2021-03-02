@@ -55,13 +55,14 @@ const useItems = () => {
         const listItems = snapshot.docs.map((doc) => {
           const arr = Object.keys(doc.data()).map((i) => Number(i));
           const min = Math.min(...arr);
+          const totalSessions = arr.length;
           //map each document into snapshot
           return {
             id: doc.id, //id and data pushed into items array
+            totalSessions: totalSessions,
             ...doc.data()[min],
           }; //spread operator merges data to id.
         });
-
         setItems(listItems); //items is equal to listItems
       }
     );
@@ -110,6 +111,7 @@ const ViewLog = () => {
         <td>{item.obstacles.rescueCount}</td>
         <td>{item.obstacles.calcSuccess}</td>
         <td>{item.obstacles.calcFail}</td>
+        <td>{item.totalSessions}</td>
         {item.pollData ? (
           <td>{item.pollData.map((answer) => answer + ", ")}</td>
         ) : (
@@ -191,17 +193,20 @@ const ViewLog = () => {
   itemsFromFirestore.sort((a, b) => b.startTime - a.startTime); // sort by date, decending
 
   const listItems = itemsFromFirestore.map(mapToTable);
-  //const csvData =
-
+  // headers for CSV output
   const headers = [
     { label: "session ID", key: "id" },
     { label: "param set", key: "parametersSet" },
-    //{ label: "global params", key: "global" },
     { label: "start at", key: "startTime" },
     { label: "end time", key: "endTime" },
     { label: "final score", key: "score" },
     { label: "total time", key: "totalTime" },
     { label: "begin with mode", key: "param_startWithAuto" },
+    { label: "wait-decision", key: "param_timeoutComputerDecision" },
+    { label: "wait between - min", key: "param_timeoutNextObstacleFloor" },
+    { label: "wait between - max", key: "param_timeoutNextObstacleMax" },
+    { label: "k value", key: "param_kValue" },
+    { label: "random - min", key: "param_randomValues" },
     //////
     { label: "score - success", key: "param_success" },
     { label: "score - calculation", key: "param_calculation" },
@@ -220,6 +225,7 @@ const ViewLog = () => {
     { label: "total rescue calls", key: "obstaclesSum_rescueCount" },
     { label: "total calc fail", key: "obstaclesSum_calcFail" },
     { label: "total correct calc", key: "obstaclesSum_calcSuccess" },
+    { label: "no. of sessions", key: "totalSessions" },
     { label: "questions", key: "pollData" },
   ];
 
@@ -244,8 +250,8 @@ const ViewLog = () => {
               "Rescue(h)",
               "Calc Success(h)",
               "Calc Fail(h)",
-              "Quest.",
-              "points",
+              "Total sessions",
+              "answers",
               "log",
               "",
             ].map((title) =>
