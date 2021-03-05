@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import { constants } from "griddle-react";
 import { normal } from "jstat";
 
+/**
+ * This class handles the OBSTACLES,
+ * which are the object a driver hits every once in a while
+ */
 class Obstacle {
   constructor(
     k,
@@ -52,36 +56,10 @@ class Obstacle {
     this.ev_f = this.getExpectedValue(this.real_f, success, fail, 0); //EV with no pass
     this.ev_rescue = rescue; // EV of rescue
     this.decision = this.getComputerDecision();
-
-    /*console.log(
-      "Decisions Parameters: " +
-        " k:" +
-        this.k +
-        "  reals: r = " +
-        this.real_r +
-        " l =  " +
-        this.real_l +
-        "  f = " +
-        this.real_f +
-        " ev_r = " +
-        this.ev_r +
-        " ev_l = " +
-        this.ev_l +
-        " ev_f = " +
-        this.ev_f +
-        " ev_rescue" +
-        this.ev_rescue +
-        " dec: " +
-        this.decision +
-        "scores: success: " +
-        success +
-        " fail: " +
-        fail +
-        " pass: " +
-        pass
-    );*/
   }
 
+  // returns the decision made by the algorithm,
+  // this will either be shown to the user or used for making a decision in AutoMode
   getComputerDecision() {
     if (
       this.ev_r < this.ev_rescue &&
@@ -99,26 +77,20 @@ class Obstacle {
     }
   }
 
+  // gets a random value between min and max
   getXValue(max, min) {
     const rnd = Math.random() * (max - min) + min;
-    //console.log("rnd = " + rnd);
     return rnd;
   }
 
+  // gets the real value of the obstacle, without user/computer error
   getRealObstacleValue(k, x) {
     const exponent = 1 / (1 + Math.exp(-1 * k * x));
-    /* console.log(
-      "in get real obstacle value:" +
-        " k= " +
-        k +
-        " x=" +
-        x +
-        " real = " +
-        exponent
-    );*/
     return exponent;
   }
 
+  // ncdf stands for Normal Cumulative Distribution Function
+  // Calculates the ncdf value for x, a mean, and standard deviation
   ncdf(x, mean, std) {
     var x = (x - mean) / std;
     var t = 1 / (1 + 0.2315419 * Math.abs(x));
@@ -132,60 +104,19 @@ class Obstacle {
     return prob;
   }
 
+  // returns the obstacle value, but with the error (either human error or computer error)
   getObstacleValueWithError(real, error) {
     const rnd = Math.random();
-    //=NORM.DIST(NORM.INV(I2,$B$12,$B$13)+NORM.INV(RAND(),0,$B$14),$B$12,$B$13,TRUE)
-    //let obstacleValueWithError = normal.cdf(
-    //  normal.inv(real, 0, 1) + normal.inv(rnd, 0, error), // should be changed to global variables?
-    //  0,
-    //  1
-    //);
-
-    /*console.log(
-      "value with error => error: " +
-        error +
-        " real: " +
-        real +
-        " normal inv " +
-        normal.inv(0.37519, 0, 1) +
-        " normal inv 22 " +
-        normal.inv(0.8, 0, 1.5) +
-        " cdf: " +
-        this.ncdf(normal.inv(real, 0, 1) + normal.inv(rnd, 0, error), 0, 1) +
-        " val with err: " +
-        obstacleValueWithError
-    );
-
-    console.log(
-      "compare: 1 - ncdf = " +
-        this.ncdf(-1.714269295, 0, 1) +
-        " jsstat = " +
-        normal.cdf(
-          -1.714269295, // should be changed to global variables?
-          0,
-          1
-        )
-    );*/
-
     return this.ncdf(normal.inv(real, 0, 1) + normal.inv(rnd, 0, error), 0, 1); // obstacleValueWithError;
   }
 
+  // returns the EV for a specific direction.
+  // This is used for the computer to choose a direction.
+  // The computer chooses the highest EV option.
   getExpectedValue(failureProbabilty, successScore, failScore, pass) {
     const ev =
       (1 - failureProbabilty) * (successScore + pass) +
       failureProbabilty * (failScore + pass);
-    /*console.log(
-      "in getEV=> failureProb: " +
-        failureProbabilty +
-        " Success Score = " +
-        successScore +
-        " fail score = " +
-        failScore +
-        " pass " +
-        pass +
-        " ev " +
-        ev
-    );*/
     return ev;
   }
 }

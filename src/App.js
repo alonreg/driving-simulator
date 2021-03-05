@@ -13,7 +13,9 @@ export default function App() {
             renders the first one that matches the current URL. */}
         <Switch>
           <Route path="/settings" children={<Settings />} />
+          {/** ID = parameters id, urlInfoDataId = pre-experiment params */}
           <Route path="/:id/:urlInfoDataId/2" children={<Experiment />} />
+          {/** ID = parameters id, urlInfoDataId = pre-experiment params, page-:urlPageNumber = page number in pre-experiment*/}
           <Route
             path="/:id/:urlInfoDataId/1/page-:urlPageNumber"
             children={<InformationPage />}

@@ -166,7 +166,7 @@ code {
 
 /**MOBILE-1000**/
 
-/**MOBILE-500**/
+/**CSS For MOBILE-600px width max**/
 @media (max-width: 600px) {
   .parent-experiment {
     display: grid;

@@ -2,8 +2,12 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 
-//let firebaseConfig = require("./env.json");
-
+/**
+ * Firebase Configuration:
+ * The configuration is taken from the firebase console.
+ * Values are kept in "env.dev" and "end.production" files.
+ * The system chooses the correct configration according to the domain being used.
+ */
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
@@ -15,19 +19,25 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 };
 
+// initialize the Firebase connection
 const firebaseApp = firebase.initializeApp(firebaseConfig);
-
 const db = firebaseApp.firestore();
 
+// authenticate user anonymously, with a random id.
+// Every user has a unique ID.
+// This ID is saved with a cookie on the user's browser,
+// so an incognito browsing will create a seperate ID.
 export const authenticateAnonymously = () => {
   console.log("firebase > authenticate Anonymously");
   return firebase.auth().signInAnonymously();
 };
 
+// returns pre-experiment firebase collection data
 export const getInfoData = () => {
   return db.collection("preExperiment"); //.orderBy("startTime");
 };
 
+// creates a new session at the database, initializes user data and parameters
 export const createSession = ({
   session,
   startTime,
@@ -70,22 +80,27 @@ export const createSession = ({
     });
 };
 
+// returns parameters from DB. paramererSet is the name of the firebase document
 export const getParametersData = (parameterSet) => {
   return db.collection("parameters").doc(parameterSet).get();
 };
 
+// returns all parameters documents
 export const getAllParametersData = () => {
   return db.collection("parameters");
 };
 
+// returns all user sessions
 export const getAllSessions = () => {
   return db.collection("sessions"); //.orderBy("startTime");
 };
 
+// returns specific session, by session ID
 export const getSessionData = (sessionId) => {
   return db.collection("sessions").doc(sessionId).get();
 };
 
+// sets session data
 export const setSessionData = ({
   session,
   successByHuman,
@@ -107,9 +122,6 @@ export const setSessionData = ({
   log,
   parametersSet,
 } = {}) => {
-  console.log("firebase > setSesstionData > " + session);
-  console.log("firebase > setSesstionData2 > " + pollData);
-
   const data = {
     obstacles: {
       successByHuman: successByHuman ?? 0,
@@ -129,17 +141,55 @@ export const setSessionData = ({
     log: log ?? "empty",
     serverTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
   };
-
-  console.log("firebase > setSessionData data: > " + parametersSet);
-
   db.collection("sessions")
     .doc(session) // sessionID
-    .set({ [startTime]: data }, { merge: true })
+    .set({ [startTime]: data }, { merge: true }) // sub-document for each session this user has
     .then((ref) => {
       console.log("ref of setSessionData in FIREBASE.JS: " + ref + session);
     }); //catch error  - .catch()
 };
 
+// delete a parameters set (from settings)
+export const deleteParameters = (set) => {
+  db.collection("parameters").doc(set).delete();
+};
+
+// delete a session
+export const deleteSession = (session) => {
+  db.collection("sessions")
+    .doc(session) // user id
+    .delete();
+};
+
+// update a parameters set (from settings)
+export const updateParameters = (set, updatedItem) => {
+  delete updatedItem.id;
+  db.collection("parameters").doc(set).update(updatedItem);
+};
+
+// set new parameters
+export const setParameters = (set, item) => {
+  return db.collection("parameters").doc(set).set(item, { merge: true });
+};
+
+// update the text+images+questionnaire in the pre-experiment part
+export const updatePreText = (id, updatedItem) => {
+  delete updatedItem.id;
+  return db.collection("preExperiment").doc(id).update(updatedItem);
+};
+
+// set new text+images+questionnaire set for the pre-experiment part
+export const setPreText = (id, updatedItem) => {
+  delete updatedItem.id;
+  return db.collection("preExperiment").doc(id).set(updatedItem);
+};
+
+// get the text+images+questionnaire for the pre-experiment part
+export const getInfoDataById = (id) => {
+  return db.collection("preExperiment").doc(id).get();
+};
+
+// not being used currently
 export const setParametersOLD = ({
   set,
   computerError,
@@ -169,37 +219,4 @@ export const setParametersOLD = ({
       },
       { merge: true }
     );
-};
-
-export const deleteParameters = (set) => {
-  db.collection("parameters").doc(set).delete();
-};
-//export const setParameters = {};
-export const deleteSession = (session) => {
-  db.collection("sessions")
-    .doc(session) // user id
-    .delete();
-};
-
-export const updateParameters = (set, updatedItem) => {
-  delete updatedItem.id;
-  db.collection("parameters").doc(set).update(updatedItem);
-};
-
-export const setParameters = (set, item) => {
-  return db.collection("parameters").doc(set).set(item, { merge: true });
-};
-
-export const updatePreText = (id, updatedItem) => {
-  delete updatedItem.id;
-  return db.collection("preExperiment").doc(id).update(updatedItem);
-};
-
-export const setPreText = (id, updatedItem) => {
-  delete updatedItem.id;
-  return db.collection("preExperiment").doc(id).set(updatedItem);
-};
-
-export const getInfoDataById = (id) => {
-  return db.collection("preExperiment").doc(id).get();
 };
