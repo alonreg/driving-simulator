@@ -22,6 +22,7 @@ const firebaseConfig = {
 // initialize the Firebase connection
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 const db = firebaseApp.firestore();
+export const auth = firebaseApp.auth();
 
 // authenticate user anonymously, with a random id.
 // Every user has a unique ID.
@@ -29,7 +30,27 @@ const db = firebaseApp.firestore();
 // so an incognito browsing will create a seperate ID.
 export const authenticateAnonymously = () => {
   console.log("firebase > authenticate Anonymously");
-  return firebase.auth().signInAnonymously();
+  return auth.signInAnonymously();
+};
+
+export async function authenticateUser(email, password) {
+  try {
+    const user = await auth.signInWithEmailAndPassword(email, password);
+    console.log("user is: " + user.user.email);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export const userLogout = () => {
+  auth
+    .signOut()
+    .then(() => {
+      // Sign-out successful.
+    })
+    .catch((error) => {
+      // An error happened.
+    });
 };
 
 // returns pre-experiment firebase collection data

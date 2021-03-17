@@ -17,7 +17,6 @@ const UpdatePreTextItem = ({ currentItem, updateItem, setCurrentItem }) => {
       setItem({ ...item, [name]: false });
       return;
     }
-
     let itemCopy = { ...item };
     let nameArrayCopy = [...itemCopy[name]];
     nameArrayCopy[page] = value;
@@ -31,16 +30,19 @@ const UpdatePreTextItem = ({ currentItem, updateItem, setCurrentItem }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    //delete currentItem.name;
     updateItem({ currentItem }, item);
+
+    // reset all fields
     setCurrentItem({
-      id: "-",
-      titles: [],
-      bodyList: [],
-      images: [],
+      id: "",
+      titles: [""],
+      bodyList: [""],
+      images: [""],
     });
+    setPage(0);
   };
 
+  // The pagination settings
   const pageButtons = item.bodyList.map((page, i) => (
     <Button onClick={() => setPage(i)}>{i + 1}</Button>
   ));
@@ -51,6 +53,19 @@ const UpdatePreTextItem = ({ currentItem, updateItem, setCurrentItem }) => {
       <ButtonToolbar aria-label="Toolbar with button groups">
         <ButtonGroup className="mr-2" aria-label="First group">
           {pageButtons}
+          <Button
+            onClick={() => {
+              setItem({
+                id: currentItem.id,
+                titles: [...currentItem.titles, ""],
+                bodyList: [...currentItem.bodyList, ""],
+                images: [...currentItem.images, ""],
+              });
+              setPage(page + 1);
+            }}
+          >
+            +
+          </Button>
         </ButtonGroup>
       </ButtonToolbar>
 
@@ -65,8 +80,17 @@ const UpdatePreTextItem = ({ currentItem, updateItem, setCurrentItem }) => {
               name="name"
               disabled
             />
+            <label>Page Number</label>
+            <input
+              className="input-settings"
+              placeholder="0"
+              value={page + 1}
+              name="page"
+              type="text"
+              disabled
+            />
           </div>
-
+          <hr />
           <div>
             <label>Title</label>
             <textarea
@@ -108,23 +132,19 @@ const UpdatePreTextItem = ({ currentItem, updateItem, setCurrentItem }) => {
           Update
         </Button>
         <Button
-          className="input-settings "
-          onClick={() =>
+          className="input-settings"
+          onClick={() => {
             setCurrentItem({
-              id: "-",
+              id: "",
               titles: [""],
               bodyList: [""],
               images: [""],
-            })
-          }
+            });
+            setPage(0);
+          }}
         >
           clear
         </Button>
-        {/*
-       <Button className="input-settings " onClick={() => setEditing(false)}>
-          Remove
-        </Button>
-       */}
       </form>
     </>
   );

@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 
+/** This component holds a form to add new pre-experiment sets. */
 const AddPreTextItemForm = () => {
   const [name, setName] = useState("");
   const [titles, setTitles] = useState([""]);
@@ -13,15 +14,10 @@ const AddPreTextItemForm = () => {
   const [page, setPage] = useState(0);
 
   const onChange = (e, setItem, item) => {
+    /** This functions creates a copy of the array and replaces it */
     const { name, value } = e.target;
-    // 2. Make a shallow copy of the item you want to mutate
     let arrayCopy = item.slice();
-    // 3. Replace the property you're intested in
     arrayCopy[page] = value;
-
-    // 4. Put it back into our array. N.B. we *are* mutating the array here, but that's why we made a copy first
-
-    // 5. Set the state to our new copy
     setItem(arrayCopy);
   };
 
@@ -51,8 +47,9 @@ const AddPreTextItemForm = () => {
       () => setName(""),
       setTitles([""]),
       setBodyList([""]),
-      setImages([""])
-    ); //.then will reset the form to nothing
+      setImages([""]),
+      setPage(0)
+    ); //".then" will reset the form to nothing
   };
 
   const clear = () => {
@@ -60,6 +57,7 @@ const AddPreTextItemForm = () => {
     setTitles([""]);
     setBodyList([""]);
     setImages([""]);
+    setPage(0);
   };
 
   const pageButtons = bodyList.map((page, i) => (
@@ -97,7 +95,17 @@ const AddPreTextItemForm = () => {
               onChange={(e) => setName(e.currentTarget.value)}
               type="text"
             />
+            <label>Page Number</label>
+            <input
+              className="input-settings"
+              placeholder="0"
+              value={page + 1}
+              name="page"
+              type="text"
+              disabled
+            />
           </div>
+          <hr />
           <div>
             <label>Title</label>
             <textarea

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./informationPage.css";
 
+/** A function to handle the questions at the end of the pre-experiment part */
 function Poll({ questions, pollStatus, setCurrentAnswer, currentChecked }) {
   return (
     <>

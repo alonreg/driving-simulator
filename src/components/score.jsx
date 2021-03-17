@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import createSpacing from "@material-ui/core/styles/createSpacing";
 
+// Displays the score at the top console
 function Score({ score, scoreBoard, onChange }) {
   const data = [
     { actionName: "Successful", score: scoreBoard.success },
@@ -15,6 +16,7 @@ function Score({ score, scoreBoard, onChange }) {
     { actionName: "Calculation", score: scoreBoard.calculation },
   ];
 
+  // a green color for addition of points, a red to subtraction of points
   const mapToTable = function (action, i) {
     var fontColor = action.score > 0 ? "font-green" : "font-red";
     var positiveCharacter = action.score > 0 ? "+" : "";

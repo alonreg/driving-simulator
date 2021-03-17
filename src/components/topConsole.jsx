@@ -1,19 +1,15 @@
-import Switch from "react-switch";
 import React, { useEffect, useState } from "react";
-import { db } from "../firebase";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import drivingGif from "../assets/endless_road.gif";
 import drivingPaused from "../assets/endless_road.jpg";
 import CenterSign from "../components/centerSign.jsx";
 import DirectionsCarIcon from "@material-ui/icons/DirectionsCar";
 import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
-import ToggleButton from "@material-ui/lab/ToggleButton";
-import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import Nav from "react-bootstrap/Nav";
 import "./topConsole.css";
 import Badge from "react-bootstrap/Badge";
 
+/** The top part of the experiment where the sign, score, GIF, and modes are */
 function TopConsole(props) {
   const [scoreDelta, setScoreDelta] = useState(0);
   const [oldScore, setOldScore] = useState(0);
@@ -30,44 +26,6 @@ function TopConsole(props) {
 
   return (
     <>
-      {/**<label className="switch">
-        <span>Mode</span>
-        <br />
-        <Switch
-          disabled={!props.isMoving || !props.started}
-          uncheckedIcon={
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                color: "white",
-                paddingRight: 2,
-              }}
-            >
-              Manual
-            </div>
-          }
-          checkedIcon={
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                color: "white",
-                paddingRight: 2,
-              }}
-            >
-              Auto
-            </div>
-          }
-          height={20}
-          width={100}
-          onColor="#0080FF"
-          onChange={handleChange}
-          checked={props.userAutoMode}
-        />
-        </label>**/}
       <div className="parent-topConsole">
         <div className="div1-topConsole">
           <CenterSign

@@ -6,6 +6,9 @@ import "./calculator.css";
 import Button from "react-bootstrap/Button";
 import Badge from "react-bootstrap/Badge";
 
+/** The calculator component is in charge of the calculator part of the experiment,
+ * where the user can solve math problems to gain points.
+ */
 function Calculator(props) {
   const generateMathProblem = () => [
     Math.floor(Math.random() * 900 + 100),

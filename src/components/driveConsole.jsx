@@ -9,6 +9,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Badge from "react-bootstrap/Badge";
 import Alert from "react-bootstrap/Alert";
 
+/** The initial pixel is a component that initiates the driving when in automode. */
 function InitiatePixel({ autoModeInit, isMoving, autoMode, started }) {
   useEffect(() => {
     if (autoMode && !isMoving && started) {
@@ -28,6 +29,7 @@ function InitiatePixel({ autoModeInit, isMoving, autoMode, started }) {
   );
 }
 
+/** Start button component at the start of the experiment */
 function StartButton({ onClick, className }) {
   return (
     <>
@@ -38,7 +40,7 @@ function StartButton({ onClick, className }) {
   );
 }
 
-// this currently doesnt get re-render so ill need to use the hazard as a re-render
+/** The rescue button */
 function RescueButton({ onClick, disabled, className, rescueScore }) {
   return (
     <>
@@ -74,35 +76,10 @@ function Arrow({
   failScore,
   autoAssist,
 }) {
-  //const capitalizedDirection = {
-  // src: direction.charAt(0).toUpperCase() + direction.slice(1),
-  // };
-  // const imageName = require(`../assets/arrow-${direction}.png`);
-
   const directionDictionary = { left: "<", forward: "^", right: ">" };
   return (
-    /**className={`arrow-${direction} estimate-${direction}`}
-     * className={`arrow-${direction} progress-${direction}`}
-     */ <>
+    <>
       <div className={statsDivClassName}>
-        {/**<ListGroup className="stats-info">
-          {!autoMode && !isMoving && (
-            <ListGroup.Item action variant="primary" className="stats-info">
-              
-              {Math.round((estimate + Number.EPSILON) * 100)}%
-            </ListGroup.Item>
-          )}
-          {!isMoving && (
-            <ListGroup.Item action variant="dark">
-              <ProgressBar
-                striped
-                now={progressBar * 100}
-                className={className}
-              />
-            </ListGroup.Item>
-          )}
-        </ListGroup>
-         */}
         {!isMoving && (
           <Alert className="alert-driveConsole" variant="warning">
             {!autoMode && !isMoving && (
@@ -128,15 +105,6 @@ function Arrow({
           </Alert>
         )}
       </div>
-
-      {/*<input
-        disabled={autoMode || isMoving}
-        draggable="false"
-        type="image"
-        src={imageName}
-        className={className}
-        onClick={() => onClick(direction)}
-      />*/}
       <div className={divClassName}>
         <Button
           onClick={() => onClick(direction)}
@@ -154,6 +122,7 @@ function Arrow({
   );
 }
 
+/** DriveConsole component displays the driving console, and manages it */
 function DriveConsole({
   autoMode,
   onArrowClick,
@@ -168,6 +137,7 @@ function DriveConsole({
   timeoutComputerDecision,
   autoAssist,
 }) {
+  /** Renders a direction decision for the computer when in autoMode */
   const computerDesicion = () => {
     const direction = currentObstacle?.decision ?? null;
     if (autoMode) {
@@ -256,17 +226,6 @@ function DriveConsole({
     }
     onChange["obstaclesAddition"]();
     onArrowClick();
-    //onChange["obstaclesAddition"]();
-    //11-12-2020 - alon!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    /*if (Math.random() > 0.5) {
-        if (direction != "forward") {
-          onChange["scoreAddition"](100);
-        } else {
-          onChange["scoreAddition"](150);
-        }
-      } else {
-        onChange["scoreAddition"](-150);
-      }*/
   };
 
   return (
@@ -348,52 +307,6 @@ function DriveConsole({
           </div>
         )}
       </div>
-
-      {/**<Counter number={obstacles} />
-
-      {started ? (
-        <>
-          <RescueButton
-            onClick={directionDecided}
-            disabled={isMoving || autoMode}
-            className="rescue"
-          />
-          <Arrow
-            key="123"
-            direction="left"
-            onClick={directionDecided}
-            progressBar={currentObstacle?.obstacleValueWithError_human_l ?? 50}
-            estimate={currentObstacle?.obstacleValueWithError_computer_l ?? 0}
-            autoMode={autoMode}
-            isMoving={isMoving}
-          />
-          <Arrow
-            direction="right"
-            onClick={directionDecided}
-            progressBar={currentObstacle?.obstacleValueWithError_human_r ?? 0}
-            estimate={currentObstacle?.obstacleValueWithError_computer_r ?? 0}
-            autoMode={autoMode}
-            isMoving={isMoving}
-          />
-          <Arrow
-            direction="forward"
-            onClick={directionDecided}
-            progressBar={currentObstacle?.obstacleValueWithError_human_f ?? 0}
-            estimate={currentObstacle?.obstacleValueWithError_computer_f ?? 0}
-            autoMode={autoMode}
-            isMoving={isMoving}
-          />
-          <CenterSign
-            autoModeInit={computerDesicion}
-            isMoving={isMoving}
-            autoMode={autoMode}
-            started={started}
-          />
-        </>
-      ) : (
-        <StartButton onClick={startOnClick} className="start-button" />
-      )}
-      **/}
     </>
   );
 }

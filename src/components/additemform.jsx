@@ -3,8 +3,9 @@ import firebase from "firebase";
 import * as FirestoreService from "../firebase";
 import Button from "react-bootstrap/Button";
 
+/** This component is in charge of the Add Parameters part at the Settings. It contains a form and buttons */
 const AddItemForm = () => {
-  //useState() hook captures the value from the input value
+  // All state parameters hold the state of the matching variable.
   const [name, setName] = useState("");
   const [computerError, setComputerError] = useState(null);
   const [humanError, setHumanError] = useState(null);
@@ -50,7 +51,7 @@ const AddItemForm = () => {
       window.alert("Empty field detected. Please fill all fields.");
       return;
     }
-
+    /** this function uploads the new parameters set to  */
     FirestoreService.setParameters(name, {
       computerError: +computerError,
       humanError: +humanError,
@@ -67,7 +68,7 @@ const AddItemForm = () => {
       kValue: +kValue,
       randomValues: [-2.5, 2.5],
     })
-      //.then will reset the form to nothing
+      //".then" will reset the form to nothing
       .then(
         () => setName(""),
         setComputerError(0),

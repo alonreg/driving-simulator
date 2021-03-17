@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import AutonomousCarImage from "../assets/autonomous-vehicles.png";
 
+/** Displays the results at the end of the experiment, with a goodbye message */
 function Results({ score, obstacles }) {
   return (
     <>
@@ -10,7 +11,7 @@ function Results({ score, obstacles }) {
         <hr />
         <h3>
           By participating in this experiment, you helped advance scientific
-          research.
+          research. You can now close this window.
         </h3>
         <hr />
         <h3 className="mb-0">

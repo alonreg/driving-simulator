@@ -4,6 +4,7 @@ import "../settings.css";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 
+/** The useItems component downloads all session data and renders it into a list */
 const useItems = () => {
   const [items, setItems] = useState([]); //useState() hook, sets initial state to an empty array
   useEffect(() => {
@@ -24,6 +25,7 @@ const useItems = () => {
   return items;
 };
 
+/** This component creates a list of items in an HTML table */
 const ItemList = ({ editItem }) => {
   const mapToTable = function (item, i) {
     return (

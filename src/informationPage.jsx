@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import Button from "react-bootstrap/Button";
-import * as strings from "./assets/InfoPageStrings.jsx";
 import Loader from "react-loader-spinner";
 import * as FirestoreService from "./firebase";
 
 import Poll from "./components/poll.jsx";
-import Alert from "react-bootstrap/Alert";
 
+// a small function to create newline text out of "\\u encoding"
 function NewlineText(props) {
   const text = props.text;
   const newText = text
@@ -28,14 +27,15 @@ function NewlineText(props) {
   return newText;
 }
 
+/** This page displays the pre-experiment information */
 const InformationPage = () => {
   let { urlInfoDataId, id, urlPageNumber } = useParams();
 
-  const [pageNumber, setPageNumber] = useState(urlPageNumber - 1);
-  const [infoData, setInfoData] = useState(null);
-  const [totalPages, setTotalPages] = useState(0);
-  const [pollState, setPollState] = useState([]);
-  const [firstPollPosition, setFirstPollPosition] = useState(-1);
+  const [pageNumber, setPageNumber] = useState(urlPageNumber - 1); // current page number
+  const [infoData, setInfoData] = useState(null); // the data to display
+  const [totalPages, setTotalPages] = useState(0); // total number of pages
+  const [pollState, setPollState] = useState([]); // the current state of the poll (questions at the end)
+  const [firstPollPosition, setFirstPollPosition] = useState(-1); // the first page that has the poll (the poll is always last)
 
   useEffect(() => {
     if (!infoData) {
@@ -45,6 +45,8 @@ const InformationPage = () => {
         setTotalPages(data.bodyList.length);
         let newPollState = [];
         let firstQuestion = true;
+
+        // If the following "image" is a "question", set first question
         data.images.forEach((image, i) => {
           if (image.includes(",") && !image.includes("png")) {
             if (firstQuestion) {
@@ -55,7 +57,6 @@ const InformationPage = () => {
           }
         });
         setPollState(newPollState);
-        console.log("in pollstate 0 " + pollState.length);
       });
     }
   }, []);
@@ -123,10 +124,21 @@ const InformationPage = () => {
     }
   };
 
+  const isImage = (currInfoData) => {
+    if (
+      currInfoData.includes("data:image") ||
+      currInfoData.includes("gif") ||
+      currInfoData.includes(".png?") ||
+      currInfoData.includes(".jpeg?") ||
+      currInfoData.includes(".jpg?")
+    ) {
+      return true;
+    } else return false;
+  };
+
   console.log(+pageNumber - 1 + " this is the current page");
 
   if (!infoData) {
-    console.log("in spingger");
     return (
       <>
         <div className="center-spinner">
@@ -136,7 +148,6 @@ const InformationPage = () => {
     );
   }
 
-  console.log("out spingger");
   return (
     <div className="bg-infopage">
       <div className="parent-infopage">
@@ -156,8 +167,7 @@ const InformationPage = () => {
             />
           )}
           {infoData.images[+pageNumber] &&
-          (infoData.images[+pageNumber].includes("data:image") ||
-            infoData.images[+pageNumber].includes("gif")) ? (
+          isImage(infoData.images[+pageNumber]) ? (
             <>
               <img
                 src={infoData.images[+pageNumber]}

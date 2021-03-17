@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Experiment from "./Experiment";
 import Settings from "./Settings";
+import Redirector from "./Redirector.jsx";
 import InformationPage from "./informationPage";
 const queryString = require("query-string");
 
@@ -20,6 +21,8 @@ export default function App() {
             path="/:id/:urlInfoDataId/1/page-:urlPageNumber"
             children={<InformationPage />}
           />
+          {/** Root URL - goes to 1 of 4 sets (the original experiment sets) */}
+          <Route path="/" children={<Redirector />} />
         </Switch>
       </div>
     </Router>

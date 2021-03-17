@@ -32,19 +32,6 @@ function InfoTooltip({ text }) {
 
 const renderTooltip = (props, text) => (
   <Tooltip id="button-tooltip">aaa</Tooltip>
-
-  /*
-  <Overlay
-  target={pointsTarget.current}
-  show={showPoints}
-  placement="bottom"
->
-  {(props) => (
-    <Tooltip id="overlay-example" {...props}>
-      {JSON.stringify(item.parameters.calculation)}
-    </Tooltip>
-  )}
-</Overlay>*/
 );
 
 const useItems = () => {
@@ -251,8 +238,9 @@ const ViewLog = () => {
               "Calc Success(h)",
               "Calc Fail(h)",
               "Total sessions",
-              "answers",
-              "log",
+              "Answers",
+              "Parameters",
+              "Log",
               "",
             ].map((title) =>
               title.includes("Fail") ? (

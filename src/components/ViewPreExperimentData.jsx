@@ -10,36 +10,6 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Dropdown from "react-bootstrap/Dropdown";
 
-function NewlineText(props) {
-  const text = props.text;
-  const newText = text
-    .replaceAll("\\n", "\n")
-    .split("\n")
-    .map((str) => <p className="new-line-text-settings">{str}</p>);
-
-  return newText;
-}
-
-function InfoTooltip({ text }) {
-  const [show, setShow] = useState(false);
-  const target = useRef(null);
-
-  return (
-    <>
-      <Button variant="light" ref={target} onClick={() => setShow(!show)}>
-        view
-      </Button>
-      <Overlay target={target.current} show={show} placement="bottom">
-        {(props) => (
-          <Tooltip id="overlay" {...props}>
-            <pre className="info-tooltip">{text}</pre>
-          </Tooltip>
-        )}
-      </Overlay>
-    </>
-  );
-}
-
 const useItems = () => {
   const [items, setItems] = useState([]); //useState() hook, sets initial state to an empty array
   useEffect(() => {
@@ -62,7 +32,7 @@ const useItems = () => {
 
 const ViewPreExperimentData = () => {
   const initialItemState = {
-    id: "-",
+    id: "",
     titles: [],
     bodyList: [],
     images: [],
@@ -89,7 +59,6 @@ const ViewPreExperimentData = () => {
   const body = itemsFromFirestore.map((item) => item.bodyList[0].toString());
   const bodyList = itemsFromFirestore.map((item) => item.bodyList);
   const images = itemsFromFirestore.map((item) => item.images[0]);
-  console.log("hi hi " + itemsFromFirestore[0]);
 
   if (!bodyList[0]) {
     return (
@@ -127,7 +96,10 @@ const ViewPreExperimentData = () => {
         <div className="div3-preText"></div>
         <div className="div2-preText">
           <h3>Update sets of information</h3>
-          <DropdownButton title="Choose Set" id="bg-nested-dropdown">
+          <DropdownButton
+            title={currentItem.id || "Choose Set"}
+            id="bg-nested-dropdown"
+          >
             {setsId}
           </DropdownButton>
 
