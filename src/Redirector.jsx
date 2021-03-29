@@ -8,6 +8,8 @@ import Loader from "react-loader-spinner";
  */
 const Redirector = () => {
   let history = useHistory();
+  const queryString = require("query-string");
+  const parsed = queryString.parse(window.location.search);
 
   // Returns a random option from an array
   const getRandomFromArray = (list) =>
@@ -18,7 +20,10 @@ const Redirector = () => {
   // The pre-experiment data id
   let infoData = getRandomFromArray([3217492]);
   // Push the newely created URL
-  history.push(`/${id}/${infoData}/1/page-1`);
+  history.push({
+    pathname: `/${id}/${infoData}/1/page-1`, // the path to the pre-experiment part
+    aid: parsed.aid,
+  });
 
   return <></>;
 };

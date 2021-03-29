@@ -1,18 +1,22 @@
 import React, { useState } from "react";
-import Alert from "react-bootstrap/Alert";
 import AutonomousCarImage from "../assets/autonomous-vehicles.png";
+import Button from "react-bootstrap/Button";
 
 /** Displays the results at the end of the experiment, with a goodbye message */
-function Results({ score, obstacles }) {
+function Results({ score, obstacles, aid }) {
   return (
     <>
       <div className="results-page">
         <h1>Thank you! We appreciate your time and effort</h1>
         <hr />
-        <h3>
-          By participating in this experiment, you helped advance scientific
-          research. You can now close this window.
-        </h3>
+        <Button
+          size="lg"
+          type="button"
+          variant="light"
+          href={`https://app.cloudresearch.com/Router/End?aid=${aid}`}
+        >
+          Finish
+        </Button>
         <hr />
         <h3 className="mb-0">
           By the way, your final score is: {score}.{" "}

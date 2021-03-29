@@ -4,7 +4,7 @@ import Experiment from "./Experiment";
 import Settings from "./Settings";
 import Redirector from "./Redirector.jsx";
 import InformationPage from "./informationPage";
-const queryString = require("query-string");
+//const queryString = require("query-string");
 
 export default function App() {
   return (
@@ -21,6 +21,8 @@ export default function App() {
             path="/:id/:urlInfoDataId/1/page-:urlPageNumber"
             children={<InformationPage />}
           />
+          {/** Root URL - goes to 1 of 4 sets (the original experiment sets) */}
+          <Route path="/" children={<Redirector />} />
           {/** Root URL - goes to 1 of 4 sets (the original experiment sets) */}
           <Route path="/" children={<Redirector />} />
         </Switch>

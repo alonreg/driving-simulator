@@ -9,13 +9,11 @@ import * as FirestoreService from "./firebase";
 import Loader from "react-loader-spinner";
 import Obstacle from "./obstacle";
 import Results from "./components/results";
-
-/////
-
 import {
   BrowserRouter as Router,
   useParams,
   useLocation,
+  useHistory,
 } from "react-router-dom";
 
 /** Experiment Page:
@@ -26,6 +24,8 @@ import {
 function Experiment(props) {
   const location = useLocation(); // passing metadata from the pre-experiment part
   let { id } = useParams(); // extract experiment-id from URL, to choose experiment config
+  let history = useHistory();
+
   // experiment state:
   const [score, setScore] = useState(0); // user score
   const [obstaclesNum, setObstaclesNum] = useState(0); // obstacles passed by user
@@ -330,7 +330,7 @@ function Experiment(props) {
 
   // if session has ended - show the Result page
   return ended ? (
-    <Results score={score} obstacles={obstaclesNum} />
+    <Results score={score} obstacles={obstaclesNum} aid={location.aid} />
   ) : (
     <>
       <div class="parent-experiment">
@@ -416,7 +416,9 @@ function Experiment(props) {
       </div>
       {process.env.REACT_APP_AUTH_DOMAIN ==
       "driving-simulator-tau-test.firebaseapp.com" ? (
-        <p>sessionid for debug: {sessionId}</p>
+        <p>
+          sessionid for debug: {sessionId}, aid: {location.aid}
+        </p>
       ) : (
         ""
       )}

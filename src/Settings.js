@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ViewLog from "./components/viewLog";
 import ViewParameters from "./components/viewParameters";
-import ViewPreExperimentData from "./components/viewPreExperimentData";
+import ViewPreExperimentData from "./components/ViewPreExperimentData";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import "./settings.css";
@@ -72,21 +72,21 @@ function Settings() {
         </Nav>
 
         <Button href="/test-1/info-1/1/page-1" variant="outline-info">
-          Go to experiment
+          Experiment
         </Button>
         {"_"}
         <Button
           href="https://console.firebase.google.com/u/0/project/driving-simulator-tau-test/firestore/"
           variant="outline-info"
         >
-          Go to Firestore TEST
+          Firestore TEST
         </Button>
         {"_"}
         <Button
           href="https://console.firebase.google.com/u/0/project/driving-simulator-tau/firestore/"
           variant="outline-info"
         >
-          Go to Firestore PROD
+          Firestore PROD
         </Button>
 
         {login ? (

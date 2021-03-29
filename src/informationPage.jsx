@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, useLocation } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Loader from "react-loader-spinner";
 import * as FirestoreService from "./firebase";
@@ -36,6 +36,9 @@ const InformationPage = () => {
   const [totalPages, setTotalPages] = useState(0); // total number of pages
   const [pollState, setPollState] = useState([]); // the current state of the poll (questions at the end)
   const [firstPollPosition, setFirstPollPosition] = useState(-1); // the first page that has the poll (the poll is always last)
+  const [aid, setAid] = useState(""); // the aid of the user
+  const location = useLocation(); // passing metadata from the pre-experiment part
+  let history = useHistory();
 
   useEffect(() => {
     if (!infoData) {
@@ -79,6 +82,9 @@ const InformationPage = () => {
 
   useEffect(() => {
     setPageNumber(urlPageNumber - 1);
+    if (!aid) {
+      setAid(location.aid);
+    }
   }, [urlPageNumber]);
 
   const goToPreviousPage = () => {
@@ -91,14 +97,13 @@ const InformationPage = () => {
       history.push({
         pathname: `/${id}/${urlInfoDataId}/2`, // the path to the driving simulator
         pollData: pollState,
+        aid: aid,
       });
       return;
     }
     setPageNumber(+pageNumber + 1);
     history.push(`/${id}/${urlInfoDataId}/1/page-${+pageNumber + 2}`);
   };
-
-  let history = useHistory();
 
   const onClose = function () {
     history.push("/set-1/0");
