@@ -3,7 +3,7 @@ import AutonomousCarImage from "../assets/autonomous-vehicles.png";
 import Button from "react-bootstrap/Button";
 
 /** Displays the results at the end of the experiment, with a goodbye message */
-function Results({ score, obstacles, aid }) {
+function Results({ score, aid }) {
   return (
     <>
       <div className="results-page">

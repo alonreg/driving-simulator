@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ViewLog from "./components/viewLog";
 import ViewParameters from "./components/viewParameters";
-import ViewPreExperimentData from "./components/ViewPreExperimentData";
+import ViewPreExperimentData from "./components/viewPreExperimentData";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import "./settings.css";

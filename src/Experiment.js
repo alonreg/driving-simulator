@@ -330,7 +330,7 @@ function Experiment(props) {
 
   // if session has ended - show the Result page
   return ended ? (
-    <Results score={score} obstacles={obstaclesNum} aid={location.aid} />
+    <Results score={score} aid={location.aid} />
   ) : (
     <>
       <div class="parent-experiment">

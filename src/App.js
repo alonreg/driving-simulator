@@ -23,8 +23,6 @@ export default function App() {
           />
           {/** Root URL - goes to 1 of 4 sets (the original experiment sets) */}
           <Route path="/" children={<Redirector />} />
-          {/** Root URL - goes to 1 of 4 sets (the original experiment sets) */}
-          <Route path="/" children={<Redirector />} />
         </Switch>
       </div>
     </Router>
