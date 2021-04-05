@@ -205,9 +205,13 @@ export const setPreText = (id, updatedItem) => {
   return db.collection("preExperiment").doc(id).set(updatedItem);
 };
 
-// get the text+images+questionnaire for the pre-experiment part
+// get the text+images for the pre-experiment part
 export const getInfoDataById = (id) => {
   return db.collection("preExperiment").doc(id).get();
+};
+// get the questionnaire for the pre-experiment part
+export const getQuestionsDataById = (id) => {
+  return db.collection("questions").doc(id).get();
 };
 
 // not being used currently
