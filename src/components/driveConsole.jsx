@@ -61,7 +61,7 @@ function RescueButton({ onClick, disabled, className, rescueScore }) {
   );
 }
 
-// A function to create an arrow image, according to a direction
+// A function to create an arrow button, according to a direction
 function Arrow({
   progressBar,
   estimate,
@@ -95,11 +95,13 @@ function Arrow({
             {!isMoving && (
               <>
                 <i>Human: </i>
-                <ProgressBar
-                  striped
-                  now={progressBar * 100}
-                  className={className}
-                />
+                <div className="driveConsole-progressBar">
+                  <ProgressBar
+                    striped
+                    now={progressBar * 100}
+                    className={className}
+                  />
+                </div>
               </>
             )}
           </Alert>

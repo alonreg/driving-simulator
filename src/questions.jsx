@@ -3,7 +3,8 @@ import { useHistory, useParams, useLocation } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Loader from "react-loader-spinner";
 import * as FirestoreService from "./firebase";
-import Poll from "./components/poll.jsx";
+import Options from "./components/options.jsx";
+import ProgressBar from "react-bootstrap/ProgressBar";
 
 /** This page displays the pre-experiment information */
 const Questions = () => {
@@ -108,7 +109,7 @@ const Questions = () => {
           <br></br>
         </div>
         <div className="div3-infopage">
-          <Poll
+          <Options
             currentPage={+pageNumber}
             questionsData={questionsData}
             questionsState={questionsState}
@@ -137,30 +138,30 @@ const Questions = () => {
               </Button>
             </div>
             <div className="div2-buttonRow">
+              <ProgressBar
+                now={parseInt(((+pageNumber + 1) * 100) / +totalPages)}
+                label={`${parseInt(((+pageNumber + 1) * 100) / totalPages)}%`}
+                variant="info"
+              />
+            </div>
+            <div className="div3-buttonRow">
               <Button
                 size="lg"
                 type="button"
                 variant="success"
+                disabled={!questionsState[pageNumber]}
                 onClick={() =>
                   handleClick(
-                    +pageNumber >= totalPages - 1 ? "begin experiment" : "next"
+                    +pageNumber >= totalPages - 1 ? "next stage" : "next"
                   )
                 }
               >
-                {+pageNumber >= totalPages - 1 ? "begin experiment" : "next"}
+                {+pageNumber >= totalPages - 1 ? "next stage" : "next"}
               </Button>
-              <h3>page out of... 2/3 or loading thing</h3>
             </div>
           </div>
         </div>
       </div>{" "}
-      {/** setAnswer={(value) => {
-              const currentQuestionsState = [...questionsState];
-              currentQuestionsState[pageNumber - firstPollPosition] =
-                value.target.value;
-              setQuestionsState(currentPollState);
-            }}
-          */}
     </div>
   );
 };
