@@ -56,15 +56,28 @@ const UpdatePreTextItem = ({ currentItem, updateItem, setCurrentItem }) => {
           <Button
             onClick={() => {
               setItem({
-                id: currentItem.id,
-                titles: [...currentItem.titles, ""],
-                bodyList: [...currentItem.bodyList, ""],
-                images: [...currentItem.images, ""],
+                id: item.id,
+                titles: [...item.titles, ""],
+                bodyList: [...item.bodyList, ""],
+                images: [...item.images, ""],
               });
               setPage(page + 1);
             }}
           >
             +
+          </Button>
+          {"  "}
+          <Button
+            onClick={() => {
+              setItem({
+                id: item.id,
+                titles: item.titles.slice(0, -1),
+                bodyList: item.bodyList.slice(0, -1),
+                images: item.images.slice(0, -1),
+              });
+            }}
+          >
+            -
           </Button>
         </ButtonGroup>
       </ButtonToolbar>
@@ -116,7 +129,7 @@ const UpdatePreTextItem = ({ currentItem, updateItem, setCurrentItem }) => {
             />
           </div>
           <div>
-            <label>Image / Questions</label>
+            <label>Image URL</label>
             <textarea
               cols="80"
               rows="1"

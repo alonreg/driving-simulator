@@ -58,6 +58,11 @@ export const getInfoData = () => {
   return db.collection("preExperiment"); //.orderBy("startTime");
 };
 
+// returns questions firebase collection data
+export const getQuestionsData = () => {
+  return db.collection("questions");
+};
+
 // creates a new session at the database, initializes user data and parameters
 export const createSession = ({
   session,
@@ -175,11 +180,22 @@ export const deleteParameters = (set) => {
   db.collection("parameters").doc(set).delete();
 };
 
+// delete a parameters set (from settings)
+export const deleteQuestions = (set) => {
+  db.collection("questions").doc(set).delete();
+};
+
 // delete a session
 export const deleteSession = (session) => {
   db.collection("sessions")
     .doc(session) // user id
     .delete();
+};
+
+// update an item (from settings)
+export const updateItem = (set, updatedItem, collection) => {
+  delete updatedItem.id;
+  db.collection(collection).doc(set).update(updatedItem);
 };
 
 // update a parameters set (from settings)
@@ -193,16 +209,28 @@ export const setParameters = (set, item) => {
   return db.collection("parameters").doc(set).set(item, { merge: true });
 };
 
-// update the text+images+questionnaire in the pre-experiment part
+// update the text+images in the pre-experiment part
 export const updatePreText = (id, updatedItem) => {
   delete updatedItem.id;
   return db.collection("preExperiment").doc(id).update(updatedItem);
 };
 
-// set new text+images+questionnaire set for the pre-experiment part
+// update the questionnaire part
+export const updateQuestions = (id, updatedItem) => {
+  delete updatedItem.id;
+  return db.collection("questions").doc(id).update(updatedItem);
+};
+
+// set new text+images set for the pre-experiment part
 export const setPreText = (id, updatedItem) => {
   delete updatedItem.id;
   return db.collection("preExperiment").doc(id).set(updatedItem);
+};
+
+// set new questions set for the questionnaire part
+export const setQuestions = (id, updatedItem) => {
+  delete updatedItem.id;
+  return db.collection("questions").doc(id).set(updatedItem);
 };
 
 // get the text+images for the pre-experiment part

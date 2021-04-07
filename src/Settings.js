@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ViewLog from "./components/viewLog";
 import ViewPreExperimentData from "./components/viewPreExperimentData.jsx";
+import ViewQuestions from "./components/viewQuestions.jsx";
 import ViewParameters from "./components/viewParameters";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
@@ -133,6 +134,10 @@ function Settings() {
             <Tab eventKey="pretext" title="Pre-Experiment">
               <h1>Edit Pre-Experiment Text and Images</h1>
               <ViewPreExperimentData />
+            </Tab>
+            <Tab eventKey="questions" title="Questions">
+              <h1>Edit Questions</h1>
+              <ViewQuestions />
             </Tab>
             <Tab eventKey="log" title="Log">
               <h1>View Experiment Log</h1>

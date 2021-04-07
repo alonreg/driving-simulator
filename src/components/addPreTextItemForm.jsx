@@ -132,7 +132,7 @@ const AddPreTextItemForm = () => {
             />
           </div>
           <div>
-            <label>Image / Questions</label>
+            <label>Image URL</label>
             <textarea
               cols="80"
               rows="1"

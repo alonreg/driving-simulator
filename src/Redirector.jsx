@@ -21,7 +21,7 @@ const Redirector = () => {
   let infoData = getRandomFromArray([3217492]);
   // Push the newely created URL
   history.push({
-    pathname: `/${id}/${infoData}/quest1/1/page-1`, // the path to the pre-experiment part
+    pathname: `/${id}/${infoData}/example-qestions/1/page-1`, // the path to the pre-experiment part
     aid: parsed.aid,
   });
 

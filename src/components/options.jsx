@@ -17,7 +17,7 @@ const Options = ({ currentPage, questionsData, questionsState, setAnswer }) => {
 
   const currentAnswers = questionsData.answers[currentPage];
   const currentAnswersState = questionsState[currentPage];
-  const currentType = questionsData.questionType[currentPage];
+  const currentType = questionsData.types[currentPage];
 
   // A likert scale that returns the string value of each choise
   const likertStrings = {
