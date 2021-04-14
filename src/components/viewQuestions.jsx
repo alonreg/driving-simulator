@@ -82,7 +82,7 @@ const ViewQuestions = () => {
     <>
       <div className="preTextGrid">
         <div className="div1-preText">
-          <h3>Add new sets of information</h3>
+          <h3>Add a new set of information</h3>
           <AddQuestionsForm />
         </div>
         <div className="div3-preText"></div>
