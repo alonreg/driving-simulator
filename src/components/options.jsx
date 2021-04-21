@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./informationPage.css";
 import Likert from "react-likert-scale";
 
@@ -33,12 +33,15 @@ const Options = ({ currentPage, questionsData, questionsState, setAnswer }) => {
 
   // A likert scale that returns the integer value of each choise
   // Choosing the best option will return the highest index value
-  const likertIntegers = {
-    responses: currentAnswers.split(",").map((question, i) => ({
-      value: i + 1,
-      text: question,
-      checked: currentAnswersState == i + 1,
-    })),
+  var likertIntegers = {
+    id: questionsData.titles[currentPage],
+    responses: questionsData.answers[currentPage]
+      .split(",")
+      .map((question, i) => ({
+        value: i + 1,
+        text: question,
+        checked: false,
+      })),
     onChange: (val) => setCurrentAnswer({ text: val.value }),
     flexible: true,
   };
@@ -53,7 +56,6 @@ const Options = ({ currentPage, questionsData, questionsState, setAnswer }) => {
             <Likert {...likertStrings} />
           )}
         </div>
-
         <br></br>
       </>
     );
