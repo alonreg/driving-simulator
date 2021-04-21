@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
+import { deleteQuestions } from "../firebase";
 
 // Updates paramerters item
 const UpdateQuestionsItem = ({
@@ -22,6 +23,23 @@ const UpdateQuestionsItem = ({
     setItem(itemCopy);
   };
 
+  const onFilterTypeChange = (e, i) => {
+    const { name, value } = e.target;
+    let itemCopy = { ...item };
+    let nameArrayCopy = [...itemCopy["filters"]];
+    if (name == "filters") {
+      nameArrayCopy[i] =
+        nameArrayCopy[i].slice(0, 2) + value + nameArrayCopy[i].slice(-2);
+    } else if (name == "redirect") {
+      nameArrayCopy[i] = nameArrayCopy[i].slice(0, -1) + value;
+    } else {
+      nameArrayCopy[i] = value + nameArrayCopy[i].slice(1);
+    }
+
+    itemCopy["filters"] = nameArrayCopy;
+    setItem(itemCopy);
+  };
+
   useEffect(() => {
     setItem(currentItem);
   }, [currentItem]);
@@ -35,6 +53,7 @@ const UpdateQuestionsItem = ({
       id: "",
       titles: [],
       answers: [],
+      filters: [],
       types: [],
     });
   };
@@ -43,7 +62,6 @@ const UpdateQuestionsItem = ({
     return (
       <>
         <hr></hr>
-
         <p>Questions Number {i + 1}</p>
         <div>
           <label>Title</label>
@@ -56,9 +74,9 @@ const UpdateQuestionsItem = ({
           />
         </div>
         <div>
-          <label>Type </label>
-          {"   "}
+          <label>Question Type </label>
           <select
+            className="input-settings"
             name="types"
             id="types"
             defaultValue={item.types[i]}
@@ -80,9 +98,98 @@ const UpdateQuestionsItem = ({
             name="answers"
           />
         </div>
+        <div>
+          <label>Filters</label>
+          <input
+            className="input-settings"
+            type="text"
+            value={item.filters[i].slice(2, -2)}
+            onChange={(e) => onFilterTypeChange(e, i)}
+            name="filters"
+          />
+        </div>
+        {item.filters[i].slice(2, -2) ? (
+          <>
+            <div>
+              <label>Redirect</label>
+              <select
+                className="input-settings"
+                name="redirect"
+                id="redirect"
+                defaultValue={item.filters[i].slice(-1)}
+                onChange={(e) => onFilterTypeChange(e, i)}
+              >
+                <option value="U">Demographic</option>
+                <option value="A">Lack of attention</option>
+              </select>
+            </div>
+            <div>
+              <label>Filter Type</label>
+              <select
+                className="input-settings"
+                name="filter-types"
+                id="filter-types"
+                defaultValue={item.filters[i].slice(0, 1)}
+                onChange={(e) => onFilterTypeChange(e, i)}
+              >
+                <option value="M">Math Operation </option>
+                <option value="I">Includes</option>
+              </select>
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
+        <Button
+          onClick={() => {
+            deleteQuestion(i);
+          }}
+        >
+          Delete Question {i + 1}
+        </Button>
+        {"  "}
+        <Button
+          onClick={() => {
+            addQuestion(i);
+          }}
+        >
+          Add Below
+        </Button>
       </>
     );
   });
+
+  const deleteQuestion = (i) => {
+    let itemCopy = { ...item };
+    itemCopy.titles.splice(i, 1);
+    itemCopy.answers.splice(i, 1);
+    itemCopy.filters.splice(i, 1);
+    itemCopy.types.splice(i, 1);
+
+    setItem({
+      id: item.id,
+      titles: [...itemCopy.titles],
+      answers: [...itemCopy.answers],
+      filters: [...itemCopy.filters],
+      types: [...itemCopy.types],
+    });
+  };
+
+  const addQuestion = (i) => {
+    let itemCopy = { ...item };
+    itemCopy.titles.splice(i + 1, 0, "");
+    itemCopy.answers.splice(i + 1, 0, "");
+    itemCopy.filters.splice(i + 1, 0, "");
+    itemCopy.types.splice(i + 1, 0, "");
+
+    setItem({
+      id: item.id,
+      titles: [...itemCopy.titles],
+      answers: [...itemCopy.answers],
+      filters: [...itemCopy.filters],
+      types: [...itemCopy.types],
+    });
+  };
 
   return (
     <>
@@ -105,6 +212,7 @@ const UpdateQuestionsItem = ({
               id: item.id,
               titles: [...item.titles, ""],
               answers: [...item.answers, ""],
+              filters: [...item.filters, ""],
               types: [...item.types, ""],
             });
           }}
@@ -119,6 +227,7 @@ const UpdateQuestionsItem = ({
               id: item.id,
               titles: item.titles.slice(0, -1),
               answers: item.answers.slice(0, -1),
+              filters: item.filters.slice(0, -1),
               types: item.types.slice(0, -1),
             });
           }}
@@ -138,11 +247,12 @@ const UpdateQuestionsItem = ({
               id: "",
               titles: [],
               answers: [],
+              filters: [],
               types: [],
             });
           }}
         >
-          Delete (...)
+          Delete
         </Button>
       </form>
     </>

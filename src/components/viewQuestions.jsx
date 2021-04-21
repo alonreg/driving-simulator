@@ -31,6 +31,7 @@ const ViewQuestions = () => {
     id: "",
     titles: [],
     answers: [],
+    filters: [],
     types: [],
   };
 
@@ -41,6 +42,7 @@ const ViewQuestions = () => {
       id: item.id,
       titles: item.titles,
       answers: item.answers,
+      filters: item.filters,
       types: item.types,
     });
   };
@@ -52,6 +54,7 @@ const ViewQuestions = () => {
   const itemsFromFirestore = useItems();
   const titles = itemsFromFirestore.map((item) => item.titles);
   const answers = itemsFromFirestore.map((item) => item.answers);
+  const filters = itemsFromFirestore.map((item) => item.filters);
   const types = itemsFromFirestore.map((item) => item.types);
 
   const setsId = itemsFromFirestore.map((item) => {

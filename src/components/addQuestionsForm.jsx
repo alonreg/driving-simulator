@@ -10,6 +10,7 @@ const AddQuestionsForm = () => {
   const [name, setName] = useState("");
   const [titles, setTitles] = useState([""]);
   const [answers, setAnswers] = useState([""]);
+  const [filters, setFilters] = useState(["I##U"]);
   const [types, setTypes] = useState(["default"]);
 
   const onChange = (e, setItem, item, i) => {
@@ -35,11 +36,13 @@ const AddQuestionsForm = () => {
       id: name,
       titles: titles,
       answers: answers,
+      filters: filters,
       types: types,
     }).then(
       () => setName(""),
       setTitles([""]),
       setAnswers([""]),
+      setFilters(["I##U"]),
       setTypes(["default"])
     ); //".then" will reset the form to nothing
   };
@@ -48,7 +51,7 @@ const AddQuestionsForm = () => {
     setName("");
     setTitles([""]);
     setAnswers([""]);
-    setTypes([""]);
+    setFilters(["I##U"]), setTypes(["default"]);
   };
 
   const questionItems = titles.map((title, i) => {
@@ -59,7 +62,7 @@ const AddQuestionsForm = () => {
         <p>Questions Number {i + 1}</p>
         <div>
           <label>Title</label>
-          <input
+          <textarea
             className="input-settings"
             type="text"
             value={titles[i]}
@@ -69,8 +72,8 @@ const AddQuestionsForm = () => {
         </div>
         <div>
           <label>Type </label>
-          {"   "}
           <select
+            className="input-settings"
             name="types"
             id="types"
             defaultValue={types[i]}
@@ -88,30 +91,176 @@ const AddQuestionsForm = () => {
             className="input-settings"
             type="text"
             value={answers[i]}
-            onChange={(e) => onChange(e, setAnswers, answers, i)}
+            onChange={(e) =>
+              onChange(
+                {
+                  target: {
+                    name: "answers",
+                    value: e.target.value.replace(", ", ","),
+                  },
+                },
+                setAnswers,
+                answers,
+                i
+              )
+            }
             name="answers"
           />
         </div>
+        <div>
+          <label>Filter</label>
+          <input
+            className="input-settings"
+            type="text"
+            value={filters[i].split("#")[1]}
+            onChange={(e) =>
+              onChange(
+                {
+                  target: {
+                    name: "filters",
+                    value:
+                      filters[i].slice(0, 2) +
+                      e.target.value +
+                      filters[i].slice(-2),
+                  },
+                },
+                setFilters,
+                filters,
+                i
+              )
+            }
+            name="filters"
+          />
+        </div>
+        {filters[i].split("#")[1] ? (
+          <>
+            <div>
+              <label>Redirect</label>
+              <select
+                className="input-settings"
+                name="redirect"
+                id="redirect"
+                defaultValue={filters[i].slice(-1)}
+                onChange={(e) =>
+                  onChange(
+                    {
+                      target: {
+                        name: "filters",
+                        value: filters[i].slice(0, -1) + e.target.value,
+                      },
+                    },
+                    setFilters,
+                    filters,
+                    i
+                  )
+                }
+              >
+                <option value="U">Demographic</option>
+                <option value="A">Lack of attention</option>
+              </select>
+            </div>
+            <div>
+              <label>Filter Type</label>
+              <select
+                className="input-settings"
+                name="filter-type"
+                id="filter-type"
+                defaultValue={filters[i].slice(0, 1)}
+                onChange={(e) =>
+                  onChange(
+                    {
+                      target: {
+                        name: "filters",
+                        value: e.target.value + filters[i].slice(1),
+                      },
+                    },
+                    setFilters,
+                    filters,
+                    i
+                  )
+                }
+              >
+                <option value="M">Math Operation </option>
+                <option value="I">Includes</option>
+              </select>
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
+        <Button
+          onClick={() => {
+            deleteQuestion(i);
+          }}
+        >
+          Delete Question {i + 1}
+        </Button>
+        {"  "}
+        <Button
+          onClick={() => {
+            addQuestion(i);
+          }}
+        >
+          Add Below
+        </Button>
       </>
     );
   });
 
+  const deleteQuestion = (i) => {
+    let titlesCopy = titles.slice();
+    let typesCopy = types.slice();
+    let answersCopy = answers.slice();
+    let filtersCopy = filters.slice();
+    titlesCopy.splice(i, 1);
+    typesCopy.splice(i, 1);
+    answersCopy.splice(i, 1);
+    filtersCopy.splice(i, 1);
+    setTitles(titlesCopy);
+    setTypes(typesCopy);
+    setAnswers(answersCopy);
+    setFilters(filtersCopy);
+  };
+
+  const addQuestion = (i) => {
+    let titlesCopy = titles.slice();
+    let typesCopy = types.slice();
+    let answersCopy = answers.slice();
+    let filtersCopy = filters.slice();
+    titlesCopy.splice(i + 1, 0, "");
+    typesCopy.splice(i + 1, 0, "");
+    answersCopy.splice(i + 1, 0, "");
+    filtersCopy.splice(i + 1, 0, "");
+    setTitles(titlesCopy);
+    setTypes(typesCopy);
+    setAnswers(answersCopy);
+    setFilters(filtersCopy);
+  };
+
   return (
     <>
       <br />
-      <ButtonToolbar aria-label="Toolbar with button groups">
-        <ButtonGroup className="mr-2" aria-label="First group">
-          <Button
-            onClick={() => {
-              setTitles([...titles, ""]);
-              setAnswers([...answers, ""]);
-              setTypes([...types, ""]);
-            }}
-          >
-            +
-          </Button>
-        </ButtonGroup>
-      </ButtonToolbar>
+      <Button
+        onClick={() => {
+          setTitles([...titles, ""]);
+          setAnswers([...answers, ""]);
+          setFilters([...filters, "I##U"]);
+          setTypes([...types, ""]);
+        }}
+      >
+        +
+      </Button>
+      {"  "}
+      <Button
+        onClick={() => {
+          setTitles(titles.slice(0, -1));
+          setAnswers(answers.slice(0, -1));
+          setFilters(filters.slice(0, -1));
+          setTypes(types.slice(0, -1));
+        }}
+      >
+        -
+      </Button>
 
       <form onSubmit={onSubmit}>
         <div className="input-div">

@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import Loader from "react-loader-spinner";
 import * as FirestoreService from "./firebase";
 import "./components/informationPage.css";
+import ProgressBar from "react-bootstrap/ProgressBar";
 
 // a small function to create newline text out of "\\u encoding"
 function NewlineText(props) {
@@ -182,15 +183,18 @@ const InformationPage = () => {
               </Button>
             </div>
             <div className="div2-buttonRow">
+              <ProgressBar
+                now={parseInt(((+pageNumber + 1) * 100) / +totalPages)}
+                label={`${parseInt(((+pageNumber + 1) * 100) / totalPages)}%`}
+                variant="info"
+              />
+            </div>
+            <div className="div3-buttonRow">
               <Button
                 size="lg"
                 type="button"
                 variant="success"
-                onClick={() =>
-                  handleClick(
-                    +pageNumber >= totalPages - 1 ? "begin experiment" : "next"
-                  )
-                }
+                onClick={() => handleClick("next")}
               >
                 {+pageNumber >= totalPages - 1
                   ? "begin experiment"

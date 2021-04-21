@@ -99,14 +99,24 @@ const ViewLog = () => {
         <td>{item.obstacles.calcSuccess}</td>
         <td>{item.obstacles.calcFail}</td>
         <td>{item.totalSessions}</td>
-        {item.pollData ? (
-          <td>{item.pollData.map((answer) => answer + ", ")}</td>
+        {item.questions ? (
+          <td>
+            <InfoTooltip text={JSON.stringify(item.questions, null, 2)} />
+          </td>
+        ) : (
+          <td>empty</td>
+        )}
+        {item.answers ? (
+          <td>
+            <InfoTooltip text={JSON.stringify(item.answers, null, 2)} />
+          </td>
         ) : (
           <td>empty</td>
         )}
         <td>
           <InfoTooltip text={JSON.stringify(item.parameters, null, 2)} />
         </td>
+
         {item.log != "empty" && item.log != undefined ? (
           <td className="table-center">
             <InfoTooltip
@@ -213,7 +223,8 @@ const ViewLog = () => {
     { label: "total calc fail", key: "obstaclesSum_calcFail" },
     { label: "total correct calc", key: "obstaclesSum_calcSuccess" },
     { label: "no. of sessions", key: "totalSessions" },
-    { label: "questions", key: "pollData" },
+    { label: "questions", key: "questions" },
+    { label: "answers", key: "answers" },
   ];
 
   console.log(itemsFromFirestore);
@@ -238,6 +249,7 @@ const ViewLog = () => {
               "Calc Success(h)",
               "Calc Fail(h)",
               "Total sessions",
+              "Questions",
               "Answers",
               "Parameters",
               "Log",

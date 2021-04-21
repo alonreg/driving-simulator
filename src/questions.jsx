@@ -13,7 +13,7 @@ const Questions = () => {
   const [pageNumber, setPageNumber] = useState(urlPageNumber - 1); // current page number
   const [questionsData, setQuestionsData] = useState(null); // the data to display
   const [totalPages, setTotalPages] = useState(0); // total number of pages
-  const [questionsState, setQuestionsState] = useState([]); // the current state of the poll (questions at the end)
+  const [questionsState, setQuestionsState] = useState([]); // the current state of the answers
 
   // AID managment for cloud research
   const [aid, setAid] = useState(""); // the aid of the user
@@ -46,25 +46,121 @@ const Questions = () => {
   }, [urlPageNumber]);
 
   const goToPreviousPage = () => {
-    setPageNumber(+pageNumber - 1);
+    const currPageNum = +pageNumber;
+    setPageNumber(currPageNum - 1);
     history.push(
-      `/${id}/${urlInfoDataId}/${questionDataId}/2/page-${+pageNumber}`
+      `/${id}/${urlInfoDataId}/${questionDataId}/2/page-${currPageNum}`
     );
   };
 
+  // A function that tests if an asnwer passes the filter.
+  const handleFilter = () => {
+    const currPageNum = +pageNumber;
+    const currFilter = questionsData.filters[currPageNum];
+
+    if (currFilter && currFilter.split("#")[1]) {
+      if (currFilter && currFilter.charAt(0) == "M") {
+        // it's a mathematical filter
+        // will look like: #>#20#attention
+        // or: #<=3
+        try {
+          if (mathFilter(currFilter, questionsState[currPageNum])) {
+            goBackToCloudResearch(currFilter.slice(-1));
+            return true;
+          }
+        } catch (err) {
+          console.log("error in filtering - NaN");
+        }
+      } else if (currFilter.charAt(0) == "I") {
+        // it's an Include filter
+        const filterArray = currFilter.slice(2, -2).split(","); // the current filter array
+        if (!filterArray.includes(questionsState[currPageNum].toString())) {
+          goBackToCloudResearch(currFilter.slice(-1));
+          return true;
+        }
+      } else {
+        // it's not a valid filter as of now
+        return false;
+      }
+    }
+
+    return false;
+  };
+
   const goToNextPage = () => {
+    const filterResult = handleFilter();
+    if (filterResult) {
+      // if filter suggests this user should be terminated.
+      return;
+    }
+
+    const currPageNum = +pageNumber;
+
     if (+pageNumber >= totalPages - 1) {
       history.push({
         pathname: `/${id}/${urlInfoDataId}/${questionDataId}/3`, // the path to the driving simulator
-        pollData: questionsState,
+        pollData: [questionsData.titles, questionsState],
         aid: aid,
       });
       return;
     }
-    setPageNumber(+pageNumber + 1);
+    setPageNumber(currPageNum + 1);
     history.push(
-      `/${id}/${urlInfoDataId}/${questionDataId}/2/page-${+pageNumber + 2}`
+      `/${id}/${urlInfoDataId}/${questionDataId}/2/page-${currPageNum + 2}`
     );
+  };
+
+  // tests the dynamic filter and checks if the user is qualified
+  const mathFilter = (filterStatement, answer) => {
+    var comparisonOperatorsHash = {
+      "<": function (a, b) {
+        return a < b;
+      },
+      ">": function (a, b) {
+        return a > b;
+      },
+      ">=": function (a, b) {
+        return a >= b;
+      },
+      "<=": function (a, b) {
+        return a <= b;
+      },
+      "==": function (a, b) {
+        return a == b;
+      },
+    };
+
+    const filterArray = filterStatement.split("#");
+    const operatorAndNumArray = getOperatorAndNumArray(filterArray[1]);
+
+    const operatorString = operatorAndNumArray[0];
+    const num = operatorAndNumArray[1];
+    const operator = comparisonOperatorsHash[operatorString];
+
+    if (operator === undefined) {
+      console.log("the filter is not an operator");
+    }
+
+    return operator(answer, num);
+  };
+
+  const getOperatorAndNumArray = (str) =>
+    isNaN(str.charAt(1))
+      ? [str.slice(0, 2), str.slice(2)]
+      : [str.slice(0, 1), str.slice(1)];
+
+  const goBackToCloudResearch = (reason) => {
+    // reasons can be: attention, quota, unqualified
+    if (reason == "A") {
+      // user pays too little attention at survey
+      window.location.href = `https://app.cloudresearch.com/Router/ThankYouTerm?aid=${aid}`;
+    } else if (reason == "Q") {
+      // too many users, quota is overfull
+      window.location.href = `https://app.cloudresearch.com/Router/QuotaFull?aid=${aid}`;
+    } else {
+      // reason == "U", user is not qualified for this survey - "U"
+      window.location.href = `https://app.cloudresearch.com/Router/ThankYouNotQualified?aid=${aid}`;
+    }
   };
 
   const onClose = function () {
@@ -101,11 +197,11 @@ const Questions = () => {
     <div className="bg-infopage">
       <div className="parent-infopage">
         <div className="div1-infopage">
-          <h1>Please answer the following questions:</h1>
+          <h1>Please answer the following question:</h1>
           <hr />
         </div>
         <div className="div2-infopage">
-          <h2>{questionsData.titles[+pageNumber]}</h2>
+          <p>{questionsData.titles[+pageNumber]}</p>
           <br></br>
         </div>
         <div className="div3-infopage">

@@ -94,7 +94,8 @@ export const createSession = ({
     screenHeight: window.innerHeight,
     parametersSet: parametersSet,
     parameters: parameters,
-    pollData: pollData ?? [],
+    questions: pollData[0] ?? [],
+    answers: pollData[1] ?? [],
   };
 
   db.collection("sessions")
