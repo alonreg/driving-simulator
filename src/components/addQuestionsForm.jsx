@@ -10,7 +10,7 @@ const AddQuestionsForm = () => {
   const [name, setName] = useState("");
   const [titles, setTitles] = useState([""]);
   const [answers, setAnswers] = useState([""]);
-  const [filters, setFilters] = useState(["I##U"]);
+  const [filters, setFilters] = useState(["I##U"]); // deafult type
   const [types, setTypes] = useState(["default"]);
 
   const onChange = (e, setItem, item, i) => {
@@ -59,7 +59,15 @@ const AddQuestionsForm = () => {
       <>
         <hr></hr>
 
-        <p>Questions Number {i + 1}</p>
+        <span>Questions Number {i + 1}</span>
+        <Button
+          variant="link"
+          onClick={() => {
+            deleteQuestion(i);
+          }}
+        >
+          Delete Question {i + 1}
+        </Button>
         <div>
           <label>Title</label>
           <textarea
@@ -188,15 +196,10 @@ const AddQuestionsForm = () => {
         ) : (
           <></>
         )}
-        <Button
-          onClick={() => {
-            deleteQuestion(i);
-          }}
-        >
-          Delete Question {i + 1}
-        </Button>
+
         {"  "}
         <Button
+          variant="link"
           onClick={() => {
             addQuestion(i);
           }}

@@ -66,11 +66,15 @@ export const getQuestionsData = () => {
 // creates a new session at the database, initializes user data and parameters
 export const createSession = ({
   session,
+  questions,
+  answers,
+  aid,
   startTime,
   parameters,
   parametersSet,
-  pollData,
 } = {}) => {
+  console.log("creating session");
+
   const data = {
     obstacles: {
       successByHuman: 0,
@@ -94,8 +98,9 @@ export const createSession = ({
     screenHeight: window.innerHeight,
     parametersSet: parametersSet,
     parameters: parameters,
-    questions: pollData[0] ?? [],
-    answers: pollData[1] ?? [],
+    questions: questions ?? [],
+    answers: answers ?? [],
+    aid: aid ?? "None",
   };
 
   db.collection("sessions")
@@ -168,6 +173,7 @@ export const setSessionData = ({
     log: log ?? "empty",
     serverTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
   };
+
   db.collection("sessions")
     .doc(session) // sessionID
     .set({ [startTime]: data }, { merge: true }) // sub-document for each session this user has

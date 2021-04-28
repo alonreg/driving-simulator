@@ -62,7 +62,15 @@ const UpdateQuestionsItem = ({
     return (
       <>
         <hr></hr>
-        <p>Questions Number {i + 1}</p>
+        <span>Q{i + 1}</span>
+        <Button
+          variant="link"
+          onClick={() => {
+            deleteQuestion(i);
+          }}
+        >
+          Delete
+        </Button>
         <div>
           <label>Title</label>
           <input
@@ -140,15 +148,10 @@ const UpdateQuestionsItem = ({
         ) : (
           <></>
         )}
-        <Button
-          onClick={() => {
-            deleteQuestion(i);
-          }}
-        >
-          Delete Question {i + 1}
-        </Button>
+
         {"  "}
         <Button
+          variant="link"
           onClick={() => {
             addQuestion(i);
           }}

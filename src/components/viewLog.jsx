@@ -71,19 +71,19 @@ const ViewLog = () => {
   }
 
   const mapToTable = function (item, i) {
-    const start = new Date(item.startTime).toISOString();
+    const start = item.startTime
+      ? new Date(item.startTime).toISOString()
+      : "None";
     let end = item.endTime;
     if (item.endTime != 0) {
       end = new Date(item.endTime).toISOString();
-    } else {
-      console.log(item.endTime);
     }
     return (
       <tr key={i} className={`font-italic`}>
         <td>{item.id}</td>
+        <td>{item.aid}</td>
         <td>{item.parametersSet}</td>
         <td>{start}</td>
-        <td>{end}</td>
         <td>
           {item.endTime - item.startTime < 0
             ? "undone"
@@ -101,7 +101,29 @@ const ViewLog = () => {
         <td>{item.totalSessions}</td>
         {item.questions ? (
           <td>
-            <InfoTooltip text={JSON.stringify(item.questions, null, 2)} />
+            {item.answers && item.answers != undefined ? (
+              <>
+                <InfoTooltip text={JSON.stringify(item.questions, null, 2)} />
+                <CSVLink
+                  data={[
+                    item.questions.reduce(
+                      (obj, key, index) => ({
+                        ...obj,
+                        [key]: item.answers[index],
+                      }),
+                      {}
+                    ),
+                  ]}
+                  filename={
+                    "q_and_a-" + item.id + "-" + getFormattedTime() + ".csv"
+                  }
+                >
+                  <img className="download-button" src={downloadIcon} />
+                </CSVLink>
+              </>
+            ) : (
+              <>"empty"</>
+            )}
           </td>
         ) : (
           <td>empty</td>
@@ -193,6 +215,7 @@ const ViewLog = () => {
   // headers for CSV output
   const headers = [
     { label: "session ID", key: "id" },
+    { label: "aid", key: "aid" },
     { label: "param set", key: "parametersSet" },
     { label: "start at", key: "startTime" },
     { label: "end time", key: "endTime" },
@@ -223,8 +246,8 @@ const ViewLog = () => {
     { label: "total calc fail", key: "obstaclesSum_calcFail" },
     { label: "total correct calc", key: "obstaclesSum_calcSuccess" },
     { label: "no. of sessions", key: "totalSessions" },
-    { label: "questions", key: "questions" },
-    { label: "answers", key: "answers" },
+    //{ label: "answers", key: "answers" },
+    //{ label: "questions", key: "questions" },
   ];
 
   console.log(itemsFromFirestore);
@@ -235,9 +258,9 @@ const ViewLog = () => {
           <tr>
             {[
               "Id",
+              "aid",
               "Params",
               "Start (UTC)",
-              "End (UTC)",
               "Tot. Time",
               "Score",
               "Mode Change",

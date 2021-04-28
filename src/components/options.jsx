@@ -22,6 +22,7 @@ const Options = ({ currentPage, questionsData, questionsState, setAnswer }) => {
 
   // A likert scale that returns the string value of each choise
   const likertStrings = {
+    id: questionsData.titles[currentPage],
     responses: currentAnswers.split(",").map((question) => ({
       value: question,
       text: question,
@@ -33,14 +34,14 @@ const Options = ({ currentPage, questionsData, questionsState, setAnswer }) => {
 
   // A likert scale that returns the integer value of each choise
   // Choosing the best option will return the highest index value
-  var likertIntegers = {
-    id: questionsData.titles[currentPage],
+  const likertIntegers = {
+    id: currentPage,
     responses: questionsData.answers[currentPage]
       .split(",")
       .map((question, i) => ({
         value: i + 1,
         text: question,
-        checked: false,
+        checked: currentAnswersState == i + 1,
       })),
     onChange: (val) => setCurrentAnswer({ text: val.value }),
     flexible: true,
@@ -51,9 +52,9 @@ const Options = ({ currentPage, questionsData, questionsState, setAnswer }) => {
       <>
         <div className="likert">
           {currentType == "likertIntegers" ? (
-            <Likert {...likertIntegers} />
+            <Likert key={currentPage} {...likertIntegers} />
           ) : (
-            <Likert {...likertStrings} />
+            <Likert key={currentPage} {...likertStrings} />
           )}
         </div>
         <br></br>
@@ -67,6 +68,7 @@ const Options = ({ currentPage, questionsData, questionsState, setAnswer }) => {
             <textarea
               id={currentAnswers}
               name={currentAnswers}
+              value={currentAnswersState}
               rows="4"
               cols="50"
             ></textarea>

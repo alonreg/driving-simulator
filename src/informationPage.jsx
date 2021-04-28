@@ -34,27 +34,23 @@ const InformationPage = () => {
   const [pageNumber, setPageNumber] = useState(urlPageNumber - 1); // current page number
   const [infoData, setInfoData] = useState(null); // the data to display
   const [totalPages, setTotalPages] = useState(0); // total number of pages
-
+  const [imageLoading, setImageLoading] = useState(true); // total number of pages
   // AID user managment for cloud research
   const [aid, setAid] = useState(""); // the aid of the user
   const location = useLocation(); // passing metadata from the pre-experiment part
   let history = useHistory();
-
   // This function sets the css body class name and preloads images
   useEffect(() => {
     document.body.className = "body-informationPage";
-    let imageList = [];
+    // Preload all images, for fastet UI
     if (infoData) {
-      infoData.images.forEach(
-        (element) => element.image && imageList.push(element.image)
-      );
-      imageList.forEach((image) => {
-        new Image().src = image;
+      infoData.images.forEach((image) => {
+        const img = new Image();
+        img.src = image;
+        console.log("loaded image:" + image.fileName);
       });
-      console.log(imageList);
-      // preload images
     }
-  }, []);
+  }, [infoData]);
 
   useEffect(() => {
     if (!infoData) {
@@ -150,17 +146,14 @@ const InformationPage = () => {
           <br></br>
         </div>
         <div className="div3-infopage">
-          {infoData.images[+pageNumber + 1] && (
-            <img
-              src={infoData.images[+pageNumber + 1]}
-              className="hide-image-for-preload"
-            />
-          )}
           {infoData.images[+pageNumber] ? (
             <>
+              {!imageLoading && <h1>asdsadsadsad</h1>}
               <img
                 src={infoData.images[+pageNumber]}
                 className="instructions-image"
+                key={+pageNumber}
+                alt="Loading..."
               />
             </>
           ) : (

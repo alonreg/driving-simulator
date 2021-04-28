@@ -20,7 +20,7 @@
 .env.production
 /src/env.dev
 /src/env.production
-
+.firebase/*
 
 npm-debug.log*
 yarn-debug.log*

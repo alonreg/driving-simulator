@@ -107,8 +107,10 @@ function Experiment(props) {
           } else if (userCredential.user.uid) {
             setSessionId(userCredential.user.uid);
             FirestoreService.createSession({
+              aid: location.aid,
               session: userCredential.user.uid,
-              pollData: location.pollData, // user answers to questionare in the pre-experiment stage
+              questions: location.questions, // user answers to questionare in the pre-experiment stage
+              answers: location.answers, // user answers to questionare in the pre-experiment stage
               startTime: startTime,
               parameters: parameters,
               parametersSet: id,
@@ -409,7 +411,7 @@ function Experiment(props) {
             currentObstacle={currentObstacle}
             started={started}
             startOnClick={start}
-            obstacles={obstaclesNum}
+            obstacles={obstaclesNum + 1}
             autoAssist={parameters.autoAssist ?? "AutoAssist"}
           />
         </div>

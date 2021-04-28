@@ -99,7 +99,8 @@ const Questions = () => {
     if (+pageNumber >= totalPages - 1) {
       history.push({
         pathname: `/${id}/${urlInfoDataId}/${questionDataId}/3`, // the path to the driving simulator
-        pollData: [questionsData.titles, questionsState],
+        questions: questionsData.titles,
+        answers: questionsState,
         aid: aid,
       });
       return;
