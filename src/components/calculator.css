@@ -48,6 +48,23 @@
   width: 60%;
   height: 60%;
 }
+
+.calculator-input-fail {
+  animation: change 3s step-end both;
+}
+.calculator-input-success {
+  animation: change 3s step-end both;
+}
+
+@keyframes change {
+  from {
+    background-color: green;
+  }
+  to {
+    background-color: red;
+  }
+}
+
 .calculator-submit {
   margin: auto;
   width: 50%;

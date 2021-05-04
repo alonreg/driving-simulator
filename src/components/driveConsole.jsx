@@ -75,6 +75,8 @@ function Arrow({
   successScore,
   failScore,
   autoAssist,
+  backgroundColor,
+  currentChoiseResults,
 }) {
   const directionDictionary = { left: "<", forward: "^", right: ">" };
   return (
@@ -107,7 +109,24 @@ function Arrow({
           </Alert>
         )}
       </div>
-      <div className={divClassName}>
+      <div
+        className={divClassName}
+        style={
+          currentChoiseResults.direction == direction && isMoving
+            ? currentChoiseResults.success
+              ? Object.assign(
+                  {},
+                  { backgroundColor: "RGBA(0,188,34,0.23)" },
+                  { borderRadius: "10px" }
+                )
+              : Object.assign(
+                  {},
+                  { backgroundColor: "rgba(187, 16, 16, 0.23)" },
+                  { borderRadius: "10px" }
+                )
+            : {}
+        }
+      >
         <Button
           onClick={() => onClick(direction)}
           variant="primary"
@@ -139,6 +158,11 @@ function DriveConsole({
   timeoutComputerDecision,
   autoAssist,
 }) {
+  const [currentChoiseResults, setCurrentChoiseResults] = useState({
+    direction: "-",
+    success: false,
+  }); // holds the current results and direction
+
   /** Renders a direction decision for the computer when in autoMode */
   const computerDesicion = () => {
     const direction = currentObstacle?.decision ?? null;
@@ -168,6 +192,7 @@ function DriveConsole({
     switch (direction) {
       case "right":
         if (rnd >= currentObstacle.real_r) {
+          setCurrentChoiseResults({ direction: "right", success: true });
           onChange["scoreAddition"](scoreBoard.success + scoreBoard.pass);
           onChange["addToLog"](
             "right-success",
@@ -177,22 +202,24 @@ function DriveConsole({
             ? onChange["addSuccessFailToSessionData"]("successByComp")
             : onChange["addSuccessFailToSessionData"]("successByHuman");
         } else {
+          setCurrentChoiseResults({ direction: "right", success: false });
           onChange["scoreAddition"](scoreBoard.fail + scoreBoard.pass);
           onChange["addToLog"]("right-fail", autoMode ? "computer" : "human");
           autoMode
             ? onChange["addSuccessFailToSessionData"]("failByComp")
             : onChange["addSuccessFailToSessionData"]("failByHuman");
         }
-
         break;
       case "left":
         if (rnd >= currentObstacle.real_l) {
+          setCurrentChoiseResults({ direction: "left", success: true });
           onChange["scoreAddition"](scoreBoard.success + scoreBoard.pass);
           onChange["addToLog"]("left-success", autoMode ? "computer" : "human");
           autoMode
             ? onChange["addSuccessFailToSessionData"]("successByComp")
             : onChange["addSuccessFailToSessionData"]("successByHuman");
         } else {
+          setCurrentChoiseResults({ direction: "left", success: false });
           onChange["scoreAddition"](scoreBoard.fail + scoreBoard.pass);
           onChange["addToLog"]("left-fail", autoMode ? "computer" : "human");
           autoMode
@@ -203,6 +230,7 @@ function DriveConsole({
         break;
       case "forward":
         if (rnd >= currentObstacle.real_f) {
+          setCurrentChoiseResults({ direction: "forward", success: true });
           onChange["scoreAddition"](scoreBoard.success);
           onChange["addToLog"](
             "forward-success",
@@ -212,6 +240,7 @@ function DriveConsole({
             ? onChange["addSuccessFailToSessionData"]("successByComp")
             : onChange["addSuccessFailToSessionData"]("successByHuman");
         } else {
+          setCurrentChoiseResults({ direction: "forward", success: false });
           onChange["scoreAddition"](scoreBoard.fail);
           onChange["addToLog"]("forward-fail", autoMode ? "computer" : "human");
           autoMode
@@ -220,6 +249,7 @@ function DriveConsole({
         }
         break;
       case "rescue":
+        setCurrentChoiseResults({ direction: "rescue", success: false });
         onChange["scoreAddition"](scoreBoard.rescue);
         onChange["addToLog"]("rescue", autoMode ? "computer" : "human");
         onChange["addSuccessFailToSessionData"]("rescue");
@@ -257,6 +287,7 @@ function DriveConsole({
               successScore={scoreBoard.success + scoreBoard.pass}
               failScore={scoreBoard.fail + scoreBoard.pass}
               autoAssist={autoAssist}
+              currentChoiseResults={currentChoiseResults}
             />
             <Arrow
               direction="forward"
@@ -271,6 +302,7 @@ function DriveConsole({
               successScore={scoreBoard.success}
               failScore={scoreBoard.fail}
               autoAssist={autoAssist}
+              currentChoiseResults={currentChoiseResults}
             />
 
             <Arrow
@@ -286,6 +318,7 @@ function DriveConsole({
               successScore={scoreBoard.success + scoreBoard.pass}
               failScore={scoreBoard.fail + scoreBoard.pass}
               autoAssist={autoAssist}
+              currentChoiseResults={currentChoiseResults}
             />
 
             <div className="div4-drivingConsole ">

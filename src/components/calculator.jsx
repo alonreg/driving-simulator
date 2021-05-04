@@ -18,6 +18,7 @@ function Calculator(props) {
   ];
 
   const [problemParameters, setParameters] = useState(generateMathProblem());
+  const [currentChoiseSuccess, setCurrentChoiseSuccess] = useState(false);
 
   const initialValues = {
     answer: "",
@@ -41,13 +42,15 @@ function Calculator(props) {
     initialValues,
     onSubmit: (values) => {
       if (values.values.answer == problemParameters[0] + problemParameters[1]) {
+        setCurrentChoiseSuccess(true);
         props.onChange(props.scoreBoard.calculation);
         props.addToLog("calcSuccess", "human");
         props.addSuccessFailToSessionData("calcSuccess");
         setParameters(generateMathProblem());
       } else if (values.values.answer) {
+        setCurrentChoiseSuccess(false);
         props.onChange(0);
-        props.addToLog("calcSuccess", "human");
+        props.addToLog("calcFail", "human");
         props.addSuccessFailToSessionData("calcFail");
         setParameters(generateMathProblem());
       }
@@ -70,7 +73,11 @@ function Calculator(props) {
           </div>
           <div className="div2-calc">
             <input
-              className="inputRounded calculator-input"
+              className={
+                currentChoiseSuccess && props.started
+                  ? "calculator-input-success inputRounded calculator-input"
+                  : "calculator-input-fail inputRounded calculator-input"
+              }
               type="number"
               name="answer"
               onKeyPress={() => false}
