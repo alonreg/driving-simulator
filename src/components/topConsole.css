@@ -16,7 +16,7 @@
   grid-area: 1 / 2 / 2 / 3;
 }
 .div3-topConsole {
-  display: flex !important;
+  /*display: flex !important;*/
   grid-area: 2 / 2 / 3 / 3;
 }
 .div4-topConsole {
@@ -67,6 +67,9 @@
   display: flex;
   justify-content: center;
   white-space: pre-wrap;
+  /*font-family: "Courier New", monospace;*/
+  font-weight: 800;
+  color: rgb(37, 129, 248);
 }
 
 .score-change-alert {
@@ -74,7 +77,6 @@
 
 .inputRounded {
   text-align: center;
-  border-radius: 20px;
   border: 1px solid grey;
   padding-left: 8px;
 }
@@ -86,29 +88,144 @@
 .score-topConsole {
   margin: 0 auto;
   width: 50%;
-  height: 30px;
   border-radius: 10px;
-  border: 3px solid #0066ff9f;
-  background-color: #f8f5f5;
+  border: 3px solid #0d67ee9f;
+  background-color: #f3f2f2;
 }
 
 /* Grid for the score line */
 .parent-scoreGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 0.5fr;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
 }
 
-.div1-scoreGrid {
+/* badge */
+.div3-scoreGrid {
+  grid-area: 1 / 2 / 2 / 3;
+  opacity: 0;
+}
+
+/* score text */
+.div2-scoreGrid {
   grid-area: 1 / 1 / 2 / 2;
 }
-.div2-scoreGrid {
-  grid-area: 1 / 2 / 2 / 3;
+
+.topConsole-toggle-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 0.25fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  width: 100%;
+  height: 100%;
 }
-.div3-scoreGrid {
-  grid-area: 1 / 3 / 2 / 4;
+
+.topConsole-toggle-grid-div1 {
+  display: flex;
+  align-self: flex-end;
+  grid-area: 1 / 1 / 2 / 2;
+}
+
+.topConsole-toggle-grid-div2 {
+  display: flex;
+  align-self: flex-start;
+  grid-area: 2 / 1 / 3 / 2;
+}
+
+.topConsole-toggle-text {
+  margin: auto;
+  color: black;
+  padding: 2px;
+  background-color: rgb(255, 238, 0);
+  border-radius: 5px;
+  opacity: 0;
+  z-index: 1;
+}
+
+.topConsole-shake-animation {
+  /* Start the shake animation and make the animation last for 0.5 seconds */
+  animation: topConsole-shake-keyframes 0.4s;
+  /* When the animation is finished, start again */
+}
+
+@keyframes topConsole-shake-keyframes {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
+}
+
+.topConsole-lift-animation {
+  /* Start the shake animation and make the animation last for 0.5 seconds */
+  animation: topConsole-lift-keyframes 0.4s;
+  /* When the animation is finished, start again */
+}
+
+@keyframes topConsole-lift-keyframes {
+  0% {
+    transform: translate(0px, -1px);
+  }
+  50% {
+    transform: translate(0px, 6px);
+  }
+  100% {
+    transform: translate(0px, 0px);
+  }
+}
+
+.topConsole-toggle-text-animation {
+  animation: topConsole-toggle-text-animation-opacityOnAndOff 3s normal;
+}
+
+.topConsole-badge-animation {
+  animation: topConsole-toggle-text-animation-opacityOnAndOff 1.5s normal;
+}
+
+@keyframes topConsole-toggle-text-animation-opacityOnAndOff {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 /*  1000px    */
@@ -159,6 +276,8 @@
 
   .div1-topConsole {
     display: flex;
+    justify-content: space-between;
+    margin-right: auto;
     grid-area: 2 / 1 / 3 / 2;
   }
   .div4-topConsole {
@@ -189,10 +308,12 @@
 
   .driving-gif {
     width: 30%;
+    margin-right: 15px;
   }
   .center-sign {
     width: 35%;
     padding: 2px;
+    margin-left: 15px;
   }
 }
 

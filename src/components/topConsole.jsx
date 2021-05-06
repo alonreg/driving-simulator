@@ -14,6 +14,11 @@ import Results from "./results";
 function TopConsole(props) {
   const [scoreDelta, setScoreDelta] = useState(0);
   const [oldScore, setOldScore] = useState(0);
+  const [toggleText, setToggleText] = useState("");
+  const [toggleClassName, setToggleClassName] = useState("");
+  const [toggleTextClassName, setToggleTextClassName] = useState("");
+  const [badgeClassName, setBadgeClassName] = useState("");
+  const [scoreClassName, setScoreClassName] = useState("");
 
   const handleChange = (event, newAutoMode) => {
     props.onChange(newAutoMode == "auto"); //setChecked({ status: checked });
@@ -23,6 +28,12 @@ function TopConsole(props) {
   useEffect(() => {
     setScoreDelta(props.score - oldScore);
     setOldScore(props.score);
+    setBadgeClassName("topConsole-badge-animation");
+    if (props.score - oldScore < 0) {
+      setScoreClassName("topConsole-shake-animation");
+    } else if (props.score - oldScore > 0) {
+      setScoreClassName("topConsole-lift-animation");
+    }
   }, [props.score]);
 
   return (
@@ -51,7 +62,8 @@ function TopConsole(props) {
         <div className="div2-topConsole">
           <div className="text-and-score-div">
             <div
-              className="score-topConsole inputRounded"
+              onAnimationEnd={() => setScoreClassName("")}
+              className={"score-topConsole inputRounded " + scoreClassName}
               style={
                 props.isMoving && props.obstaclesNum > 0
                   ? scoreDelta > 0
@@ -62,18 +74,27 @@ function TopConsole(props) {
             >
               <div className="parent-scoreGrid">
                 <div className="div2-scoreGrid">
-                  <p className="score-text">
+                  <h2 className="score-text">
                     {props.score}
                     {"  "}
-                  </p>
+                  </h2>
                 </div>
-                <div className="div3-scoreGrid">
-                  {scoreDelta == 0 || !props.isMoving ? (
+                <div
+                  className={"div3-scoreGrid " + badgeClassName}
+                  onAnimationEnd={() => setBadgeClassName("")}
+                >
+                  {" "}
+                  {scoreDelta == 0 ? (
                     ""
                   ) : (
-                    <Badge pill variant={scoreDelta > 0 ? "success" : "danger"}>
-                      {scoreDelta > 0 ? "+" + scoreDelta : scoreDelta}
-                    </Badge>
+                    <h2>
+                      <Badge
+                        pill
+                        variant={scoreDelta > 0 ? "success" : "danger"}
+                      >
+                        {scoreDelta > 0 ? "+" + scoreDelta : scoreDelta}
+                      </Badge>
+                    </h2>
                   )}
                 </div>
               </div>
@@ -89,48 +110,65 @@ function TopConsole(props) {
         </div>
 
         <div className="div3-topConsole">
-          <div
-            className="toggle-div"
-            style={
-              props.isMoving && props.started
-                ? { backgroundColor: "RGBA(255,244,236,0.55)" }
-                : { backgroundColor: "RGBA(0,0,5,0.68)" }
-            }
-            onClick={() => {
-              if (!props.isMoving || !props.started)
-                alert("You can only switch modes when the vehicle is moving");
-            }}
-          >
-            <Nav
-              variant="pills"
-              defaultActiveKey={props.userAutoMode ? "auto" : "manual"}
-              activeKey={props.userAutoMode ? "auto" : "manual"}
-            >
-              <Nav.Item color="black">
-                <Nav.Link
-                  draggable={false}
-                  disabled={!props.isMoving || !props.started}
-                  onChange={handleChange}
-                  onClick={() => handleChange("_", "auto")}
-                  eventKey="auto"
+          <div className="topConsole-toggle-grid">
+            <div className="topConsole-toggle-grid-div1">
+              {" "}
+              <div
+                className={"toggle-div " + toggleClassName}
+                style={
+                  props.isMoving && props.started
+                    ? { backgroundColor: "rgba(255,244,236,0.55)" }
+                    : { backgroundColor: "rgba(0,0,5,0.68)" }
+                }
+                onClick={() => {
+                  if (!props.isMoving || !props.started) {
+                    setToggleText("change mode when vehicle moves");
+                    setToggleTextClassName("topConsole-toggle-text-animation");
+                    setToggleClassName("topConsole-shake-animation");
+                  }
+                }}
+                onAnimationEnd={() => setToggleClassName("")}
+              >
+                <Nav
+                  variant="pills"
+                  defaultActiveKey={props.userAutoMode ? "auto" : "manual"}
+                  activeKey={props.userAutoMode ? "auto" : "manual"}
                 >
-                  <DirectionsCarIcon />
-                  {props.autoAssist}
-                </Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link
-                  draggable={false}
-                  disabled={!props.isMoving || !props.started}
-                  onChange={handleChange}
-                  onClick={() => handleChange("_", "manual")}
-                  eventKey="manual"
-                >
-                  <EmojiPeopleIcon />
-                  Manual
-                </Nav.Link>
-              </Nav.Item>
-            </Nav>
+                  <Nav.Item color="black">
+                    <Nav.Link
+                      draggable={false}
+                      disabled={!props.isMoving || !props.started}
+                      onChange={handleChange}
+                      onClick={() => handleChange("_", "auto")}
+                      eventKey="auto"
+                    >
+                      <DirectionsCarIcon />
+                      {props.autoAssist}
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link
+                      draggable={false}
+                      disabled={!props.isMoving || !props.started}
+                      onChange={handleChange}
+                      onClick={() => handleChange("_", "manual")}
+                      eventKey="manual"
+                    >
+                      <EmojiPeopleIcon />
+                      Manual
+                    </Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </div>
+            </div>
+            <div className="topConsole-toggle-grid-div2">
+              <p
+                className={"topConsole-toggle-text " + toggleTextClassName}
+                onAnimationEnd={() => setToggleTextClassName("")}
+              >
+                {toggleText}
+              </p>
+            </div>
           </div>
         </div>
       </div>

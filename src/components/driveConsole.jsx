@@ -110,18 +110,35 @@ function Arrow({
         )}
       </div>
       <div
-        className={divClassName}
+        className={
+          divClassName +
+          (currentChoiseResults.direction == direction &&
+          isMoving &&
+          !currentChoiseResults.success
+            ? " driveConsole-shake-animation"
+            : "")
+        }
         style={
           currentChoiseResults.direction == direction && isMoving
             ? currentChoiseResults.success
               ? Object.assign(
                   {},
-                  { backgroundColor: "RGBA(0,188,34,0.23)" },
+                  {
+                    borderColor: "rgba(0,188,34,0.23)",
+                    backgroundColor: "rgba(0,188,34,0.23)",
+                    borderWidth: "6px",
+                    borderStyle: "solid",
+                  },
                   { borderRadius: "10px" }
                 )
               : Object.assign(
                   {},
-                  { backgroundColor: "rgba(187, 16, 16, 0.23)" },
+                  {
+                    borderColor: "rgba(187, 16, 16, 0.23)",
+                    backgroundColor: "rgba(187, 16, 16, 0.23)",
+                    borderWidth: "6px",
+                    borderStyle: "solid",
+                  },
                   { borderRadius: "10px" }
                 )
             : {}
