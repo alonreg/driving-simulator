@@ -30,11 +30,21 @@ const Questions = () => {
           setQuestionsData(data);
           const totPages = data.titles.length;
           setTotalPages(totPages);
-          // Create an array of null answers
-          let newPollState = Array(totPages).fill(null);
-          setQuestionsState(newPollState);
+          localStorage.getItem("questionsState")
+            ? setQuestionsState(
+                JSON.parse(localStorage.getItem("questionsState"))
+              )
+            : setQuestionsState(Array(totPages).fill(null));
         }
       );
+      // Create an array of null answers or pull from local storage
+      //let localAnswers =
+
+      //if(localAnswers){
+
+      //} else {
+      //let newPollState = Array(totPages).fill(null);
+      //}
     }
   }, []);
 
@@ -212,6 +222,7 @@ const Questions = () => {
             questionsState={questionsState}
             setAnswer={(newState) => {
               setQuestionsState(newState);
+              localStorage.setItem("questionsState", JSON.stringify(newState));
             }}
           />
           <br></br>

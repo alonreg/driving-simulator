@@ -41,22 +41,44 @@ function StartButton({ onClick, className }) {
 }
 
 /** The rescue button */
-function RescueButton({ onClick, disabled, className, rescueScore }) {
+function RescueButton({
+  onClick,
+  disabled,
+  className,
+  rescueScore,
+  currentChoiseResults,
+  isMoving,
+}) {
   return (
     <>
-      <Button
-        onClick={() => onClick("rescue")}
-        variant="danger"
-        className={className}
-        disabled={disabled}
+      <div
+        className="rescue-container"
+        style={
+          currentChoiseResults.direction == "rescue" && isMoving
+            ? {
+                borderColor: "rgba(231, 221, 81, 0.829)",
+                backgroundColor: "rgba(231, 221, 81, 0.829)",
+                borderWidth: "6px",
+                borderStyle: "solid",
+                borderRadius: "10px",
+              }
+            : {}
+        }
       >
-        <div className="rescue-text-container">
-          <p className="rescue-text">
-            Rescue&nbsp;
-            <Badge variant="dark">{rescueScore}</Badge>
-          </p>
-        </div>
-      </Button>
+        <Button
+          onClick={() => onClick("rescue")}
+          variant="danger"
+          className={className}
+          disabled={disabled}
+        >
+          <div className="rescue-text-container">
+            <p className="rescue-text">
+              Rescue&nbsp;
+              <Badge variant="dark">{rescueScore}</Badge>
+            </p>
+          </div>
+        </Button>
+      </div>
     </>
   );
 }
@@ -339,14 +361,14 @@ function DriveConsole({
             />
 
             <div className="div4-drivingConsole ">
-              <div className="rescue-container">
-                <RescueButton
-                  onClick={directionDecided}
-                  disabled={isMoving || autoMode}
-                  className="rescue"
-                  rescueScore={scoreBoard.rescue}
-                />
-              </div>
+              <RescueButton
+                onClick={directionDecided}
+                disabled={isMoving || autoMode}
+                className="rescue"
+                rescueScore={scoreBoard.rescue}
+                currentChoiseResults={currentChoiseResults}
+                isMoving={isMoving}
+              />
             </div>
           </>
         )}

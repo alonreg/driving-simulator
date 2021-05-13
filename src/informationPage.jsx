@@ -34,7 +34,7 @@ const InformationPage = () => {
   const [pageNumber, setPageNumber] = useState(urlPageNumber - 1); // current page number
   const [infoData, setInfoData] = useState(null); // the data to display
   const [totalPages, setTotalPages] = useState(0); // total number of pages
-  const [imageLoading, setImageLoading] = useState(true); // total number of pages
+  const [imageLoading, setImageLoading] = useState(true);
   // AID user managment for cloud research
   const [aid, setAid] = useState(""); // the aid of the user
   const location = useLocation(); // passing metadata from the pre-experiment part
@@ -148,13 +148,33 @@ const InformationPage = () => {
         <div className="div3-infopage">
           {infoData.images[+pageNumber] ? (
             <>
-              {!imageLoading && <h1>asdsadsadsad</h1>}
-              <img
-                src={infoData.images[+pageNumber]}
-                className="instructions-image"
-                key={+pageNumber}
-                alt="Loading..."
-              />
+              {!imageLoading && <h1>Loading</h1>}
+              {infoData.images[+pageNumber].includes("youtu.be") ? (
+                <div className="video-container">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src={
+                      "https://www.youtube.com/embed/" +
+                      infoData.images[+pageNumber].split(
+                        "https://youtu.be/"
+                      )[1] +
+                      "?controls=0"
+                    }
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                  ></iframe>
+                </div>
+              ) : (
+                <img
+                  src={infoData.images[+pageNumber]}
+                  className="instructions-image"
+                  key={+pageNumber}
+                  alt="Error Displaying Image"
+                />
+              )}
             </>
           ) : (
             <p1></p1>

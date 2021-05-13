@@ -48,18 +48,22 @@ const Options = ({ currentPage, questionsData, questionsState, setAnswer }) => {
   };
 
   if (currentType.includes("likert")) {
-    return (
-      <>
-        <div className="likert">
-          {currentType == "likertIntegers" ? (
-            <Likert key={currentPage} {...likertIntegers} />
-          ) : (
-            <Likert key={currentPage} {...likertStrings} />
-          )}
-        </div>
-        <br></br>
-      </>
-    );
+    if (questionsState.length == 0) {
+      return <></>;
+    } else {
+      return (
+        <>
+          <div className="likert">
+            {currentType == "likertIntegers" ? (
+              <Likert key={currentPage} {...likertIntegers} />
+            ) : (
+              <Likert key={currentPage} {...likertStrings} />
+            )}
+          </div>
+          <br></br>
+        </>
+      );
+    }
   } else if (currentType == "textbox") {
     return (
       <>

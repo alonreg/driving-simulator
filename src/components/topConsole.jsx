@@ -74,11 +74,9 @@ function TopConsole(props) {
             >
               <div className="parent-scoreGrid">
                 <div className="div2-scoreGrid">
-                  <h2 className="score-text">
-                    {props.score}
-                    {"  "}
-                  </h2>
+                  <h2 className="score-text">{props.score}</h2>
                 </div>
+                <div className="div1-scoreGrid"></div>
                 <div
                   className={"div3-scoreGrid " + badgeClassName}
                   onAnimationEnd={() => setBadgeClassName("")}
