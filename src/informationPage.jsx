@@ -156,10 +156,7 @@ const InformationPage = () => {
                     height="100%"
                     src={
                       "https://www.youtube.com/embed/" +
-                      infoData.images[+pageNumber].split(
-                        "https://youtu.be/"
-                      )[1] +
-                      "?controls=0"
+                      infoData.images[+pageNumber].split("https://youtu.be/")[1]
                     }
                     title="YouTube video player"
                     frameborder="0"
