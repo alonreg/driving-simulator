@@ -34,37 +34,34 @@ function Calculator(props) {
     }
   }
 
-  const {
-    values,
-    errors,
-    touched,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-  } = useCustomForm({
-    initialValues,
-    onSubmit: (values) => {
-      if (values.values.answer == problemParameters[0] + problemParameters[1]) {
-        setCurrentChoiseSuccess(true);
-        setCurrentInputClassName(
-          "calculator-input-success inputRounded calculator-input"
-        );
-        props.onChange(props.scoreBoard.calculation);
-        props.addToLog("calcSuccess", "human");
-        props.addSuccessFailToSessionData("calcSuccess");
-        setParameters(generateMathProblem());
-      } else if (values.values.answer) {
-        setCurrentChoiseSuccess(false);
-        setCurrentInputClassName(
-          "calculator-input-fail inputRounded calculator-input"
-        );
-        props.onChange(0);
-        props.addToLog("calcFail", "human");
-        props.addSuccessFailToSessionData("calcFail");
-        setParameters(generateMathProblem());
-      }
-    },
-  });
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit } =
+    useCustomForm({
+      initialValues,
+      onSubmit: (values) => {
+        if (
+          values.values.answer ==
+          problemParameters[0] + problemParameters[1]
+        ) {
+          setCurrentChoiseSuccess(true);
+          setCurrentInputClassName(
+            "calculator-input-success inputRounded calculator-input"
+          );
+          props.onChange(props.scoreBoard.calculation);
+          props.addToLog("calcSuccess", "human");
+          props.addSuccessFailToSessionData("calcSuccess");
+          setParameters(generateMathProblem());
+        } else if (values.values.answer) {
+          setCurrentChoiseSuccess(false);
+          setCurrentInputClassName(
+            "calculator-input-fail inputRounded calculator-input"
+          );
+          props.onChange(0);
+          props.addToLog("calcFail", "human");
+          props.addSuccessFailToSessionData("calcFail");
+          setParameters(generateMathProblem());
+        }
+      },
+    });
 
   return (
     <>
@@ -103,8 +100,10 @@ function Calculator(props) {
               type="submit"
               disabled={!props.started}
             >
-              Submit{" "}
-              <Badge variant="success">{props.scoreBoard.calculation}</Badge>
+              <h4>
+                Submit{" "}
+                <Badge variant="success">{props.scoreBoard.calculation}</Badge>
+              </h4>
             </Button>
           </div>
         </div>

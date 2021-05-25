@@ -9,6 +9,7 @@ import Nav from "react-bootstrap/Nav";
 import "./topConsole.css";
 import Badge from "react-bootstrap/Badge";
 import Results from "./results";
+import Background from "../assets/background/blue_road_with_sun_single_frame.gif";
 
 /** The top part of the experiment where the sign, score, GIF, and modes are */
 function TopConsole(props) {
@@ -38,16 +39,25 @@ function TopConsole(props) {
 
   return (
     <>
-      <div className="parent-topConsole">
-        <div className="div1-topConsole">
+      <div
+        className="parent-topConsole"
+        style={
+          !props.started || !props.isMoving
+            ? {
+                backgroundImage: `url(${Background})`,
+              }
+            : {}
+        }
+      >
+        {/* <div className="div1-topConsole">
           <CenterSign
             className="center-sign"
             isMoving={props.isMoving}
             started={props.started}
           />
-        </div>
+        </div> */}
 
-        <div className="div4-topConsole">
+        {/* <div className="div4-topConsole">
           {props.isMoving && props.started ? (
             <img draggable={false} src={drivingGif} className="driving-gif" />
           ) : (
@@ -57,8 +67,8 @@ function TopConsole(props) {
               className="driving-gif"
             />
           )}
-        </div>
-
+        </div> */}
+        <div className="div5-topConsole"></div>
         <div className="div2-topConsole">
           <div className="text-and-score-div">
             <div
@@ -97,13 +107,22 @@ function TopConsole(props) {
                 </div>
               </div>
             </div>
-            <p className="center-text">
-              {!props.started
-                ? "Press Start Below"
-                : !props.isMoving
-                ? "Obstacle Detected"
-                : "Vehicle is moving"}
-            </p>
+            {!props.started ? (
+              <p className="center-text">Press Start Below</p>
+            ) : !props.isMoving ? (
+              <>
+                <p
+                  className="center-text"
+                  style={{
+                    color: "rgb(247, 230, 230)",
+                  }}
+                >
+                  Obstacle detected
+                </p>
+              </>
+            ) : (
+              <p className="center-text">Vehicle is moving</p>
+            )}
           </div>
         </div>
 

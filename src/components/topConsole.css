@@ -1,20 +1,27 @@
 .parent-topConsole {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 0.25fr 1fr 0.25fr;
   grid-template-rows: repeat(2, 1fr);
   grid-column-gap: 0px;
   grid-row-gap: 0px;
   height: 100%;
+  background-size: cover;
+  background: url("../assets/background/blue_road_with_sun.gif") no-repeat
+    center center;
+  background-position: bottom;
 }
 
 .div1-topConsole {
   display: flex;
   grid-area: 1 / 1 / 3 / 2;
 }
+
+/* text and score */
 .div2-topConsole {
   display: flex;
   grid-area: 1 / 2 / 2 / 3;
 }
+/* toggle switch */
 .div3-topConsole {
   /*display: flex !important;*/
   grid-area: 2 / 2 / 3 / 3;
@@ -24,6 +31,13 @@
   grid-area: 1 / 3 / 3 / 4;
 }
 
+/* background div 
+.div5-topConsole {
+  display: flex;
+  grid-area: 1 / 1 / 3 / 4;
+  background-image: #0066ff;
+}
+*/
 /**
 
 **/
@@ -45,20 +59,23 @@
 
 .toggle-div {
   margin: auto;
-  padding: 10px;
+  padding: 20px;
   border-radius: 5px;
 }
 
 .text-and-score-div {
   margin: auto;
+  margin-bottom: 0;
   flex: 100%;
 }
 
 .center-text {
+  margin: 0;
   text-align: center;
-  font-size: xx-large;
-  font-weight: 300;
-  color: white;
+  font-size: xxx-large;
+  font-weight: 700;
+  -webkit-text-stroke: 1.1px rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
 }
 
 .score-text {
@@ -85,7 +102,7 @@
 
 .score-topConsole {
   margin: 0 auto;
-  width: 50%;
+  width: 250px;
   border-radius: 10px;
   border: 3px solid #0d67ee9f;
   background-color: #f3f2f2;
@@ -235,13 +252,24 @@
 /*  1000px    */
 @media (max-width: 1000px) {
   .parent-topConsole {
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: 1fr;
     grid-template-rows: repeat(2, 1fr);
   }
 
   .center-text {
     margin: auto;
-    font-size: large;
+    font-size: 36px;
+  }
+
+  /* text and score */
+  .div2-topConsole {
+    display: flex;
+    grid-area: 1 / 1 / 2 / 2;
+  }
+  /* toggle switch */
+  .div3-topConsole {
+    /*display: flex !important;*/
+    grid-area: 2 / 1 / 3 / 2;
   }
 
   .mode-toggle {
@@ -267,7 +295,7 @@
     grid-template-rows: 50px 100px 50px;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
-    height: 300px;
+    /*height: 300px;*/
   }
 
   .div2-topConsole {
@@ -295,7 +323,7 @@
 
   .center-text {
     margin: auto;
-    font-size: large;
+    font-size: 32px;
   }
 
   .mode-toggle {

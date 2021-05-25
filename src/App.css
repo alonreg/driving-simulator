@@ -14,33 +14,37 @@ code {
 }
 
 .parent-experiment {
+  padding: 100px;
+  padding-left: 150px;
+  padding-right: 150px;
   display: grid;
   grid-template-columns: 1fr 3fr;
-  grid-template-rows: minmax(200px, 1fr) minmax(300px, 1fr);
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
-  height: 93vh;
-  background-color: #34568b;
+  grid-template-rows: minmax(200px, 1fr) minmax(300px, 1.5fr);
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+  height: 100vh;
+  background-color: #395a8f;
 }
 
 /* top console */
 .div1-experiment {
-  grid-area: 1 / 1 / 2 / 3;
-  background-color: #f1f2f5;
-  background-image: url("./assets/earth.gif");
-  background-size: 100%;
-}
-
-/* calc */
-.div2-experiment {
-  grid-area: 2 / 1 / 3 / 2;
-  background-color: #92818175;
+  grid-area: 1 / 2 / 2 / 3;
+  background-color: #010000;
+  border-radius: 30px;
 }
 
 /* drive console */
 .div3-experiment {
-  grid-area: 2 / 2 / 3 / 3;
-  background-color: #ffffff91;
+  grid-area: 2 / 1 / 3 / 3;
+  background-color: #9cacc5;
+  border-radius: 30px;
+}
+
+/* calc */
+.div2-experiment {
+  grid-area: 1 / 1 / 2 / 2;
+  background-color: #1f3764;
+  border-radius: 30px;
 }
 
 .font-small {
@@ -164,8 +168,37 @@ code {
   width: 30%;
 }
 
-/**MOBILE-1000**/
+/**MOBILE-1200**/
+@media (max-width: 1200px) {
+  .parent-experiment {
+    padding: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
 
+/**CSS For MOBILE-600px width max**/
+@media (max-width: 1000px) {
+  .parent-experiment {
+    padding: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    row-gap: 0px;
+    column-gap: 0px;
+  }
+  /* top console 1000 */
+  .div1-experiment {
+    border-radius: 0px;
+  }
+  /* drive console 1000 */
+  .div3-experiment {
+    border-radius: 0px;
+  }
+  /* calc 1000 */
+  .div2-experiment {
+    border-radius: 0px;
+  }
+}
 /**CSS For MOBILE-600px width max**/
 @media (max-width: 600px) {
   .parent-experiment {
@@ -174,6 +207,9 @@ code {
     grid-template-rows: minmax(200px, 200px) 330px 2fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
+    padding: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
   }
   /* top console */
   .div1-experiment {

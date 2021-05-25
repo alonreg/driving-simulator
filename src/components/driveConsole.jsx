@@ -8,6 +8,7 @@ import "../components/driveConsole.css";
 import ListGroup from "react-bootstrap/ListGroup";
 import Badge from "react-bootstrap/Badge";
 import Alert from "react-bootstrap/Alert";
+import Rescue from "../assets/rescue.png";
 
 /** The initial pixel is a component that initiates the driving when in automode. */
 function InitiatePixel({ autoModeInit, isMoving, autoMode, started }) {
@@ -52,7 +53,7 @@ function RescueButton({
   return (
     <>
       <div
-        className="rescue-container"
+        className="div4-drivingConsole"
         style={
           currentChoiseResults.direction == "rescue" && isMoving
             ? {
@@ -76,6 +77,7 @@ function RescueButton({
               Rescue&nbsp;
               <Badge variant="dark">{rescueScore}</Badge>
             </p>
+            <img src={Rescue} className="rescue-image" />
           </div>
         </Button>
       </div>
@@ -360,16 +362,14 @@ function DriveConsole({
               currentChoiseResults={currentChoiseResults}
             />
 
-            <div className="div4-drivingConsole ">
-              <RescueButton
-                onClick={directionDecided}
-                disabled={isMoving || autoMode}
-                className="rescue"
-                rescueScore={scoreBoard.rescue}
-                currentChoiseResults={currentChoiseResults}
-                isMoving={isMoving}
-              />
-            </div>
+            <RescueButton
+              onClick={directionDecided}
+              disabled={isMoving || autoMode}
+              className="rescue"
+              rescueScore={scoreBoard.rescue}
+              currentChoiseResults={currentChoiseResults}
+              isMoving={isMoving}
+            />
           </>
         )}
 
