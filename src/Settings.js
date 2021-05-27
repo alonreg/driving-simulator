@@ -66,7 +66,10 @@ function Settings() {
             {process.env.REACT_APP_AUTH_DOMAIN ==
             "driving-simulator-tau-test.firebaseapp.com"
               ? " TEST"
-              : " PROD"}
+              : process.env.REACT_APP_AUTH_DOMAIN ==
+                "driving-simulator-tau.firebaseapp.com"
+              ? " PROD"
+              : " ERROR"}
             {"   " + process.env.REACT_APP_AUTH_DOMAIN}
             {", Logged as: " + login}
           </Nav.Link>

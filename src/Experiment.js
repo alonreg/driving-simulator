@@ -25,6 +25,8 @@ function Experiment(props) {
   const location = useLocation(); // passing metadata from the pre-experiment part
   let { id } = useParams(); // extract experiment-id from URL, to choose experiment config
   let history = useHistory();
+  const queryString = require("query-string");
+  const parsed = queryString.parse(window.location.search);
 
   // experiment state:
   const [score, setScore] = useState(0); // user score
@@ -50,13 +52,15 @@ function Experiment(props) {
   const [startTime, setStartTime] = useState(Date.now()); // UTC start time
   const [modeChanges, setModeChanges] = useState(0); // counts no. of mode (Auto / Manual) changes
   const [log, setLog] = useState([]); // holds the log with info about current session
+  const logRef = useRef(log); // reference to log state
+  logRef.current = log; // assign the log state to the reference
 
   /** adds +1 to the success / failure count
    * gets one of the following strings:
    * "successByHuman","successByComp","failByComp","rescue","calcSuccess", "calcFail"
    *  */
   const addSuccessFailToSessionData = (addTo) => {
-    console.log(addTo + "   in add to ");
+    //console.log("   in add to session data " + addTo);
     switch (addTo) {
       case "successByHuman":
         setSuccessByHuman(successByHuman + 1);
@@ -107,15 +111,31 @@ function Experiment(props) {
           } else if (userCredential.user.uid) {
             setSessionId(userCredential.user.uid);
             FirestoreService.createSession({
-              aid: location.aid,
+              aid: location.aid ? location.aid : parsed.aid,
               session: userCredential.user.uid,
-              questions: location.questions, // user answers to questionare in the pre-experiment stage
-              answers: location.answers, // user answers to questionare in the pre-experiment stage
+              questions: location.questions
+                ? location.questions
+                : localStorage.getItem("questions") // check if it is available
+                ? JSON.parse(localStorage.getItem("questions"))
+                : ["no-data"], // user answers to questionare in the pre-experiment stage
+              // if the answers are empty, get the answers from the local storage if there are any
+              answers: location.answers
+                ? location.answers
+                : localStorage.getItem("questionsState") // check if it is available
+                ? JSON.parse(localStorage.getItem("questionsState"))
+                : ["no-data"], // user answers to questionare in the pre-experiment stage
               startTime: startTime,
               parameters: parameters,
               parametersSet: id,
             });
             addToLog("started", "none"); // add to log - the session has started
+            // if user has almost finished, than redirect it to researchGate
+            if (
+              localStorage.getItem("isAlmostFinished") == true ||
+              localStorage.getItem("isAlmostFinished") == "true"
+            ) {
+              endPrematurely(userCredential.user.uid);
+            }
           }
         })
         .catch(() => {
@@ -141,10 +161,14 @@ function Experiment(props) {
         end();
       }, 1000);
       return;
-    } else {
-      console.log(
-        "obstacleNum: " + obstaclesNum + "  " + obstaclesNumRef.current
-      );
+    } else if (
+      parameters &&
+      obstaclesNumRef.current >= parameters.obstaclesNum * 0.8
+    ) {
+      // checks if user has completed 80% of the game, if it does - redirect it to reserachgate
+      localStorage.setItem("isAlmostFinished", true);
+      localStorage.setItem("logBackup", JSON.stringify(log));
+      localStorage.setItem("startTime", startTime);
     }
   }, [obstaclesNum]);
 
@@ -161,6 +185,89 @@ function Experiment(props) {
   //}
   // setScore((score) => v + score);
   //};
+
+  const endPrematurely = (currentSessionId) => {
+    const restoredLog = localStorage.getItem("logBackup")
+      ? JSON.parse(localStorage.getItem("logBackup"))
+      : {};
+    FirestoreService.setSessionData({
+      session: currentSessionId,
+      score: -1,
+      successByHuman: successByHuman,
+      successByComp: successByComp,
+      failByHuman: failByHuman,
+      failByComp: failByComp,
+      rescueCount: rescueCount,
+      calcSuccess: calcSuccess,
+      calcFail: calcFail,
+      startTime: localStorage.getItem("startTime")
+        ? localStorage.getItem("startTime")
+        : startTime,
+      endTime: Date.now(),
+      modeChanges: modeChanges,
+      log: [
+        ...restoredLog,
+        {
+          timestamp: Date.now(),
+          action: "end-prematurely",
+          host: "none",
+          currentScore: score ?? "empty",
+          currentObstacle_computerDecision:
+            currentObstacle?.decision ?? "empty",
+          currentObstacle_ev_f: currentObstacle?.ev_f ?? "empty",
+          currentObstacle_ev_r: currentObstacle?.ev_r ?? "empty",
+          currentObstacle_ev_l: currentObstacle?.ev_l ?? "empty",
+          currentObstacle_ev_rescue: currentObstacle?.ev_rescue ?? "empty",
+          currentObstacle_computer_f:
+            currentObstacle?.obstacleValueWithError_computer_f ?? "empty",
+          currentObstacle_computer_r:
+            currentObstacle?.obstacleValueWithError_computer_r ?? "empty",
+          currentObstacle_computer_l:
+            currentObstacle?.obstacleValueWithError_computer_l ?? "empty",
+          currentObstacle_human_f:
+            currentObstacle?.obstacleValueWithError_human_f ?? "empty",
+          currentObstacle_human_r:
+            currentObstacle?.obstacleValueWithError_human_r ?? "empty",
+          currentObstacle_human_l:
+            currentObstacle?.obstacleValueWithError_human_l ?? "empty",
+          currentObstacle_real_f: currentObstacle?.real_f ?? "empty",
+          currentObstacle_real_r: currentObstacle?.real_r ?? "empty",
+          currentObstacle_real_l: currentObstacle?.real_l ?? "empty",
+          autonomousMode: autoMode ?? "empty",
+          successByHuman: successByHuman ?? "empty",
+          successByComp: successByComp ?? "empty",
+          failByHuman: failByHuman ?? "empty",
+          failByComp: failByComp ?? "empty",
+          rescueCount: rescueCount ?? "empty",
+          calcSuccess: calcSuccess ?? "empty",
+          calcFail: calcFail ?? "empty",
+          modeChanges: modeChanges ?? "empty",
+        },
+      ],
+    });
+
+    console.log(
+      "ended prematurely, with " +
+        obstaclesNum +
+        " out of " +
+        parameters.obstaclesNum +
+        ", ended is set to: " +
+        ended.toString()
+    );
+    localStorage.setItem("isAlmostFinished", false);
+    localStorage.removeItem("logBackup");
+    localStorage.removeItem("startTime");
+    setEnded(true);
+
+    console.log(
+      "ended prematurely, with " +
+        obstaclesNum +
+        " out of " +
+        parameters.obstaclesNum +
+        ", ended is set to: " +
+        ended.toString()
+    );
+  };
 
   // adds score addition to the score state
   const scoreAddition = (addition) => {
@@ -273,9 +380,19 @@ function Experiment(props) {
     const driveTimeout = setTimeout(() => {
       // use the timeout we calculated to delay the next obstacle
       setIsMoving(false);
+      addToLog("new-obstacle", "none");
     }, timeout);
     return () => clearTimeout(driveTimeout);
   };
+
+  // logging mechanism, whenever the vehicle stops, a new obstacle appears and is logged
+  /*   useEffect(() => {
+    if (!isMoving) {
+      addToLog("new-obstacle", "none");
+    }
+  }, [isMoving]); */
+
+  //const helperFunctionAddToLog = () => addToLog("new-obstacle", "none");
 
   // a function to add actions to the log.
   // the function creates a new log object each time
@@ -316,7 +433,8 @@ function Experiment(props) {
       calcFail: calcFail ?? "empty",
       modeChanges: modeChanges ?? "empty",
     };
-    setLog([...log, newLog]);
+
+    setLog([...logRef.current, newLog]);
   };
 
   // if a session wasn't initialized yet, show a 3-dot loader animation
@@ -332,7 +450,7 @@ function Experiment(props) {
 
   // if session has ended - show the Result page
   return ended ? (
-    <Results score={score} aid={location.aid} />
+    <Results score={score} aid={location.aid ? location.aid : parsed.aid} />
   ) : (
     <>
       <div class="parent-experiment">
@@ -415,15 +533,16 @@ function Experiment(props) {
             autoAssist={parameters.autoAssist ?? "AutoAssist"}
           />
         </div>
+        {process.env.REACT_APP_AUTH_DOMAIN ==
+        "driving-simulator-tau-test.firebaseapp.com" ? (
+          <p>
+            sessionid for debug (will appear only on TEST domain): {sessionId},
+            location aid: {location.aid}, query string aid: {parsed.aid}
+          </p>
+        ) : (
+          ""
+        )}
       </div>
-      {process.env.REACT_APP_AUTH_DOMAIN ==
-      "driving-simulator-tau-test.firebaseapp.com" ? (
-        <p>
-          sessionid for debug: {sessionId}, aid: {location.aid}
-        </p>
-      ) : (
-        ""
-      )}
     </>
   );
 }

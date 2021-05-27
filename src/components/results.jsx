@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AutonomousCarImage from "../assets/autonomous-vehicles.png";
 import Button from "react-bootstrap/Button";
 
@@ -14,6 +14,11 @@ function Results({ score, aid }) {
           type="button"
           variant="light"
           href={`https://app.cloudresearch.com/Router/End?aid=${aid}`}
+          onClick={() => {
+            localStorage.setItem("isAlmostFinished", false);
+            localStorage.removeItem("logBackup");
+            localStorage.removeItem("startTime");
+          }}
         >
           Finish
         </Button>

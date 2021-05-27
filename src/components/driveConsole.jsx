@@ -12,12 +12,12 @@ import Rescue from "../assets/rescue.png";
 
 /** The initial pixel is a component that initiates the driving when in automode. */
 function InitiatePixel({ autoModeInit, isMoving, autoMode, started }) {
-  useEffect(() => {
+  /* useEffect(() => {
     if (autoMode && !isMoving && started) {
-      //|| isFirstRun
+      // make the computer decide on a direction
       autoModeInit();
     }
-  }, [isMoving]);
+  }, [isMoving]); */
 
   return (
     <>
@@ -204,11 +204,18 @@ function DriveConsole({
     success: false,
   }); // holds the current results and direction
 
+  useEffect(() => {
+    if (autoMode && !isMoving && started) {
+      // make the computer decide on a direction
+      computerDesicion();
+    }
+  }, [isMoving]);
+
   /** Renders a direction decision for the computer when in autoMode */
   const computerDesicion = () => {
     const direction = currentObstacle?.decision ?? null;
     if (autoMode) {
-      setTimeout(
+      let autoModeTimeout = setTimeout(
         (function (localDirectionDecided) {
           return function () {
             //inputref.click() instead.
@@ -217,6 +224,7 @@ function DriveConsole({
         })(directionDecided),
         timeoutComputerDecision
       );
+      //return clearTimeout(autoModeTimeout);
     }
   };
 

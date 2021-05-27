@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import firebase from "firebase";
 import * as FirestoreService from "../firebase";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";

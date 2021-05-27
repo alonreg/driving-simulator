@@ -24,6 +24,7 @@ const Redirector = () => {
   // Push the newely created URL
   history.push({
     pathname: `/${id}/${infoData}/${questionsData}/1/page-1`, // the path to the pre-experiment part
+    search: "?aid=" + parsed.aid,
     aid: parsed.aid,
   });
 

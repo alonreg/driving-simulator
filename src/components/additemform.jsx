@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import firebase from "firebase";
 import * as FirestoreService from "../firebase";
 import Button from "react-bootstrap/Button";
 
@@ -17,9 +16,8 @@ const AddItemForm = () => {
   const [rescue, setRescue] = useState(null);
   const [success, setSuccess] = useState(null);
   const [timeoutComputerDecision, setTimeoutComputerDecision] = useState(null);
-  const [timeoutNextObstacleFloor, setTimeoutNextObstacleFloor] = useState(
-    null
-  );
+  const [timeoutNextObstacleFloor, setTimeoutNextObstacleFloor] =
+    useState(null);
   const [timeoutNextObstacleMax, setTimeoutNextObstacleMax] = useState(null);
   const [kValue, setKValue] = useState(null);
 

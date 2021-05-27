@@ -9,6 +9,8 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 /** This page displays the pre-experiment information */
 const Questions = () => {
   let { urlInfoDataId, questionDataId, id, urlPageNumber } = useParams();
+  const queryString = require("query-string");
+  const parsed = queryString.parse(window.location.search); // read aid from url
 
   const [pageNumber, setPageNumber] = useState(urlPageNumber - 1); // current page number
   const [questionsData, setQuestionsData] = useState(null); // the data to display
@@ -51,16 +53,17 @@ const Questions = () => {
   useEffect(() => {
     setPageNumber(urlPageNumber - 1);
     if (!aid) {
-      setAid(location.aid);
+      setAid(location.aid ? location.aid : parsed.aid);
     }
   }, [urlPageNumber]);
 
   const goToPreviousPage = () => {
     const currPageNum = +pageNumber;
     setPageNumber(currPageNum - 1);
-    history.push(
-      `/${id}/${urlInfoDataId}/${questionDataId}/2/page-${currPageNum}`
-    );
+    history.push({
+      pathname: `/${id}/${urlInfoDataId}/${questionDataId}/2/page-${currPageNum}`,
+      search: "?aid=" + aid,
+    });
   };
 
   // A function that tests if an asnwer passes the filter.
@@ -107,8 +110,10 @@ const Questions = () => {
     const currPageNum = +pageNumber;
 
     if (+pageNumber >= totalPages - 1) {
+      localStorage.setItem("questions", JSON.stringify(questionsData.titles));
       history.push({
         pathname: `/${id}/${urlInfoDataId}/${questionDataId}/3`, // the path to the driving simulator
+        search: "?aid=" + aid,
         questions: questionsData.titles,
         answers: questionsState,
         aid: aid,
@@ -116,9 +121,12 @@ const Questions = () => {
       return;
     }
     setPageNumber(currPageNum + 1);
-    history.push(
-      `/${id}/${urlInfoDataId}/${questionDataId}/2/page-${currPageNum + 2}`
-    );
+    history.push({
+      pathname: `/${id}/${urlInfoDataId}/${questionDataId}/2/page-${
+        currPageNum + 2
+      }`,
+      search: "?aid=" + aid,
+    });
   };
 
   // tests the dynamic filter and checks if the user is qualified

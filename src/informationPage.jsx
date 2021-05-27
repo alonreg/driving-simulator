@@ -30,6 +30,8 @@ function NewlineText(props) {
 /** This page displays the pre-experiment information */
 const InformationPage = () => {
   let { urlInfoDataId, questionDataId, id, urlPageNumber } = useParams();
+  const queryString = require("query-string");
+  const parsed = queryString.parse(window.location.search); // read aid from url
 
   const [pageNumber, setPageNumber] = useState(urlPageNumber - 1); // current page number
   const [infoData, setInfoData] = useState(null); // the data to display
@@ -81,7 +83,7 @@ const InformationPage = () => {
   useEffect(() => {
     setPageNumber(urlPageNumber - 1);
     if (!aid) {
-      setAid(location.aid);
+      setAid(location.aid ? location.aid : parsed.aid);
     }
   }, [urlPageNumber]);
 
@@ -96,14 +98,18 @@ const InformationPage = () => {
     if (+pageNumber >= totalPages - 1) {
       history.push({
         pathname: `/${id}/${urlInfoDataId}/${questionDataId}/2/page-1`, // the path to the driving simulator
+        search: "?aid=" + aid,
         aid: aid,
       });
       return;
     }
     setPageNumber(+pageNumber + 1);
-    history.push(
-      `/${id}/${urlInfoDataId}/${questionDataId}/1/page-${+pageNumber + 2}`
-    );
+    history.push({
+      pathname: `/${id}/${urlInfoDataId}/${questionDataId}/1/page-${
+        +pageNumber + 2
+      }`,
+      search: "?aid=" + aid,
+    });
   };
 
   const onClose = function () {
