@@ -51,6 +51,11 @@ function ViewParameters() {
     });
   };
 
+  const editInitialSet = (id) => {
+    id;
+    FirestoreService.updateParameters(currentItem.id, updatedItem);
+  };
+
   const updateItem = ({ currentItem }, updatedItem) => {
     setEditing(false);
     FirestoreService.updateParameters(currentItem.id, updatedItem);

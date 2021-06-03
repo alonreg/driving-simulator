@@ -280,3 +280,18 @@ export const setParametersOLD = ({
       { merge: true }
     );
 };
+
+export const getInitialDataSets = () => {
+  return db.collection("dataSetsForExperiment").doc("dataset").get();
+};
+
+export const getInitialDataSetsSnapshot = () => {
+  return db.collection("dataSetsForExperiment").doc("dataset");
+};
+
+export const setInitialDataSets = (name, value) => {
+  return db
+    .collection("dataSetsForExperiment")
+    .doc("dataset")
+    .set({ [name]: value }, { merge: true });
+};

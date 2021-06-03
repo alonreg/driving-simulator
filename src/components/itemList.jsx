@@ -3,6 +3,7 @@ import * as FirestoreService from "../firebase";
 import "../settings.css";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
+import Switch from "react-switch";
 
 /** The useItems component downloads all session data and renders it into a list */
 const useItems = () => {
@@ -25,7 +26,27 @@ const useItems = () => {
   return items;
 };
 
+const useInitialData = () => {
+  const [paramArray, setParamArray] = useState(null); // array for randomly choosing a parameter set
+  // pull the chosen information regarding chosen data sets from the database
+  useEffect(() => {
+    if (!paramArray) {
+      const unsubscribe =
+        FirestoreService.getInitialDataSetsSnapshot().onSnapshot(
+          (docSnapshot) => {
+            const data = docSnapshot.data();
+            setParamArray(data.paramArray);
+          }
+        );
+      return () => unsubscribe();
+    }
+  }, []);
+  return paramArray;
+};
+
 const ItemList = ({ editItem }) => {
+  const paramArray = useInitialData();
+
   const mapToTable = function (item, i) {
     return (
       <tr key={i} className={`font-italic`}>
@@ -43,6 +64,26 @@ const ItemList = ({ editItem }) => {
         <td>{item.timeoutNextObstacleFloor}</td>
         <td>{item.timeoutNextObstacleMax}</td>
         <td>{item.kValue + ", [" + item.randomValues + "]"}</td>
+        <td>
+          {paramArray ? (
+            <Switch
+              onChange={() => {
+                if (paramArray.includes(item.id)) {
+                  const newArray = paramArray.filter((id) => id != item.id);
+                  FirestoreService.setInitialDataSets("paramArray", newArray);
+                } else {
+                  FirestoreService.setInitialDataSets("paramArray", [
+                    ...paramArray,
+                    item.id,
+                  ]);
+                }
+              }}
+              checked={paramArray.includes(item.id)}
+            />
+          ) : (
+            <></>
+          )}
+        </td>
         <Button onClick={() => editItem(item)} className="input-settings">
           Edit
         </Button>
@@ -79,6 +120,7 @@ const ItemList = ({ editItem }) => {
             <th>Wait max (ms)</th>
             <th>Wait min (ms)</th>
             <th>k value, randoms</th>
+            <th>Include</th>
             <th>Options</th>
           </tr>
         </thead>
