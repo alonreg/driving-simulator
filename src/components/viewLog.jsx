@@ -58,6 +58,43 @@ const useItems = () => {
   return items;
 };
 
+const logHeaders = [
+  { label: "timestamp", key: "timestamp" },
+  { label: "action", key: "action" },
+  { label: "host", key: "host" },
+  { label: "currentScore", key: "currentScore" },
+  { label: "autonomousMode", key: "autonomousMode" },
+  { label: "calcFail", key: "calcFail" },
+  { label: "rescueCount", key: "rescueCount" },
+  { label: "failByHuman", key: "failByHuman" },
+  { label: "successByHuman", key: "successByHuman" },
+  { label: "successByComp", key: "successByComp" },
+  { label: "failByComp", key: "failByComp" },
+  { label: "modeChanges", key: "modeChanges" },
+  { label: "calcSuccess", key: "calcSuccess" },
+  //////
+  { label: "currentObstacle_real_f", key: "currentObstacle_real_f" },
+  { label: "currentObstacle_real_r", key: "currentObstacle_real_r" },
+  { label: "currentObstacle_real_l", key: "currentObstacle_real_l" },
+  ///
+  { label: "currentObstacle_ev_r", key: "currentObstacle_ev_r" },
+  { label: "currentObstacle_ev_l", key: "currentObstacle_ev_l" },
+  { label: "currentObstacle_ev_f", key: "currentObstacle_ev_f" },
+  { label: "currentObstacle_ev_rescue", key: "currentObstacle_ev_rescue" },
+  /////
+  { label: "currentObstacle_human_r", key: "currentObstacle_human_r" },
+  { label: "currentObstacle_human_l", key: "currentObstacle_human_l" },
+  { label: "currentObstacle_human_f", key: "currentObstacle_human_f" },
+  ///
+  { label: "currentObstacle_computer_f", key: "currentObstacle_computer_f" },
+  { label: "currentObstacle_computer_l", key: "currentObstacle_computer_l" },
+  { label: "currentObstacle_computer_r", key: "currentObstacle_computer_r" },
+  {
+    label: "currentObstacle_computerDecision",
+    key: "currentObstacle_computerDecision",
+  },
+];
+
 const ViewLog = () => {
   function getFormattedTime() {
     var today = new Date();
@@ -146,9 +183,9 @@ const ViewLog = () => {
                 (action) => JSON.stringify(action.action) + ",\n"
               )}
             />
-
             <CSVLink
               data={item.log}
+              headers={logHeaders}
               filename={"log-" + item.id + getFormattedTime() + ".csv"}
             >
               <img className="download-button" src={downloadIcon} />

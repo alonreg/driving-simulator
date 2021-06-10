@@ -5,6 +5,9 @@ import UpdateQuestionsItem from "./updateQuestionsItem.jsx";
 import AddQuestionsForm from "./addQuestionsForm.jsx";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Dropdown from "react-bootstrap/Dropdown";
+import UseInitialData from "./useInitialData.jsx";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Button from "react-bootstrap/Button";
 
 const useItems = () => {
   const [items, setItems] = useState([]); //useState() hook, sets initial state to an empty array
@@ -27,6 +30,8 @@ const useItems = () => {
 };
 
 const ViewQuestions = () => {
+  const preExperimentDeafultSet = UseInitialData("questions");
+
   const initialItemState = {
     id: "",
     titles: [],
@@ -92,12 +97,38 @@ const ViewQuestions = () => {
         <div className="div3-preText"></div>
         <div className="div2-preText">
           <h3>Update sets of information</h3>
-          <DropdownButton
-            title={currentItem.id || "Choose Set"}
-            id="bg-nested-dropdown"
-          >
-            {setsId}
-          </DropdownButton>
+          <ButtonGroup className="mr-2" aria-label="First group">
+            <DropdownButton
+              title={currentItem.id || "Choose Set"}
+              id="bg-nested-dropdown"
+              as={ButtonGroup}
+            >
+              {setsId}
+            </DropdownButton>
+
+            {currentItem.id ? (
+              <Button
+                variant={
+                  preExperimentDeafultSet == currentItem.id
+                    ? "success"
+                    : "light"
+                }
+                disabled={preExperimentDeafultSet == currentItem.id}
+                onClick={() =>
+                  FirestoreService.setInitialDataSets(
+                    "questions",
+                    currentItem.id
+                  )
+                }
+              >
+                {preExperimentDeafultSet == currentItem.id
+                  ? "Default"
+                  : "Set as Default"}{" "}
+              </Button>
+            ) : (
+              <></>
+            )}
+          </ButtonGroup>
           {currentItem.id ? (
             <UpdateQuestionsItem
               currentItem={currentItem}

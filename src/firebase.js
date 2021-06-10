@@ -295,3 +295,10 @@ export const setInitialDataSets = (name, value) => {
     .doc("dataset")
     .set({ [name]: value }, { merge: true });
 };
+
+export const createInitialDataSets = () => {
+  return db
+    .collection("dataSetsForExperiment")
+    .doc("dataset")
+    .set({ paramArray: [], preExperiment: "", questions: "" }, { merge: true });
+};

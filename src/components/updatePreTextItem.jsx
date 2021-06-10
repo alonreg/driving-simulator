@@ -129,7 +129,7 @@ const UpdatePreTextItem = ({ currentItem, updateItem, setCurrentItem }) => {
             />
           </div>
           <div>
-            <label>Image URL</label>
+            <label>IMG/YT URL</label>
             <textarea
               cols="80"
               rows="1"

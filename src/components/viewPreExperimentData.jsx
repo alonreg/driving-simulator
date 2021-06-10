@@ -9,6 +9,7 @@ import AddPreTextItemForm from "./addPreTextItemForm.jsx";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Dropdown from "react-bootstrap/Dropdown";
+import UseInitialData from "./useInitialData.jsx";
 
 const useItems = () => {
   const [items, setItems] = useState([]); //useState() hook, sets initial state to an empty array
@@ -31,6 +32,8 @@ const useItems = () => {
 };
 
 const ViewPreExperimentData = () => {
+  const preExperimentDeafultSet = UseInitialData("preExperiment");
+
   const initialItemState = {
     id: "",
     titles: [],
@@ -96,13 +99,38 @@ const ViewPreExperimentData = () => {
         <div className="div3-preText"></div>
         <div className="div2-preText">
           <h3>Update sets of information</h3>
-          <DropdownButton
-            title={currentItem.id || "Choose Set"}
-            id="bg-nested-dropdown"
-          >
-            {setsId}
-          </DropdownButton>
-
+          <ButtonGroup className="mr-2" aria-label="First group">
+            <DropdownButton
+              as={ButtonGroup}
+              title={currentItem.id || "Choose Set"}
+              id="bg-nested-dropdown"
+            >
+              {setsId}
+            </DropdownButton>
+            {currentItem.id ? (
+              <Button
+                variant={
+                  preExperimentDeafultSet == currentItem.id
+                    ? "success"
+                    : "light"
+                }
+                disabled={preExperimentDeafultSet == currentItem.id}
+                onClick={() =>
+                  FirestoreService.setInitialDataSets(
+                    "preExperiment",
+                    currentItem.id
+                  )
+                }
+              >
+                {preExperimentDeafultSet == currentItem.id
+                  ? "Default"
+                  : "Set as Default"}{" "}
+              </Button>
+            ) : (
+              <></>
+            )}
+          </ButtonGroup>
+          <hr></hr>
           <UpdatePreTextItem
             currentItem={currentItem}
             updateItem={updateItem}
