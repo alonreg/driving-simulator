@@ -189,7 +189,7 @@ const Questions = () => {
   };
 
   const handleClick = (direction) => {
-    if (direction == "quit") {
+    if (direction == "back to instructions") {
       onClose();
     } else if (direction == "back") {
       goToPreviousPage();
@@ -250,7 +250,7 @@ const Questions = () => {
                   )
                 }
               >
-                {+pageNumber == 0 ? "quit" : "back"}
+                {+pageNumber == 0 ? "back to instructions" : "back"}
               </Button>
             </div>
             <div className="div2-buttonRow">
